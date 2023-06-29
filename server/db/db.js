@@ -19,7 +19,6 @@ db.serialize(() => {
 // Function to get a user by their username
 const getUserByUsername = (username) => {
   return new Promise((resolve, reject) => {
-    // Query the database for the user with the given username
     db.get(
       'SELECT * FROM AuthenticationUsers WHERE username = ?',
       [username],
