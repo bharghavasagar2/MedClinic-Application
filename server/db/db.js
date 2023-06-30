@@ -16,22 +16,5 @@ db.serialize(() => {
   createDBTables(db)
 });
 
-// Function to get a user by their username
-const getUserByUsername = (username) => {
-  return new Promise((resolve, reject) => {
-    db.get(
-      'SELECT * FROM AuthenticationUsers WHERE username = ?',
-      [username],
-      (err, row) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(row);
-        }
-      }
-    );
-  });
-};
-
 
 module.exports = db;
