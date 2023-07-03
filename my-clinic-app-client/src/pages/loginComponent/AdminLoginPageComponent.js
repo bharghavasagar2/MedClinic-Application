@@ -24,7 +24,7 @@ const AdminLogin = () => {
       setErrorMessage('Please fill in all fields.');
       return;
     }
-    let data = { username, password, role: 'admin' }
+    let data = { username, password, role: 'admin' };
     dispatch(login({ data }));
 
     navigate('/dashboard');
