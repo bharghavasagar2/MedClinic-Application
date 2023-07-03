@@ -3,11 +3,12 @@ const config = require('../config');
 const db = require('../db/db.js');
 
 // Controller function to authenticate user and generate JWT token
-const login = (req, res) => {
+const login = async (req, res) => {
+  console.log(req.body)
   const { username, password } = req.body;
 
   // Perform user authentication logic
-  const user = getUserByUsername(username);
+  const user = await getUserByUsername(username);
 
   if (!user || user.password !== password) {
     // Invalid credentials

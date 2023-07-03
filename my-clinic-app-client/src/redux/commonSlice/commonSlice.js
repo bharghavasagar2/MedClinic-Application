@@ -46,6 +46,18 @@ export const deleteById = (name, url) => {
 // }
 
 
+export const create_Record = (name, url) => {
+  return createAsyncThunk(name, async ({ data }, thunkAPI) => {
+    try {
+      const response = await api.post(url, data);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+  );
+}
+
 // Async thunk action creator for create_UpdateById
 export const create_Update_ById = (name, url) => {
   return createAsyncThunk(name, async ({ id, data }, thunkAPI) => {

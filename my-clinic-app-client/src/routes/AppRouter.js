@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from '../pages/landingPage/LandingPageComponent';
 import LoginPage from '../pages/loginComponent/login.js';
 import PatientSignup from '../pages/loginComponent/patientSignUp.js';
+import AdminLogin from '../pages/loginComponent/AdminLoginPageComponent';
 
 const HomePage = lazy(() => import('../pages/HomePage'));
 const AppointmentsPage = lazy(() => import('../pages/AppointmentsPage'));
@@ -18,6 +19,7 @@ const AppRouter = () => {
           <Route path="/homepage" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signUp" element={<PatientSignup />} />
+          <Route path="/adminLogin" element={<AdminLogin />} />
           {/* Add more routes for other pages */}
         </Routes>
       </Suspense>

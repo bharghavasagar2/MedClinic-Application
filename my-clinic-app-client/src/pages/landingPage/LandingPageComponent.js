@@ -18,7 +18,7 @@ const LandingPage = () => {
           <Link to="/login" className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded">
             Sign Up/Login
           </Link>
-          <Link className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded">
+          <Link to="/adminLogin" className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded">
             Admin Login
           </Link>
         </div>

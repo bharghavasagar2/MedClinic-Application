@@ -1,5 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { create_Update_ById, create_Record } from '../commonSlice/commonSlice';
 
+
+const login = create_Record('authentication/login', '/login');
+const logOut = create_Update_ById('authentication/logOut', '/logout');
 const initialState = {
   loggedIn: false,
   user: null,
@@ -7,37 +11,40 @@ const initialState = {
   error: null,
 };
 
+
+
 const authenticationSlice = createSlice({
   name: 'authentication',
   initialState,
   reducers: {
-    loginRequest: (state) => {
-      state.loggedIn = false;
-      state.user = null;
-      state.token = null;
-      state.error = null;
-    },
-    loginSuccess: (state, action) => {
-      state.loggedIn = true;
-      state.user = action.payload.user;
-      state.token = action.payload.token;
-      state.error = null;
-    },
-    loginFailure: (state, action) => {
-      state.loggedIn = false;
-      state.user = null;
-      state.token = null;
-      state.error = action.payload;
-    },
-    logout: (state) => {
-      state.loggedIn = false;
-      state.user = null;
-      state.token = null;
-      state.error = null;
-    },
 
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(login.fulfilled, (state, action) => {
+        state.loggedIn = true;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.error = null;
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.loggedIn = false;
+        state.user = null;
+        state.token = null;
+        state.error = action.payload.message;
+      })
+      .addCase(logOut.fulfilled, (state, action) => {
+        state.loggedIn = false;
+        state.user = null;
+        state.token = null;
+        state.error = null;
+      })
+      .addCase(logOut.rejected, (state, action) => {
+        state.error = action.payload.message;
+      });
+  }
+
 });
 
-export const { loginRequest, loginSuccess, loginFailure, logout } = authenticationSlice.actions;
+export { login, logOut }
 export default authenticationSlice.reducer;
