@@ -14,7 +14,17 @@ app.use(cors());
 app.use(morgan('dev'));
 
 // Routes
-app.use('/metclinic', routes);
+app.use('/metclinic', require('../server/routes/patientRoutes.js'));
+app.use('/metclinic', require('../server/routes/appointmentRoutes.js'));
+app.use('/metclinic', require('../server/routes/authRoutes.js'));
+app.use('/metclinic', require('../server/routes/doctorRoutes.js'));
+app.use('/metclinic', require('../server/routes/videoRoutes.js'));
+app.use('/metclinic', require('../server/routes/prescriptionRoutes.js'));
+app.use('/metclinic', require('../server/routes/paymentsRoutes.js'));
+
+// app.use('/metclinic', (req, res, next) => {
+//   console.log('Request Type:', req.method)
+// });
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {

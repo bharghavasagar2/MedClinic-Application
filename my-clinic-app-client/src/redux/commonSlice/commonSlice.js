@@ -15,18 +15,6 @@ export const getAllData = (name, url) => {
   });
 };
 
-// Async thunk action creator for create
-export const create = (name, url) => {
-  return createAsyncThunk(name, async (data, thunkAPI) => {
-    try {
-      const response = await api.post(url, data);
-      return response.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  }
-  );
-}
 
 
 
@@ -44,12 +32,26 @@ export const deleteById = (name, url) => {
   );
 }
 
-// Async thunk action creator for updateById
-export const updateById = (name, url) => {
+// Async thunk action creator for create
+// export const create = (name, url) => {
+//   return createAsyncThunk(name, async (data, thunkAPI) => {
+//     try {
+//       const response = await api.post(url, data);
+//       return response.data;
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(error.message);
+//     }
+//   }
+//   );
+// }
+
+
+// Async thunk action creator for create_UpdateById
+export const create_Update_ById = (name, url) => {
   return createAsyncThunk(name, async ({ id, data }, thunkAPI) => {
     console.log(id)
     try {
-      const response = await api.put(`${url}/${id}`, data);
+      const response = !!id ? await api.put(`${url}/${id}`, data) : await api.post(url, data);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);

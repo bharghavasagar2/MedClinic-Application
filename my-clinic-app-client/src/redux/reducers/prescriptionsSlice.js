@@ -1,11 +1,11 @@
 
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { deleteById, getAllData, updateById } from '../commonSlice/commonSlice';
+import { deleteById, getAllData, create_Update_ById } from '../commonSlice/commonSlice';
 
 const fetchAllRecords = getAllData('prescriptions/fetchAllRecords', '/posts');
 const getRecordById = getAllData('prescriptions/getRecordById', '/posts');
 const deleteRecordById = deleteById('prescriptions/deleteRecordById', '/posts');
-const updateRecordById = updateById('prescriptions/updateRecordById', '/posts');
+const create_UpdateById = create_Update_ById('prescriptions/create_UpdateById', '/posts');
 
 
 const prescriptionsSlice = createSlice({
@@ -14,7 +14,7 @@ const prescriptionsSlice = createSlice({
     allprescriptions: [],
     getAppprescriptionsById: null,
     deleteRecordById: null,
-    updateRecordById: null,
+    create_UpdateById: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -29,11 +29,11 @@ const prescriptionsSlice = createSlice({
       .addCase(deleteRecordById.fulfilled, (state, action) => {
         state.deleteRecordById = action.payload;
       })
-      .addCase(updateRecordById.fulfilled, (state, action) => {
-        state.updateRecordById = action.payload;
+      .addCase(create_UpdateById.fulfilled, (state, action) => {
+        state.create_UpdateById = action.payload;
       });
   },
 });
 
-export { fetchAllRecords, getRecordById, deleteRecordById, updateRecordById };
+export { fetchAllRecords, getRecordById, deleteRecordById, create_UpdateById };
 export default prescriptionsSlice.reducer;

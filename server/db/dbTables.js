@@ -1,4 +1,4 @@
-export const createDBTables = (db) => {
+const createDBTables = (db) => {
   db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='Patients'", (err, row) => {
     if (err) {
       console.error(err.message);
@@ -10,6 +10,8 @@ export const createDBTables = (db) => {
         patient_gender TEXT,
         contact_number TEXT,
         address TEXT,
+        user_id INTEGER,
+        FOREIGN KEY (user_id) REFERENCES AuthenticationUsers(user_id)
       )`, (err) => {
         if (err) {
           console.error(err.message);
@@ -30,6 +32,8 @@ export const createDBTables = (db) => {
         specialization TEXT,
         contact_number TEXT,
         email TEXT,
+        user_id INTEGER,
+        FOREIGN KEY (user_id) REFERENCES AuthenticationUsers(user_id)
       )`, (err) => {
         if (err) {
           console.error(err.message);
@@ -51,8 +55,8 @@ export const createDBTables = (db) => {
         appointment_date TEXT,
         appointment_time TEXT,
         appointment_status TEXT,      
-        FOREIGN KEY (patient_id) REFERENCES Patients (patient_id),
-        FOREIGN KEY (doctor_id) REFERENCES Doctors (doctor_id)
+        FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
+        FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id)
       )`, (err) => {
         if (err) {
           console.error(err.message);
@@ -73,8 +77,8 @@ export const createDBTables = (db) => {
         doctor_id INTEGER,
         prescription_date TEXT,
         prescription_details TEXT,      
-        FOREIGN KEY (patient_id) REFERENCES Patients (patient_id),
-        FOREIGN KEY (doctor_id) REFERENCES Doctors (doctor_id)
+        FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
+        FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id)
       )`, (err) => {
         if (err) {
           console.error(err.message);
@@ -96,8 +100,8 @@ export const createDBTables = (db) => {
         payment_date TEXT,
         payment_amount REAL,
         payment_status TEXT,       
-        FOREIGN KEY (patient_id) REFERENCES Patients (patient_id),
-        FOREIGN KEY (appointment_id) REFERENCES Appointments (appointment_id)
+        FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
+        FOREIGN KEY (appointment_id) REFERENCES Appointments(appointment_id)
       )`, (err) => {
         if (err) {
           console.error(err.message);
@@ -119,8 +123,8 @@ export const createDBTables = (db) => {
         consultation_date TEXT,
         consultation_duration TEXT,
         consultation_status TEXT,       
-        FOREIGN KEY (patient_id) REFERENCES Patients (patient_id),
-        FOREIGN KEY (doctor_id) REFERENCES Doctors (doctor_id)
+        FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
+        FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id)
       )`, (err) => {
         if (err) {
           console.error(err.message);
@@ -131,6 +135,8 @@ export const createDBTables = (db) => {
     }
   });
 
+  //When adding a user we must need to link it with respective table
+
   db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='AuthenticationUsers'", (err, row) => {
     if (err) {
       console.error(err.message);
@@ -139,7 +145,7 @@ export const createDBTables = (db) => {
         user_id INTEGER PRIMARY KEY,
         username TEXT,
         password TEXT,
-        role TEXT,
+        role TEXT
       )`, (err) => {
         if (err) {
           console.error(err.message);
@@ -149,4 +155,6 @@ export const createDBTables = (db) => {
       });
     }
   });
-}
+};
+
+module.exports = { createDBTables };

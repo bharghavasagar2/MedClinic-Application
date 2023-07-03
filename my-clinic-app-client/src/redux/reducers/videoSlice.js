@@ -1,11 +1,11 @@
 
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { deleteById, getAllData, updateById } from '../commonSlice/commonSlice';
+import { deleteById, getAllData, create_Update_ById } from '../commonSlice/commonSlice';
 
 const fetchAllRecords = getAllData('video/fetchAllRecords', '/posts');
 const getRecordById = getAllData('video/getRecordById', '/posts');
 const deleteRecordById = deleteById('video/deleteRecordById', '/posts');
-const updateRecordById = updateById('video/updateRecordById', '/posts');
+const create_UpdateById = create_Update_ById('video/create_UpdateById', '/posts');
 
 
 const videoSlice = createSlice({
@@ -14,7 +14,7 @@ const videoSlice = createSlice({
     allvideo: [],
     getAppvideoById: null,
     deleteRecordById: null,
-    updateRecordById: null,
+    create_UpdateById: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -29,13 +29,13 @@ const videoSlice = createSlice({
       .addCase(deleteRecordById.fulfilled, (state, action) => {
         state.deleteRecordById = action.payload;
       })
-      .addCase(updateRecordById.fulfilled, (state, action) => {
-        state.updateRecordById = action.payload;
+      .addCase(create_UpdateById.fulfilled, (state, action) => {
+        state.create_UpdateById = action.payload;
       });
   },
 });
 
-export { fetchAllRecords, getRecordById, deleteRecordById, updateRecordById };
+export { fetchAllRecords, getRecordById, deleteRecordById, create_UpdateById };
 export default videoSlice.reducer;
 
 

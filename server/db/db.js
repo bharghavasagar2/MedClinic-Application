@@ -3,7 +3,7 @@ const { createDBTables } = require('./dbTables');
 const sqlite3 = require('sqlite3').verbose();
 
 // Connect to the SQLite database
-const db = new sqlite3.Database('./metclinicDB.db', (err) => {
+const db = new sqlite3.Database('./db/metclinicDB.db', (err) => {
   if (err) {
     console.error(err.message);
   } else {

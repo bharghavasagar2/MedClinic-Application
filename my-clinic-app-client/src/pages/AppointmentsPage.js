@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { deleteRecordById, getRecordById, fetchAllRecords, updateRecordById } from '../redux/reducers/patientsSlice.js';
+import { deleteRecordById, getRecordById, fetchAllRecords, create_UpdateById } from '../redux/reducers/patientsSlice.js';
 
 const AppointmentsPage = () => {
   const dispatch = useDispatch();
@@ -16,7 +16,7 @@ const AppointmentsPage = () => {
       "title": "Prabhas",
       "body": "Not Good"
     }
-    dispatch(updateRecordById({ id: i, data }));
+    dispatch(create_UpdateById({ id: i, data }));
     console.log(i)
     //dispatch(deleteById(i));
   };
