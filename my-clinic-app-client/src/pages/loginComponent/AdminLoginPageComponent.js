@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import adminImage from '../../images/admin_Login.png';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../redux/reducers/authenticationSlice';
 
 
 const AdminLogin = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const dispatch = useDispatch();
-
+  const state = useSelector(state => state);
   const handleLogin = (e) => {
     e.preventDefault();
 
@@ -24,6 +26,8 @@ const AdminLogin = () => {
     }
     let data = { username, password, role: 'admin' }
     dispatch(login({ data }));
+
+    navigate('/dashboard');
   };
 
   return (

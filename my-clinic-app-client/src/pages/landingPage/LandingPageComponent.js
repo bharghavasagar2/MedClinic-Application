@@ -10,7 +10,7 @@ const LandingPage = () => {
       style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }}
     >
       <div className="max-w-3xl mx-auto px-4 py-8 bg-white bg-opacity-90 rounded-lg">
-        <h1 className="text-4xl font-bold text-center mb-4">Welcome to MetClinic</h1>
+        <h1 className="text-4xl font-bold text-center mb-4">Welcome to Medclinic</h1>
         <p className="text-lg text-center text-gray-700 mb-8">
           We provide high-quality healthcare services for patients worldwide.
         </p>

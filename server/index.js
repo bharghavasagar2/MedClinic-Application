@@ -14,15 +14,15 @@ app.use(cors());
 app.use(morgan('dev'));
 
 // Routes
-app.use('/metclinic', require('../server/routes/patientRoutes.js'));
-app.use('/metclinic', require('../server/routes/appointmentRoutes.js'));
-app.use('/metclinic', require('../server/routes/authRoutes.js'));
-app.use('/metclinic', require('../server/routes/doctorRoutes.js'));
-app.use('/metclinic', require('../server/routes/videoRoutes.js'));
-app.use('/metclinic', require('../server/routes/prescriptionRoutes.js'));
-app.use('/metclinic', require('../server/routes/paymentsRoutes.js'));
+app.use('/medclinic', require('../server/routes/patientRoutes.js'));
+app.use('/medclinic', require('../server/routes/appointmentRoutes.js'));
+app.use('/medclinic', require('../server/routes/authRoutes.js'));
+app.use('/medclinic', require('../server/routes/doctorRoutes.js'));
+app.use('/medclinic', require('../server/routes/videoRoutes.js'));
+app.use('/medclinic', require('../server/routes/prescriptionRoutes.js'));
+app.use('/medclinic', require('../server/routes/paymentsRoutes.js'));
 
-// app.use('/metclinic', (req, res, next) => {
+// app.use('/medclinic', (req, res, next) => {
 //   console.log('Request Type:', req.method)
 // });
 

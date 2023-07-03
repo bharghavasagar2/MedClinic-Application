@@ -6,7 +6,7 @@ const login = create_Record('authentication/login', '/login');
 const logOut = create_Update_ById('authentication/logOut', '/logout');
 const initialState = {
   loggedIn: false,
-  user: null,
+  userId: null,
   token: null,
   error: null,
 };
@@ -23,19 +23,19 @@ const authenticationSlice = createSlice({
     builder
       .addCase(login.fulfilled, (state, action) => {
         state.loggedIn = true;
-        state.user = action.payload.user;
+        state.userId = action.payload.userId;
         state.token = action.payload.token;
         state.error = null;
       })
       .addCase(login.rejected, (state, action) => {
         state.loggedIn = false;
-        state.user = null;
+        state.userId = null;
         state.token = null;
         state.error = action.payload.message;
       })
       .addCase(logOut.fulfilled, (state, action) => {
         state.loggedIn = false;
-        state.user = null;
+        state.userId = null;
         state.token = null;
         state.error = null;
       })

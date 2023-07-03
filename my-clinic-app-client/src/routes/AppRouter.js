@@ -4,9 +4,10 @@ import LandingPage from '../pages/landingPage/LandingPageComponent';
 import LoginPage from '../pages/loginComponent/login.js';
 import PatientSignup from '../pages/loginComponent/patientSignUp.js';
 import AdminLogin from '../pages/loginComponent/AdminLoginPageComponent';
+import Dashboard from '../pages/Dashboard/DashboardComponent';
 
-const HomePage = lazy(() => import('../pages/HomePage'));
-const AppointmentsPage = lazy(() => import('../pages/AppointmentsPage'));
+
+
 // Import other pages as needed
 
 const AppRouter = () => {
@@ -15,11 +16,11 @@ const AppRouter = () => {
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/appointments" element={<AppointmentsPage />} />
           <Route path="/homepage" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signUp" element={<PatientSignup />} />
           <Route path="/adminLogin" element={<AdminLogin />} />
+          <Route path="/dashBoard" element={<Dashboard />} />
           {/* Add more routes for other pages */}
         </Routes>
       </Suspense>
