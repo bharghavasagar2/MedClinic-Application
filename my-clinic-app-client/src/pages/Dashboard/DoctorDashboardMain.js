@@ -30,11 +30,11 @@ const DoctorDashboard = () => {
 
   return (
     <main className="max-w-7xl mx-auto px-4 py-6">
-      <div className="bg-gray-100 min-h-screen">
+      <div className="bg-gray-100 min-h-screen bg-opacity-70">
         {/* Doctor Profile */}
-        <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="max-w-7xl mx-auto px-4 py-6 ">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6 bg-opacity-70">
               <h2 className="flex items-center text-2xl font-bold mb-4">
                 <FaStethoscope className="mr-2" />
                 Doctor Profile
@@ -46,7 +46,7 @@ const DoctorDashboard = () => {
               </Link>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6 bg-opacity-70">
               <h2 className="flex items-center text-2xl font-bold mb-4">
                 <FaCalendar className="mr-2" />
                 Appointment Requests
@@ -73,7 +73,7 @@ const DoctorDashboard = () => {
               )}
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6 bg-opacity-70">
               <h2 className="flex items-center text-2xl font-bold mb-4">
                 <FaCalendar className="mr-2" />
                 Upcoming Appointments
@@ -100,7 +100,7 @@ const DoctorDashboard = () => {
               )}
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6 bg-opacity-70">
               <h2 className="flex items-center text-2xl font-bold mb-4">
                 <FaUser className="mr-2" />
                 Patient List
@@ -128,7 +128,7 @@ const DoctorDashboard = () => {
               )}
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6 bg-opacity-70">
               <h2 className="flex items-center text-2xl font-bold mb-4">
                 <FaFilePrescription className="mr-2" />
                 Prescription Management
@@ -156,7 +156,7 @@ const DoctorDashboard = () => {
               )}
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6 bg-opacity-70">
               <h2 className="flex items-center text-2xl font-bold mb-4">
                 <FaVideo className="mr-2" />
                 Video Consultation

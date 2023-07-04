@@ -31,7 +31,8 @@ const authenticationSlice = createSlice({
         state.loggedIn = false;
         state.userId = null;
         state.token = null;
-        state.error = action.payload.message;
+        console.log(action.payload)
+        state.error = action.payload;
       })
       .addCase(logOut.fulfilled, (state, action) => {
         state.loggedIn = false;

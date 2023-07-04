@@ -26,7 +26,7 @@ const AdminLogin = () => {
     }
     let data = { username, password, role: 'admin' };
     dispatch(login({ data }));
-
+    console.log(state)
     navigate('/dashboard');
   };
 
@@ -41,6 +41,7 @@ const AdminLogin = () => {
             <label htmlFor="username" className="block text-gray-700">Username:</label>
             <input
               type="text"
+              size={50}
               id="username"
               className="w-full border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={username}

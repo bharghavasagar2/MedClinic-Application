@@ -52,7 +52,7 @@ export const create_Record = (name, url) => {
       const response = await api.post(url, data);
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
+      return thunkAPI.rejectWithValue(error?.response?.data?.error ?? error.message);
     }
   }
   );
