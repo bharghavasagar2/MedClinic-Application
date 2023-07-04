@@ -11,9 +11,9 @@ const Dashboard = () => {
       {/* Header Common Component */}
       <HeaderComponent />
       {/* Main Component */}
-      {/* <DashboardGrid /> */}
+      <DashboardGrid />
       {/* <PatientScreen /> */}
-      <DoctorDashboard />
+      {/* <DoctorDashboard /> */}
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaUser, FaCalendar, FaUserMd, FaUserTimes, FaStethoscope, FaFilePrescription, FaVideo } from 'react-icons/fa';
+import Card from '../commonComponents/CardComponent';
 
 const DoctorDashboard = () => {
   // Dummy data for demonstration
@@ -30,143 +31,58 @@ const DoctorDashboard = () => {
 
   return (
     <main className="max-w-7xl mx-auto px-4 py-6">
-      <div className="bg-gray-100 min-h-screen bg-opacity-70">
-        {/* Doctor Profile */}
-        <div className="max-w-7xl mx-auto px-4 py-6 ">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="bg-white rounded-lg shadow p-6 bg-opacity-70">
-              <h2 className="flex items-center text-2xl font-bold mb-4">
-                <FaStethoscope className="mr-2" />
-                Doctor Profile
-              </h2>
-              {/* Display doctor's profile information */}
-              {/* Edit profile button */}
-              <Link to="/edit-profile" className="text-blue-500 hover:text-blue-600 font-semibold">
-                Edit Profile
-              </Link>
-            </div>
+      {/* Doctor Profile */}
+      <div className="max-w-7xl mx-auto px-4 py-6 ">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
-            <div className="bg-white rounded-lg shadow p-6 bg-opacity-70">
-              <h2 className="flex items-center text-2xl font-bold mb-4">
-                <FaCalendar className="mr-2" />
-                Appointment Requests
-              </h2>
-              {/* Display and manage appointment requests */}
-              {appointmentRequests.length > 0 ? (
-                <>
-                  <ul>
-                    {appointmentRequests.map((request) => (
-                      <li key={request.id}>
-                        <p>Patient Name: {request.patientName}</p>
-                        <p>Date and Time: {request.dateTime}</p>
-                        {/* View appointment details button */}
-                        {/* Accept/Reject appointment buttons */}
-                      </li>
-                    ))}
-                  </ul>
-                  <Link to="/appointment-requests" className="text-blue-500 hover:text-blue-600 font-semibold">
-                    Show All
-                  </Link>
-                </>
-              ) : (
-                <p>No appointment requests.</p>
-              )}
-            </div>
+          <Card
+            title="Doctor Profile"
+            icon={FaStethoscope}
+            info='s'
+            navigate='/editProfile'
+          />
 
-            <div className="bg-white rounded-lg shadow p-6 bg-opacity-70">
-              <h2 className="flex items-center text-2xl font-bold mb-4">
-                <FaCalendar className="mr-2" />
-                Upcoming Appointments
-              </h2>
-              {/* Display and manage upcoming appointments */}
-              {upcomingAppointments.length > 0 ? (
-                <>
-                  <ul>
-                    {upcomingAppointments.map((appointment) => (
-                      <li key={appointment.id}>
-                        <p>Patient Name: {appointment.patientName}</p>
-                        <p>Date and Time: {appointment.dateTime}</p>
-                        {/* View appointment details button */}
-                        {/* Reschedule/Cancel appointment buttons */}
-                      </li>
-                    ))}
-                  </ul>
-                  <Link to="/upcoming-appointments" className="text-blue-500 hover:text-blue-600 font-semibold">
-                    Show All
-                  </Link>
-                </>
-              ) : (
-                <p>No upcoming appointments.</p>
-              )}
-            </div>
+          <Card
+            title="Appointment Requests"
+            icon={FaCalendar}
+            infoToShow={['Patient Name', 'Date and Time']}
+            array={appointmentRequests}
+            navigate='/list'
+          />
 
-            <div className="bg-white rounded-lg shadow p-6 bg-opacity-70">
-              <h2 className="flex items-center text-2xl font-bold mb-4">
-                <FaUser className="mr-2" />
-                Patient List
-              </h2>
-              {/* Display and manage the list of patients */}
-              {patientList.length > 0 ? (
-                <>
-                  <ul>
-                    {patientList.map((patient) => (
-                      <li key={patient.id}>
-                        <p>Patient Name: {patient.patientName}</p>
-                        <p>Gender: {patient.gender}</p>
-                        <p>Age: {patient.age}</p>
-                        {/* View patient details button */}
-                        {/* Delete patient button */}
-                      </li>
-                    ))}
-                  </ul>
-                  <Link to="/patient-list" className="text-blue-500 hover:text-blue-600 font-semibold">
-                    Show All
-                  </Link>
-                </>
-              ) : (
-                <p>No patients found.</p>
-              )}
-            </div>
+          <Card
+            title="Upcoming Appointments"
+            icon={FaCalendar}
+            infoToShow={['Patient Name', 'Gender', 'Age']}
+            array={upcomingAppointments}
+            navigate='/list'
+          />
 
-            <div className="bg-white rounded-lg shadow p-6 bg-opacity-70">
-              <h2 className="flex items-center text-2xl font-bold mb-4">
-                <FaFilePrescription className="mr-2" />
-                Prescription Management
-              </h2>
-              {/* Display and manage prescriptions */}
-              {prescriptions.length > 0 ? (
-                <>
-                  <ul>
-                    {prescriptions.map((prescription) => (
-                      <li key={prescription.id}>
-                        <p>Patient Name: {prescription.patientName}</p>
-                        <p>Medication: {prescription.medication}</p>
-                        <p>Dosage: {prescription.dosage}</p>
-                        {/* View prescription details button */}
-                        {/* Delete prescription button */}
-                      </li>
-                    ))}
-                  </ul>
-                  <Link to="/prescription-management" className="text-blue-500 hover:text-blue-600 font-semibold">
-                    Show All
-                  </Link>
-                </>
-              ) : (
-                <p>No prescriptions found.</p>
-              )}
-            </div>
+          <Card
+            title="Patient List"
+            icon={FaUser}
+            array={patientList}
+            infoToShow={['Patient Name', 'Medication', 'Dosage']}
+            navigate='/list'
+          />
 
-            <div className="bg-white rounded-lg shadow p-6 bg-opacity-70">
-              <h2 className="flex items-center text-2xl font-bold mb-4">
-                <FaVideo className="mr-2" />
-                Video Consultation
-              </h2>
-              <p className="text-gray-600">Schedule and manage video consultations with patients.</p>
-              <Link to="/video-consultations" className="text-blue-500 hover:text-blue-600 font-semibold mt-4">
-                Schedule Video Consultation
-              </Link>
-            </div>
-          </div>
+          <Card
+            title="Prescription Management"
+            icon={FaFilePrescription}
+            array={prescriptions}
+            infoToShow={['Patient Name', 'Medication', 'Dosage']}
+            navigate='/list'
+          />
+
+          <Card
+            title="Video Consultation"
+            icon={FaVideo}
+            array={prescriptions}
+            navigate='/list'
+          //infoToShow={['Patient Name', 'Medication', 'Dosage']}
+          />
+
+
         </div>
       </div>
     </main>

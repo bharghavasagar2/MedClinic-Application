@@ -1,3 +1,1 @@
-export default {
-
-}
+export const RESET_PROPERTY = 'resetProperty';

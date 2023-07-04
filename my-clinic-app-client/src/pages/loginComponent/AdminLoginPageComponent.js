@@ -1,18 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import adminImage from '../../images/admin_Login.png';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../redux/reducers/authenticationSlice';
-
 import backgroundImage from '../../images/homepage.jpg';
+import Modal from '../commonComponents/ModalComponent';
+import { FaExclamationCircle } from 'react-icons/fa';
+import { resetProperty } from '../../redux/reducers/resetSlice';
+
+
 const AdminLogin = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const dispatch = useDispatch();
-  const state = useSelector(state => state);
+  const authentication = useSelector(state => state.authentication);
+  const [showModal, setShowModal] = useState(false);
   const handleLogin = (e) => {
     e.preventDefault();
 
@@ -25,10 +30,23 @@ const AdminLogin = () => {
       return;
     }
     let data = { username, password, role: 'admin' };
+
     dispatch(login({ data }));
-    console.log(state)
-    navigate('/dashboard');
   };
+
+  const handleCloseModal = () => {
+    dispatch(resetProperty('authentication', 'error'));
+
+    setShowModal(false);
+  };
+
+  useEffect(() => {
+    if (authentication.loggedIn && authentication.token) {
+      navigate('/dashboard');
+    } else if (!authentication.loggedIn && !!authentication.error) {
+      setShowModal(true);
+    }
+  }, [authentication, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100"
@@ -72,6 +90,18 @@ const AdminLogin = () => {
           </Link>
         </form>
       </div>
+      {/* Modal here */}
+      <Modal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        title="Error"
+        message={!authentication.loggedIn && authentication.error}
+        onClose={handleCloseModal}
+        //  onSave={handleSaveChanges}
+        icon={FaExclamationCircle}
+      />
+
+
     </div>
   );
 };
