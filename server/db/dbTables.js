@@ -76,7 +76,8 @@ const createDBTables = (db) => {
         patient_id INTEGER,
         doctor_id INTEGER,
         prescription_date TEXT,
-        prescription_details TEXT,      
+        prescription_details TEXT,    
+        dosage TEXT,  
         FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
         FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id)
       )`, (err) => {

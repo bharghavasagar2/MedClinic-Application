@@ -1,14 +1,26 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import doctorIcon from '../../images/doctorIcon.png';
 import patientIcon from '../../images/patientIcon.png';
 import backgroundImage from '../../images/homepage.jpg';
 import TextInput from '../commonComponents/TextInputCommonComponent';
+import { create_UpdateById } from '../../redux/reducers/patientsSlice';
+import { login } from '../../redux/reducers/authenticationSlice';
+import { FaExclamation } from 'react-icons/fa';
+import { useSelector, useDispatch } from 'react-redux';
+import { resetProperty } from '../../redux/reducers/resetSlice';
+import Modal from '../commonComponents/ModalComponent';
+
 
 const LoginPage = () => {
+
   const [userType, setUserType] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [showModal, setShowModal] = useState(false);
+  const authentication = useSelector(state => state.authentication);
 
   const handleUserTypeSelect = (type) => {
     setUserType(type);
@@ -20,10 +32,23 @@ const LoginPage = () => {
     // and perform any necessary actions
 
     // For demo purposes, let's just log the user type, username, and password
-    console.log('User Type:', userType);
-    console.log('Username:', username);
-    console.log('Password:', password);
+
+    const data = { username, password, role: userType };
+    dispatch(login({ data }));
   };
+
+  const handleCloseModal = () => {
+    dispatch(resetProperty('authentication', 'error'));
+    setShowModal(false);
+  };
+
+  useEffect(() => {
+    if (authentication.loggedIn && authentication.token) {
+      navigate('/dashboard');
+    } else if (!authentication.loggedIn && !!authentication.error) {
+      setShowModal(true);
+    }
+  }, [authentication, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }}>
@@ -84,6 +109,15 @@ const LoginPage = () => {
           </div>
         )}
       </div>
+
+      <Modal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        title="Error"
+        message={!authentication.loggedIn && authentication.error}
+        onClose={handleCloseModal}
+        icon={FaExclamation}
+      />
     </div>
   );
 };

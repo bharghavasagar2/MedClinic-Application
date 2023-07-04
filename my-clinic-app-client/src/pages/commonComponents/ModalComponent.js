@@ -1,7 +1,8 @@
-import React from "react";
-import { FaExclamationCircle } from "react-icons/fa";
+import { useEffect } from 'react';
+import { FaExclamationCircle } from 'react-icons/fa';
 
 export default function Modal({ icon, showModal, setShowModal, title, message, onClose, onConfirm }) {
+
   return (
     <>
       {showModal && (
@@ -17,7 +18,7 @@ export default function Modal({ icon, showModal, setShowModal, title, message, o
               </button>
             </div>
             <div className="modal-body">
-              <p>{message}</p>
+              <p>{!!message ? message : null}</p>
             </div>
             <div className="modal-footer">
               {onConfirm && (
@@ -35,12 +36,3 @@ export default function Modal({ icon, showModal, setShowModal, title, message, o
     </>
   );
 }
-
-{/* <Modal
-showModal={showModal}
-setShowModal={setShowModal}
-title="Confirmation"
-message="Are you sure you want to delete this item?"
-onClose={handleCloseModal}
-onConfirm={handleConfirm}
-/> */}
