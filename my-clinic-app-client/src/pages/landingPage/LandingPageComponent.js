@@ -9,7 +9,7 @@ const LandingPage = () => {
       className="min-h-screen flex items-center justify-center"
       style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }}
     >
-      <div className="max-w-3xl mx-auto px-4 py-8 bg-white bg-opacity-90 rounded-lg">
+      <div className="mx-auto p-8 bg-white bg-opacity-70 rounded-lg shadow-lg max-w-lg">
         <h1 className="text-4xl font-bold text-center mb-4">Welcome to Medclinic</h1>
         <p className="text-lg text-center text-gray-700 mb-8">
           We provide high-quality healthcare services for patients worldwide.

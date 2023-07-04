@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import doctorIcon from '../../images/doctorIcon.png';
 import patientIcon from '../../images/patientIcon.png';
+import backgroundImage from '../../images/homepage.jpg';
 
 const LoginPage = () => {
   const [userType, setUserType] = useState('');
@@ -24,8 +25,8 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div className="min-h-screen flex items-center justify-center" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }}>
+      <div className="mx-auto p-8 bg-white bg-opacity-50 rounded-lg shadow-lg max-w-lg">
         {userType === '' ? (
           <div className="flex flex-col items-center justify-center">
             <h2 className="text-2xl font-bold mb-4">Login</h2>
@@ -34,16 +35,17 @@ const LoginPage = () => {
                 className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded mr-4"
                 onClick={() => handleUserTypeSelect('patient')}
               >
-                Patient
+                <img src={patientIcon} alt="Patient" className="mr-2" /> Patient
               </button>
               <button
                 className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded"
                 onClick={() => handleUserTypeSelect('doctor')}
               >
-                Doctor
+                <img src={doctorIcon} alt="Doctor" className="mr-2" /> Doctor
               </button>
             </div>
           </div>
+
         ) : (
           <div className="flex flex-col items-center justify-center">
             <img src={userType === 'doctor' ? doctorIcon : patientIcon} alt="Login" className="w-40 h-40 mb-4 rounded-full" />

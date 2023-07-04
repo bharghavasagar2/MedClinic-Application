@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../redux/reducers/authenticationSlice';
 
-
+import backgroundImage from '../../images/homepage.jpg';
 const AdminLogin = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
@@ -31,8 +31,9 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="max-w-md w-full mx-auto p-8 bg-white rounded shadow">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100"
+      style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }} >
+      <div className="mx-auto p-8 bg-white bg-opacity-50 rounded-lg shadow-lg max-w-lg">
         <img src={adminImage} alt="Admin" className="w-32 h-32 mx-auto mb-4 rounded-full" />
         <h2 className="text-2xl font-bold mb-4">Admin Login</h2>
         <form onSubmit={handleLogin}>

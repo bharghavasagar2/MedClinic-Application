@@ -6,9 +6,9 @@ const HeaderComponent = () => {
   return (
     <header className="bg-white shadow-sm">
       <nav className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-        <div className="w-64 h-15">
+        <Link to='/dashboard' className="w-64 h-15">
           <img className="w-full h-full object-cover" src={logo} alt="icon" />
-        </div>
+        </Link>
         <div>
           <h1 className="text-xl font-bold">Dashboard</h1>
         </div>
