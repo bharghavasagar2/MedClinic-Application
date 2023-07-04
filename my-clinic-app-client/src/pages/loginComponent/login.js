@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import doctorIcon from '../../images/doctorIcon.png';
 import patientIcon from '../../images/patientIcon.png';
 import backgroundImage from '../../images/homepage.jpg';
+import TextInput from '../commonComponents/TextInputCommonComponent';
 
 const LoginPage = () => {
   const [userType, setUserType] = useState('');
@@ -51,31 +52,19 @@ const LoginPage = () => {
             <img src={userType === 'doctor' ? doctorIcon : patientIcon} alt="Login" className="w-40 h-40 mb-4 rounded-full" />
             <h2 className="text-2xl font-bold mb-4">Login as {userType}</h2>
             <form className="w-full">
-              <div className="mb-4">
-                <label htmlFor="username" className="block mb-2 text-gray-700">
-                  Username
-                </label>
-                <input
-                  type="text"
-                  id="username"
-                  size={50}
-                  className="w-full border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              </div>
-              <div className="mb-6">
-                <label htmlFor="password" className="block mb-2 text-gray-700">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  className="w-full border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
+              <TextInput
+                id="username"
+                label="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              <TextInput
+                id="password"
+                label="Password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
               <button
                 type="button"
                 className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded"

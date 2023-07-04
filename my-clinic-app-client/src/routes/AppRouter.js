@@ -5,6 +5,7 @@ import LoginPage from '../pages/loginComponent/login.js';
 import PatientSignup from '../pages/loginComponent/patientSignUp.js';
 import AdminLogin from '../pages/loginComponent/AdminLoginPageComponent';
 import Dashboard from '../pages/Dashboard/DashboardComponent';
+import { Loading } from '../api/api';
 
 
 
@@ -13,6 +14,7 @@ import Dashboard from '../pages/Dashboard/DashboardComponent';
 const AppRouter = () => {
   return (
     <Router>
+      <Loading />
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
