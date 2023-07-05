@@ -1,12 +1,27 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../../api/api.js';
+import { getData } from '../../security/sessionStorage.js';
+import { useSelector } from 'react-redux';
 
+
+
+
+
+
+const setAuthToken = (token) => {
+  if (token) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers.common['Authorization'];
+  }
+};
 // Works for both getRecordById and get all data
 export const getAllData = (name, url) => {
   return createAsyncThunk(name, async (id, thunkAPI) => {
     console.log(id)
     try {
-      console.log(url, id)
+      const userData = getData('userDetails');
+      setAuthToken(userData.token);
       const response = await api.get(id ? `${url}/${id}` : url);
       return response.data;
     } catch (error) {
@@ -23,6 +38,8 @@ export const deleteById = (name, url) => {
   return createAsyncThunk(name, async (id, thunkAPI) => {
     console.log(id)
     try {
+      const userData = getData('userDetails');
+      setAuthToken(userData.token);
       await api.delete(`${url}/${id}`);
       return id; // Return the deleted id
     } catch (error) {
@@ -61,8 +78,9 @@ export const create_Record = (name, url) => {
 // Async thunk action creator for create_UpdateById
 export const create_Update_ById = (name, url) => {
   return createAsyncThunk(name, async ({ id, data }, thunkAPI) => {
-    console.log(id)
     try {
+      const userData = getData('userDetails');
+      setAuthToken(userData.token);
       const response = !!id ? await api.put(`${url}/${id}`, data) : await api.post(url, data);
       return response.data;
     } catch (error) {

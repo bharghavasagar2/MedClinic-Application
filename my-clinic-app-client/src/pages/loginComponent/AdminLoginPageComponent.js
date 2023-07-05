@@ -8,6 +8,7 @@ import adminImage from '../../images/admin_Login.png';
 import backgroundImage from '../../images/homepage.jpg';
 import { resetProperty } from '../../redux/reducers/resetSlice';
 import TextInput from '../commonComponents/TextInputCommonComponent';
+import { setData } from '../../security/sessionStorage';
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -36,6 +37,12 @@ const AdminLogin = () => {
     dispatch(resetProperty('authentication', 'error'));
     setShowModal(false);
   };
+
+  useEffect(() => {
+    if (!!authentication.loggedIn && !!authentication.token) {
+      setData('userDetails', { ...authentication });
+    }
+  }, [!!authentication.loggedIn, !!authentication.token])
 
   useEffect(() => {
     if (authentication.loggedIn && authentication.token) {

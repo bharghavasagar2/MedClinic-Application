@@ -16,7 +16,7 @@ const login = async (req, res) => {
   }
 
   const token = jwt.sign({ username }, config.jwtSecret, { expiresIn: '1h' });
-  res.json({ token });
+  res.json({ token, role: user.role, userId: user.user_id });
 };
 
 // Middleware function to verify JWT token

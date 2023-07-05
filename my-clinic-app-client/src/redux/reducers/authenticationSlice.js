@@ -9,6 +9,7 @@ const initialState = {
   userId: null,
   token: null,
   error: null,
+  role: null,
 };
 
 
@@ -25,12 +26,14 @@ const authenticationSlice = createSlice({
         state.loggedIn = true;
         state.userId = action.payload.userId;
         state.token = action.payload.token;
+        state.role = action.payload.role;
         state.error = null;
       })
       .addCase(login.rejected, (state, action) => {
         state.loggedIn = false;
-        state.userId = null;
         state.token = null;
+        state.role = null;
+        state.userId = null;
         console.log(action.payload)
         state.error = action.payload;
       })
@@ -39,6 +42,7 @@ const authenticationSlice = createSlice({
         state.userId = null;
         state.token = null;
         state.error = null;
+        state.role = null;
       })
       .addCase(logOut.rejected, (state, action) => {
         state.error = action.payload.message;

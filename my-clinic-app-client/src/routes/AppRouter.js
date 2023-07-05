@@ -6,12 +6,12 @@ import PatientSignup from '../pages/loginComponent/patientSignUp.js';
 import AdminLogin from '../pages/loginComponent/AdminLoginPageComponent';
 import Dashboard from '../pages/Dashboard/DashboardComponent';
 import { Loading } from '../api/api';
-
-
+import PrivateRoutes from '../token/withTokenAuth';
 
 // Import other pages as needed
 
 const AppRouter = () => {
+
   return (
     <Router>
       <Loading />
@@ -22,7 +22,11 @@ const AppRouter = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signUp" element={<PatientSignup />} />
           <Route path="/adminLogin" element={<AdminLogin />} />
-          <Route path="/dashBoard" element={<Dashboard />} />
+
+          {/* Auth Protected Routes */}
+          <Route element={<PrivateRoutes />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
           {/* Add more routes for other pages */}
         </Routes>
       </Suspense>

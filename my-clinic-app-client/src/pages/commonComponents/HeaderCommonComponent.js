@@ -1,8 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../images/medclinic-logo.jpg';
+import { clearStorage } from '../../security/sessionStorage';
+import { resetProperty } from '../../redux/reducers/resetSlice';
+import { useDispatch } from 'react-redux';
+import { logOut } from '../../redux/reducers/authenticationSlice';
 
 const HeaderComponent = () => {
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    // Clearing the session storage 
+    try {
+      dispatch(logOut({ data: '' }));
+      //  clearStorage();
+      dispatch(resetProperty('authentication', 'token'));
+    } catch (err) {
+      console.log(err)
+    }
+  }
   return (
     <header className="bg-white shadow-sm bg-opacity-40">
       <nav className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -15,7 +31,7 @@ const HeaderComponent = () => {
 
 
         <div>
-          <Link to="/logout" className="text-red-500 hover:text-red-600 font-semibold">
+          <Link onClick={handleLogout} className="text-red-500 hover:text-red-600 font-semibold">
             Logout
           </Link>
         </div>

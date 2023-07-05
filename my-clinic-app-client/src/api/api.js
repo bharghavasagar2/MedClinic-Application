@@ -6,6 +6,7 @@ export const api = axios.create({
   baseURL: 'http://localhost:5000/medclinic', // Replace with your API base URL
 });
 
+
 export const Loading = () => {
   const [loading, setLoading] = useState(false);
 
