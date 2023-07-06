@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../images/medclinic-logo.jpg';
-import { clearStorage } from '../../security/sessionStorage';
+import { clearData } from '../../security/sessionStorage';
 import { resetProperty } from '../../redux/reducers/resetSlice';
 import { useDispatch } from 'react-redux';
 import { logOut } from '../../redux/reducers/authenticationSlice';
@@ -9,15 +9,10 @@ import { logOut } from '../../redux/reducers/authenticationSlice';
 const HeaderComponent = () => {
   const dispatch = useDispatch();
 
-  const handleLogout = async () => {
-    // Clearing the session storage 
-    try {
-      dispatch(logOut({ data: '' }));
-      //  clearStorage();
-      dispatch(resetProperty('authentication', 'token'));
-    } catch (err) {
-      console.log(err)
-    }
+  const handleLogout = () => {
+    dispatch(logOut({ data: '' }));
+    dispatch(resetProperty('authentication', 'token'));
+    clearData();
   }
   return (
     <header className="bg-white shadow-sm bg-opacity-40">

@@ -1,36 +1,37 @@
 import React from 'react';
-import { FaUser, FaCalendar, FaStethoscope, FaMoneyBillWave } from 'react-icons/fa';
+import { FaUser, FaCalendar, FaFilePrescription, FaVideo } from 'react-icons/fa';
 import Card from '../commonComponents/CardComponent';
-import AnalyticalInfo from '../commonComponents/AnalyticalReportsComponent';
+import doctorVideo from '../../videos/doctorVideo.mp4';
+import VideoComponent from '../commonComponents/CommonVideoComponent';
 
-const Dashboard = () => {
+const PatientDashboard = () => {
   return (
     <main className="max-w-7xl mx-auto px-4 py-6 bg-opacity-70">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card
-          title="Total Patients"
+          title=" Patient Profile"
           icon={FaUser}
           array={[]}
         />
         <Card
-          title="Total Appointments"
+          title="Consultations"
           icon={FaCalendar}
           array={[]}
         />
         <Card
-          title="Total Doctors"
-          icon={FaStethoscope}
+          title="Appointment Requests"
+          icon={FaFilePrescription}
           array={[]}
         />
         <Card
-          title="Total Payments"
-          icon={FaMoneyBillWave}
+          title="Video Consultations"
+          icon={FaVideo}
           array={[]}
         />
       </div>
-      <AnalyticalInfo />
+      <VideoComponent src={doctorVideo} style={{ width: '100%', height: 'auto', maxHeight: '50vh' }} />
     </main>
   );
 };
 
-export default Dashboard;
+export default PatientDashboard;

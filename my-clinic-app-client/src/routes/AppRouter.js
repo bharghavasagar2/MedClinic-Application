@@ -7,6 +7,7 @@ import AdminLogin from '../pages/loginComponent/AdminLoginPageComponent';
 import Dashboard from '../pages/Dashboard/DashboardComponent';
 import { Loading } from '../api/api';
 import PrivateRoutes from '../token/withTokenAuth';
+import NotFound from '../pages/commonComponents/NotFoundComponent';
 
 // Import other pages as needed
 
@@ -27,7 +28,8 @@ const AppRouter = () => {
           <Route element={<PrivateRoutes />}>
             <Route path="/dashboard" element={<Dashboard />} />
           </Route>
-          {/* Add more routes for other pages */}
+          {/* Fallback route for handling undefined routes */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
     </Router>

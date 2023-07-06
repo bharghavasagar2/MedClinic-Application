@@ -4,10 +4,7 @@ import './styles.css';
 
 const App = () => {
   return (
-    <div>
-
-      <AppRouter />
-    </div>
+    <AppRouter />
   );
 };
 

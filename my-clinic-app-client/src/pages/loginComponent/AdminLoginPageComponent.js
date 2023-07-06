@@ -38,11 +38,7 @@ const AdminLogin = () => {
     setShowModal(false);
   };
 
-  useEffect(() => {
-    if (!!authentication.loggedIn && !!authentication.token) {
-      setData('userDetails', { ...authentication });
-    }
-  }, [!!authentication.loggedIn, !!authentication.token])
+
 
   useEffect(() => {
     if (authentication.loggedIn && authentication.token) {
