@@ -30,9 +30,9 @@ exports.getPatientById = (req, res) => {
 // Create a new patient
 exports.createPatient = (req, res) => {
   console.log('hi')
-  const { patient_name, patient_age, patient_gender, contact_number, address } = req.body;
-  const query = 'INSERT INTO patients (patient_name, patient_age, patient_gender, contact_number, address) VALUES (?, ?, ?, ?, ?)';
-  db.run(query, [patient_name, patient_age, patient_gender, contact_number, address], function (err) {
+  const { patient_name, patient_age, patient_gender, contact_number, address, user_id } = req.body;
+  const query = 'INSERT INTO patients (patient_name, patient_age, patient_gender, contact_number, address, user_id) VALUES (?, ?, ?, ?, ?, ?)';
+  db.run(query, [patient_name, patient_age, patient_gender, contact_number, address, user_id], function (err) {
     if (err) {
       res.status(500).json({ error: 'Error creating patient' });
     } else {

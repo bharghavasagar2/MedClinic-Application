@@ -29,9 +29,9 @@ exports.getPrescriptionById = (req, res) => {
 
 // Create a new prescription
 exports.createPrescription = (req, res) => {
-  const { patient_id, doctor_id, prescription_details } = req.body;
-  const query = 'INSERT INTO prescriptions (patient_id, doctor_id, prescription_details) VALUES (?, ?, ?)';
-  db.run(query, [patient_id, doctor_id, prescription_details], function (err) {
+  const { patient_id, doctor_id, prescription_date, prescription_details, dosage } = req.body;
+  const query = 'INSERT INTO Prescriptions (patient_id, doctor_id, prescription_date, prescription_details, dosage) VALUES (?, ?, ?, ?, ?)';
+  db.run(query, [patient_id, doctor_id, prescription_date, prescription_details, dosage], function (err) {
     if (err) {
       res.status(500).json({ error: 'Error creating prescription' });
     } else {
@@ -43,9 +43,9 @@ exports.createPrescription = (req, res) => {
 // Update a prescription
 exports.updatePrescription = (req, res) => {
   const prescriptionId = req.params.id;
-  const { patient_id, doctor_id, prescription_details } = req.body;
-  const query = 'UPDATE prescriptions SET patient_id = ?, doctor_id = ?, prescription_details = ? WHERE prescription_id = ?';
-  db.run(query, [patient_id, doctor_id, prescription_details, prescriptionId], (err) => {
+  const { patient_id, doctor_id, prescription_date, prescription_details, dosage } = req.body;
+  const query = 'UPDATE Prescriptions SET patient_id = ?, doctor_id = ?, prescription_date = ?, prescription_details = ?, dosage = ? WHERE prescription_id = ?';
+  db.run(query, [patient_id, doctor_id, prescription_date, prescription_details, dosage, prescriptionId], function (err) {
     if (err) {
       res.status(500).json({ error: 'Error updating prescription' });
     } else if (this.changes === 0) {

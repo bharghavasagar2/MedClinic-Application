@@ -67,6 +67,28 @@ const createDBTables = (db) => {
     }
   });
 
+  db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='Notifications'", (err, row) => {
+    if (err) {
+      console.error(err.message);
+    } else if (!row) {
+      db.run(`CREATE TABLE Notifications (
+        notification_id INTEGER PRIMARY KEY,
+        user_id INTEGER,
+        message TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        viewed BOOLEAN DEFAULT 0,
+        FOREIGN KEY (user_id) REFERENCES Users(user_id)
+      );
+      `, (err) => {
+        if (err) {
+          console.error(err.message);
+        } else {
+          console.log('Notifications table created.');
+        }
+      });
+    }
+  });
+
   db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='Prescriptions'", (err, row) => {
     if (err) {
       console.error(err.message);

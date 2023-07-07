@@ -3,21 +3,36 @@ const config = require('../config');
 const db = require('../db/db.js');
 
 // Controller function to authenticate user and generate JWT token
+const axios = require('axios');
+
 const login = async (req, res) => {
-  console.log(req.body)
-  const { username, password } = req.body;
+  try {
+    const { username, password, role, isSignUp } = req.body;
 
-  // Perform user authentication logic
-  const user = await getUserByUsername(username);
+    // Perform user authentication logic
+    let user = await getUserByUsername(username);
 
-  if (!user || user.password !== password) {
-    // Invalid credentials
-    return res.status(401).json({ error: 'Invalid credentials' });
+    if ((!user || user.password !== password) && !isSignUp) {
+      // Invalid credentials
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign({ username }, config.jwtSecret, { expiresIn: '1h' });
+
+    if (role === 'patient' && !!isSignUp) {
+      await createUser({ username, password, role });
+      user = await getUserByUsername(username);
+      await createPatient({ ...req.body, user_id: user?.user_id }, res);
+    }
+
+    res.json({ token, role: user.role, userId: user?.user_id });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
   }
-
-  const token = jwt.sign({ username }, config.jwtSecret, { expiresIn: '1h' });
-  res.json({ token, role: user.role, userId: user.user_id });
 };
+
 
 // Middleware function to verify JWT token
 const authenticateToken = (req, res, next) => {
@@ -63,7 +78,65 @@ const getUserByUsername = (username) => {
   });
 };
 
+const createUser = (user) => {
+  return new Promise((resolve, reject) => {
+    // Insert the user into the AuthenticationUsers table
+    db.run(
+      'INSERT INTO AuthenticationUsers (username, password, role) VALUES (?, ?, ?)',
+      [user.username, user.password, user.role],
+      function (err) {
+        if (err) {
+          reject(err);
+        } else {
+          // Return the user ID of the newly created user
+          resolve(this.lastID);
+        }
+      }
+    );
+  });
+};
+
+const updateUser = (user) => {
+  return new Promise((resolve, reject) => {
+    // Update the user in the AuthenticationUsers table
+    db.run(
+      'UPDATE AuthenticationUsers SET username = ?, password = ?, role = ? WHERE user_id = ?',
+      [user.username, user.password, user.role, user.user_id],
+      function (err) {
+        if (err) {
+          reject(err);
+        } else {
+          // Return the number of rows affected by the update
+          resolve(this.changes);
+        }
+      }
+    );
+  });
+};
+
+const createPatient = async (reqBody, res) => {
+  const { patient_name, patient_age, patient_gender, contact_number, address, user_id } = reqBody;
+  const query = 'INSERT INTO patients (patient_name, patient_age, patient_gender, contact_number, address, user_id) VALUES (?, ?, ?, ?, ?, ?)';
+  const values = [patient_name, patient_age, patient_gender, contact_number, address, user_id];
+
+  try {
+    await new Promise((resolve, reject) => {
+      db.run(query, values, function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          resolve(this.lastID);
+        }
+      });
+    });
+
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 module.exports = {
   login,
-  authenticateToken, logout
+  authenticateToken, logout,
 };

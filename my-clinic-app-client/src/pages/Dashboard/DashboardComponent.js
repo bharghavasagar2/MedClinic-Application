@@ -5,8 +5,10 @@ import DashboardGrid from './DashboardGridComponent.js';
 import PatientScreen from './PatientDashboardMainContent.js';
 import DoctorDashboard from './DoctorDashboardMain.js';
 import backgroundImage from '../../images/homepage.jpg';
-import { setData } from '../../security/sessionStorage.js';
+import { getData, setData } from '../../security/sessionStorage.js';
 import { useSelector } from 'react-redux';
+import NotFound from '../commonComponents/NotFoundComponent.js';
+
 const Dashboard = () => {
   const authentication = useSelector(({ authentication }) => authentication);
 
@@ -16,14 +18,28 @@ const Dashboard = () => {
     }
   }, [!!authentication.loggedIn, !!authentication.token]);
 
+  let renderDashboardGrid = () => {
+    let role = getData('userDetails')?.role || authentication.role;
+    switch (role) {
+      case 'admin':
+        return <DashboardGrid />;
+      case 'doctor':
+        return <DoctorDashboard />;
+      case 'patient':
+        return <PatientScreen />;
+      default:
+        return <NotFound />;
+    }
+  };
+
   return (
     <div className="bg-gray-100 min-h-screen" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }}>
       {/* Header Common Component */}
       <HeaderComponent />
       {/* Main Component */}
-      {/* <DashboardGrid /> */}
-      <PatientScreen />
-      {/* <DoctorDashboard /> */}
+      {renderDashboardGrid()}
+
+
     </div>
   );
 };

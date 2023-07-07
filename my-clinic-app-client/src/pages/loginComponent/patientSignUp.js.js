@@ -1,10 +1,16 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { create_UpdateById } from '../../redux/reducers/patientsSlice';
 import backgroundImage from '../../images/homepage.jpg';
 import TextInput from '../commonComponents/TextInputCommonComponent';
+import { login } from '../../redux/reducers/authenticationSlice.js';
+import { FaExclamationCircle } from 'react-icons/fa';
+import Modal from '../commonComponents/ModalComponent';
+import { resetProperty } from '../../redux/reducers/resetSlice';
+import { useNavigate } from 'react-router-dom';
 
 const PatientSignupForm = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [patientName, setPatientName] = useState('');
   const [patientAge, setPatientAge] = useState('');
@@ -16,6 +22,8 @@ const PatientSignupForm = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({});
+  const [showModal, setShowModal] = useState(false);
+  const authentication = useSelector(state => state.authentication);
 
   const validateForm = () => {
     const errors = {};
@@ -65,6 +73,12 @@ const PatientSignupForm = () => {
     return errors;
   };
 
+  const handleCloseModal = () => {
+    dispatch(resetProperty('authentication', 'error'));
+    setShowModal(false);
+  };
+
+
   const handlePatientDetailsSubmit = () => {
     const errors = validateForm();
     setErrors(errors);
@@ -75,6 +89,14 @@ const PatientSignupForm = () => {
 
     setShowCredentials(true);
   };
+
+  useEffect(() => {
+    if (authentication.loggedIn && authentication.token) {
+      navigate('/dashboard');
+    } else if (!authentication.loggedIn && !!authentication.error) {
+      setShowModal(true);
+    }
+  }, [authentication, navigate]);
 
   const handleSignup = () => {
     const errors = validateForm();
@@ -93,9 +115,10 @@ const PatientSignupForm = () => {
       address: address,
       username,
       password,
+      isSignUp: true
     };
 
-    dispatch(create_UpdateById({ data: fieldObj }));
+    dispatch(login({ data: fieldObj }));
   };
 
   const handleGoBack = () => {
@@ -213,6 +236,15 @@ const PatientSignupForm = () => {
           </>
         )}
       </div>
+      {/* Modal here */}
+      <Modal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        title="Error"
+        message={!authentication.loggedIn && authentication.error}
+        onClose={handleCloseModal}
+        icon={FaExclamationCircle}
+      />
     </div>
   );
 };

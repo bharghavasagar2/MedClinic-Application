@@ -29,9 +29,9 @@ exports.getDoctorById = (req, res) => {
 
 // Create a new doctor
 exports.createDoctor = (req, res) => {
-  const { doctor_name, specialization, contact_number, email } = req.body;
-  const query = 'INSERT INTO doctors (doctor_name, specialization, contact_number, email) VALUES (?, ?, ?, ?)';
-  db.run(query, [doctor_name, specialization, contact_number, email], function (err) {
+  const { doctor_name, specialization, contact_number, email, user_id } = req.body;
+  const query = 'INSERT INTO doctors (doctor_name, specialization, contact_number, email, , user_id) VALUES (?, ?, ?, ?, ?)';
+  db.run(query, [doctor_name, specialization, contact_number, email, user_id], function (err) {
     if (err) {
       res.status(500).json({ error: 'Error creating doctor' });
     } else {
