@@ -113,3 +113,7 @@
 .error-icon {
   margin-right: 5px;
 }
+
+.transparent-table {
+  background-color: transparent;
+}
