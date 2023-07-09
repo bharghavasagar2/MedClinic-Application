@@ -2,7 +2,7 @@ const db = require('../db/db.js');
 
 // Get all doctors
 exports.getAllDoctors = (req, res) => {
-  const query = 'SELECT * FROM doctors';
+  const query = 'SELECT * FROM Doctors';
   db.all(query, (err, rows) => {
     if (err) {
       res.status(500).json({ error: 'Error retrieving doctors from the database' });
@@ -15,7 +15,7 @@ exports.getAllDoctors = (req, res) => {
 // Get a doctor by ID
 exports.getDoctorById = (req, res) => {
   const doctorId = req.params.id;
-  const query = 'SELECT * FROM doctors WHERE doctor_id = ?';
+  const query = 'SELECT * FROM Doctors WHERE doctor_id = ?';
   db.get(query, [doctorId], (err, row) => {
     if (err) {
       res.status(500).json({ error: 'Error retrieving doctor from the database' });
@@ -29,9 +29,9 @@ exports.getDoctorById = (req, res) => {
 
 // Create a new doctor
 exports.createDoctor = (req, res) => {
-  const { doctor_name, specialization, contact_number, email, user_id } = req.body;
-  const query = 'INSERT INTO doctors (doctor_name, specialization, contact_number, email, , user_id) VALUES (?, ?, ?, ?, ?)';
-  db.run(query, [doctor_name, specialization, contact_number, email, user_id], function (err) {
+  const { doctor_name, department_id, contact_number, email, user_id } = req.body;
+  const query = 'INSERT INTO Doctors (doctor_name, department_id, contact_number, email, user_id) VALUES (?, ?, ?, ?, ?)';
+  db.run(query, [doctor_name, department_id, contact_number, email, user_id], function (err) {
     if (err) {
       res.status(500).json({ error: 'Error creating doctor' });
     } else {
@@ -43,9 +43,9 @@ exports.createDoctor = (req, res) => {
 // Update a doctor
 exports.updateDoctor = (req, res) => {
   const doctorId = req.params.id;
-  const { doctor_name, specialization, contact_number, email } = req.body;
-  const query = 'UPDATE doctors SET doctor_name = ?, specialization = ?, contact_number = ?, email = ? WHERE doctor_id = ?';
-  db.run(query, [doctor_name, specialization, contact_number, email, doctorId], (err) => {
+  const { doctor_name, department_id, contact_number, email } = req.body;
+  const query = 'UPDATE Doctors SET doctor_name = ?, department_id = ?, contact_number = ?, email = ? WHERE doctor_id = ?';
+  db.run(query, [doctor_name, department_id, contact_number, email, doctorId], (err) => {
     if (err) {
       res.status(500).json({ error: 'Error updating doctor' });
     } else if (this.changes === 0) {
@@ -59,7 +59,7 @@ exports.updateDoctor = (req, res) => {
 // Delete a doctor
 exports.deleteDoctor = (req, res) => {
   const doctorId = req.params.id;
-  const query = 'DELETE FROM doctors WHERE doctor_id = ?';
+  const query = 'DELETE FROM Doctors WHERE doctor_id = ?';
   db.run(query, [doctorId], (err) => {
     if (err) {
       res.status(500).json({ error: 'Error deleting doctor' });

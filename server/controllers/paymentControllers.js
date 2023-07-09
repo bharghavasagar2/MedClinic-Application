@@ -13,14 +13,14 @@ exports.getAllPayments = (req, res) => {
   });
 };
 
-// Get a payment by ID
+// Get a payments by ID
 exports.getPaymentById = (req, res) => {
   const { id } = req.params;
   const sql = 'SELECT * FROM Payments WHERE payment_id = ?';
   db.get(sql, [id], (err, row) => {
     if (err) {
       console.error(err.message);
-      res.status(500).json({ error: 'Failed to retrieve payment' });
+      res.status(500).json({ error: 'Failed to retrieve payments' });
     } else if (!row) {
       res.status(404).json({ error: 'Payment not found' });
     } else {
@@ -29,29 +29,29 @@ exports.getPaymentById = (req, res) => {
   });
 };
 
-// Create a new payment
+// Create a new payments
 exports.createPayment = (req, res) => {
-  const { patient_id, appointment_id, payment_date, payment_amount, payment_status } = req.body;
-  const sql = 'INSERT INTO Payments (patient_id, appointment_id, payment_date, payment_amount, payment_status) VALUES (?, ?, ?, ?, ?)';
-  db.run(sql, [patient_id, appointment_id, payment_date, payment_amount, payment_status], function (err) {
+  const { patient_id, appointment_id, payment_date, payment_amount, payment_status, card_number } = req.body;
+  const sql = 'INSERT INTO Payments (patient_id, appointment_id, payment_date, payment_amount, payment_status, card_number) VALUES (?, ?, ?, ?, ?, ?)';
+  db.run(sql, [patient_id, appointment_id, payment_date, payment_amount, payment_status, card_number], function (err) {
     if (err) {
       console.error(err.message);
-      res.status(500).json({ error: 'Failed to create payment' });
+      res.status(500).json({ error: 'Failed to create payments' });
     } else {
-      res.status(201).json({ message: 'Payment created', payment_id: this.lastID });
+      res.status(201).json({ id: this.lastID });
     }
   });
 };
 
-// Update a payment by ID
+// Update a payments by ID
 exports.updatePayment = (req, res) => {
   const { id } = req.params;
-  const { patient_id, appointment_id, payment_date, payment_amount, payment_status } = req.body;
-  const sql = 'UPDATE Payments SET patient_id = ?, appointment_id = ?, payment_date = ?, payment_amount = ?, payment_status = ? WHERE payment_id = ?';
-  db.run(sql, [patient_id, appointment_id, payment_date, payment_amount, payment_status, id], function (err) {
+  const { patient_id, appointment_id, payment_date, payment_amount, payment_status, card_number } = req.body;
+  const sql = 'UPDATE Payments SET patient_id = ?, appointment_id = ?, payment_date = ?, payment_amount = ?, payment_status = ?, card_number = ? WHERE payment_id = ?';
+  db.run(sql, [patient_id, appointment_id, payment_date, payment_amount, payment_status, card_number, id], function (err) {
     if (err) {
       console.error(err.message);
-      res.status(500).json({ error: 'Failed to update payment' });
+      res.status(500).json({ error: 'Failed to update payments' });
     } else if (this.changes === 0) {
       res.status(404).json({ error: 'Payment not found' });
     } else {
@@ -60,14 +60,14 @@ exports.updatePayment = (req, res) => {
   });
 };
 
-// Delete a payment by ID
+// Delete a payments by ID
 exports.deletePayment = (req, res) => {
   const { id } = req.params;
   const sql = 'DELETE FROM Payments WHERE payment_id = ?';
   db.run(sql, [id], function (err) {
     if (err) {
       console.error(err.message);
-      res.status(500).json({ error: 'Failed to delete payment' });
+      res.status(500).json({ error: 'Failed to delete payments' });
     } else if (this.changes === 0) {
       res.status(404).json({ error: 'Payment not found' });
     } else {

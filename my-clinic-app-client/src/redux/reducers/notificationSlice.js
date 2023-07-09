@@ -2,17 +2,17 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { deleteById, getAllData, create_Update_ById } from '../commonSlice/commonSlice';
 
-const fetchAllRecords = getAllData('doctors/fetchAllRecords', '/doctors');
-const getRecordById = getAllData('doctors/getRecordById', '/doctors');
-const deleteRecordById = deleteById('doctors/deleteRecordById', '/doctors');
-const create_UpdateById = create_Update_ById('doctors/create_UpdateById', '/doctors');
+const fetchAllRecords = getAllData('prescriptions/fetchAllRecords', '/notifications');
+const getRecordById = getAllData('prescriptions/getRecordById', '/notifications');
+const deleteRecordById = deleteById('prescriptions/deleteRecordById', '/notifications');
+const create_UpdateById = create_Update_ById('prescriptions/create_UpdateById', '/notifications');
 
 
-const doctorsSlice = createSlice({
-  name: 'doctors',
+const notificationsSlice = createSlice({
+  name: 'notifications',
   initialState: {
-    alldoctors: [],
-    getAppdoctorsById: null,
+    allnotifications: [],
+    getnotificationById: null,
     deleteRecordById: null,
     create_UpdateById: null,
   },
@@ -21,10 +21,10 @@ const doctorsSlice = createSlice({
     builder
       .addCase(fetchAllRecords.fulfilled, (state, action) => {
         console.log(action.payload);
-        state.alldoctors = action.payload;
+        state.allnotifications = action.payload;
       })
       .addCase(getRecordById.fulfilled, (state, action) => {
-        state.getAppdoctorsById = action.payload;
+        state.getnotificationById = action.payload;
       })
       .addCase(deleteRecordById.fulfilled, (state, action) => {
         state.deleteRecordById = action.payload;
@@ -36,4 +36,4 @@ const doctorsSlice = createSlice({
 });
 
 export { fetchAllRecords, getRecordById, deleteRecordById, create_UpdateById };
-export default doctorsSlice.reducer;
+export default notificationsSlice.reducer;

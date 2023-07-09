@@ -22,7 +22,10 @@ const login = async (req, res) => {
     if (role === 'patient' && !!isSignUp) {
       await createUser({ username, password, role });
       user = await getUserByUsername(username);
-      await createPatient({ ...req.body, user_id: user?.user_id }, res);
+      let isError = await createPatient({ ...req.body, user_id: user?.user_id }, res);
+      if (!!isError) {
+        return res.status(401).json({ error: 'Error Signing Up' });
+      }
     }
 
     res.json({ token, role: user.role, userId: user?.user_id });
@@ -116,25 +119,29 @@ const updateUser = (user) => {
 
 const createPatient = async (reqBody, res) => {
   const { patient_name, patient_age, patient_gender, contact_number, address, user_id } = reqBody;
-  const query = 'INSERT INTO patients (patient_name, patient_age, patient_gender, contact_number, address, user_id) VALUES (?, ?, ?, ?, ?, ?)';
-  const values = [patient_name, patient_age, patient_gender, contact_number, address, user_id];
+  const query = 'INSERT INTO patients (patient_id, patient_name, patient_age, patient_gender, contact_number, address, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)';
+  const values = [user_id, patient_name, patient_age, patient_gender, contact_number, address, user_id];
 
   try {
     await new Promise((resolve, reject) => {
       db.run(query, values, function (err) {
         if (err) {
           console.error(err.message);
-          reject(err);
+          reject(false);
         } else {
-          resolve(this.lastID);
+          resolve(true);
         }
       });
     });
 
+    return false;
+
   } catch (error) {
     console.error(error);
+    return true;
   }
 };
+
 
 module.exports = {
   login,

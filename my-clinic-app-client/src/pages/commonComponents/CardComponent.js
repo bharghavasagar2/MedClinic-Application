@@ -1,12 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Card = ({ title, icon: Icon, data, navigate, fieldsToShow }) => {
+const Card = ({ title, icon: Icon, data, navigate, fieldsToShow, buttonText = 'Show All', showLink = false, filterArrayKey }) => {
   const renderData = () => {
     if (Array.isArray(data) && data.length > 0) {
+      let filterData = data;
+      if (filterArrayKey) {
+        filterData = data.filter(({ appointment_status }) => !!appointment_status && appointment_status === filterArrayKey);
+      }
+
+      if (Array.isArray(filterData) && filterData.length > 0) {
+        filterData = filterData.slice(0, 3);
+      }
+
       return (
         <ul>
-          {data.map((item, index) => (
+          {filterData.map((item, index) => (
             <li key={index}>
               {fieldsToShow?.map((field, i) => (
                 <p key={i}>
@@ -18,6 +27,7 @@ const Card = ({ title, icon: Icon, data, navigate, fieldsToShow }) => {
         </ul>
       );
     } else if (typeof data === 'object' && Object.keys(data).length > 0) {
+
       return (
         <>
           {fieldsToShow?.map((field, index) => (
@@ -41,9 +51,10 @@ const Card = ({ title, icon: Icon, data, navigate, fieldsToShow }) => {
         {title}
       </h2>
       {renderData()}
-      {Array.isArray(data) && data.length > 0 && (
-        <Link to={navigate} className="text-blue-500 hover:text-blue-600 font-semibold">
-          Show All
+
+      {((Array.isArray(data) && data.length > 0) || showLink) && (
+        <Link to={navigate ? navigate : null} state={data} className="text-blue-500 hover:text-blue-600 font-semibold">
+          {buttonText}
         </Link>
       )}
     </div>

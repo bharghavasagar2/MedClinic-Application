@@ -5,6 +5,7 @@ import { clearData } from '../../security/sessionStorage';
 import { resetProperty } from '../../redux/reducers/resetSlice';
 import { useDispatch } from 'react-redux';
 import { logOut } from '../../redux/reducers/authenticationSlice';
+import { LOGOUT } from '../../commonConfig/commonConfig';
 
 const HeaderComponent = () => {
   const dispatch = useDispatch();
@@ -12,6 +13,7 @@ const HeaderComponent = () => {
   const handleLogout = () => {
     dispatch(logOut({ data: '' }));
     dispatch(resetProperty('authentication', 'token'));
+    dispatch({ type: LOGOUT });
     clearData();
   }
   return (

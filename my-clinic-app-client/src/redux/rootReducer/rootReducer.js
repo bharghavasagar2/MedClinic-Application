@@ -5,9 +5,23 @@ import appointmentsReducer from '../reducers/appointmentsSlice';
 import prescriptionsReducer from '../reducers/prescriptionsSlice';
 import authenticationReducer from '../reducers/authenticationSlice';
 import videoReducer from '../reducers/videoSlice';
-import { RESET_PROPERTY } from '../../commonConfig/commonConfig.js';
+import notificationReducer from '../reducers/notificationSlice';
+import { LOGOUT, RESET_PROPERTY } from '../../commonConfig/commonConfig.js';
+import paymentReducer from '../reducers/paymentSlice';
 
 const rootReducer = (state, action) => {
+  if (action.type === LOGOUT) {
+    state = {
+      patients: patientsReducer(undefined, {}),
+      doctors: doctorsReducer(undefined, {}),
+      appointments: appointmentsReducer(undefined, {}),
+      prescriptions: prescriptionsReducer(undefined, {}),
+      authentication: authenticationReducer(undefined, {}),
+      video: videoReducer(undefined, {}),
+      notification: notificationReducer(undefined, {}),
+      payments: paymentReducer(undefined, {}),
+    };
+  }
   if (action.type === RESET_PROPERTY) {
     const { reducer, property } = action;
     const initialState = combineReducers({
@@ -17,6 +31,8 @@ const rootReducer = (state, action) => {
       prescriptions: prescriptionsReducer,
       authentication: authenticationReducer,
       video: videoReducer,
+      notification: notificationReducer,
+      payments: paymentReducer,
     })(undefined, {});
     const updatedState = {
       ...state,
@@ -34,6 +50,8 @@ const rootReducer = (state, action) => {
     prescriptions: prescriptionsReducer,
     authentication: authenticationReducer,
     video: videoReducer,
+    notification: notificationReducer,
+    payments: paymentReducer,
   })(state, action);
 };
 

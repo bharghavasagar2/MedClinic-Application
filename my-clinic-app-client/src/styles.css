@@ -36,6 +36,29 @@
   cursor: pointer;
 }
 
+.form-header {
+  margin-bottom: 20px;
+  /* Add your custom styles here */
+}
+
+.form-header h2 {
+  text-align: center;
+  font-size: 24px;
+  /* Add your custom styles here */
+}
+
+.form-header p {
+  margin-top: 10px;
+  /* Add your custom styles here */
+}
+
+.datepicker-input {
+  width: 450px; /* Adjust the width to your desired size */
+  height: 40px; /* Adjust the height to your desired size */
+  font-size: 16px; /* Adjust the font size to your desired size */
+  /* Add any additional styling as needed */
+}
+
 .modal-content {
   background-color: white;
   border-radius: 4px;

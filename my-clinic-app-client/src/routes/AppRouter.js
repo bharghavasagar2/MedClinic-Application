@@ -8,6 +8,7 @@ import Dashboard from '../pages/Dashboard/DashboardComponent';
 import { Loading } from '../api/api';
 import PrivateRoutes from '../token/withTokenAuth';
 import NotFound from '../pages/commonComponents/NotFoundComponent';
+import List from '../pages/commonComponents/commonListComponent';
 
 // Import other pages as needed
 
@@ -27,6 +28,7 @@ const AppRouter = () => {
           {/* Auth Protected Routes */}
           <Route element={<PrivateRoutes />}>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/list" element={<List />} />
           </Route>
           {/* Fallback route for handling undefined routes */}
           <Route path="*" element={<NotFound />} />

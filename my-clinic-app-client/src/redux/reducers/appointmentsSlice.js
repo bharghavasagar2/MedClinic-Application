@@ -2,10 +2,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { deleteById, getAllData, create_Update_ById } from '../commonSlice/commonSlice';
 
-const fetchAllRecords = getAllData('appointments/fetchAllRecords', '/posts');
-const getRecordById = getAllData('appointments/getRecordById', '/posts');
-const deleteRecordById = deleteById('appointments/deleteRecordById', '/posts');
-const create_UpdateById = create_Update_ById('appointments/create_UpdateById', '/posts');
+const getAppointmentAllRecords = getAllData('appointments/fetchAllRecords', '/appointments');
+const getAppointmentById = getAllData('appointments/getRecordById', '/appointments');
+const deleteRecordById = deleteById('appointments/deleteRecordById', '/appointments');
+const create_UpdateById = create_Update_ById('appointments/create_UpdateById', '/appointments');
 
 
 const appointmentsSlice = createSlice({
@@ -19,11 +19,11 @@ const appointmentsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAllRecords.fulfilled, (state, action) => {
+      .addCase(getAppointmentAllRecords.fulfilled, (state, action) => {
         console.log(action.payload);
         state.allappointments = action.payload;
       })
-      .addCase(getRecordById.fulfilled, (state, action) => {
+      .addCase(getAppointmentById.fulfilled, (state, action) => {
         state.getAppappointmentsById = action.payload;
       })
       .addCase(deleteRecordById.fulfilled, (state, action) => {
@@ -35,5 +35,5 @@ const appointmentsSlice = createSlice({
   },
 });
 
-export { fetchAllRecords, getRecordById, deleteRecordById, create_UpdateById };
+export { getAppointmentAllRecords, getAppointmentById, deleteRecordById, create_UpdateById };
 export default appointmentsSlice.reducer;

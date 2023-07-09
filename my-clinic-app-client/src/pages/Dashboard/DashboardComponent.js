@@ -8,9 +8,10 @@ import backgroundImage from '../../images/homepage.jpg';
 import { getData, setData } from '../../security/sessionStorage.js';
 import { useSelector } from 'react-redux';
 import NotFound from '../commonComponents/NotFoundComponent.js';
-
+let token;
 const Dashboard = () => {
   const authentication = useSelector(({ authentication }) => authentication);
+  token = authentication.token || setData('userDetails')?.token;
 
   useEffect(() => {
     if (!!authentication.loggedIn && !!authentication.token) {
@@ -43,5 +44,7 @@ const Dashboard = () => {
     </div>
   );
 };
+
+///export { token }
 
 export default Dashboard;
