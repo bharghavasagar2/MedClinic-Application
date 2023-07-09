@@ -7,7 +7,6 @@ const getRecordById = getAllData('prescriptions/getRecordById', '/prescriptions'
 const deleteRecordById = deleteById('prescriptions/deleteRecordById', '/prescriptions');
 const create_UpdateById = create_Update_ById('prescriptions/create_UpdateById', '/prescriptions');
 
-
 const prescriptionsSlice = createSlice({
   name: 'prescriptions',
   initialState: {

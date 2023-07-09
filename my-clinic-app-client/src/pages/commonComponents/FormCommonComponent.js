@@ -1,14 +1,21 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import 'react-datetime/css/react-datetime.css';
 import 'react-datepicker/dist/react-datepicker.css';
 
-const Form = ({ fields, onSubmit, submitButtonName = 'Submit', disabled = false, formName }) => {
-  const [formValues, setFormValues] = useState({});
+const Form = ({ fields, onSubmit, submitButtonName = 'Submit', disabled = false, formName, initialValues }) => {
+  const [formValues, setFormValues] = useState(initialValues || {});
   const [errors, setErrors] = useState({});
   const [time, setTime] = useState('');
   const [date, setDate] = useState('')
+
+
+  // Update form values when initial values change
+  useEffect(() => {
+    setFormValues(initialValues || {});
+  }, [initialValues]);
+
 
   const handleSubmit = (event) => {
     event.preventDefault();

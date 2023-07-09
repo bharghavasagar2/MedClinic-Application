@@ -1,13 +1,15 @@
-import { departments, appointmentType } from "../../commonConfig/commonConfig";
+import { departments, appointmentType, GENDER_OPTIONS } from "../../commonConfig/commonConfig";
 
 export const patientInitialState = {
   patientFormValues: {},
   paymentFormValues: {},
+  patientEditDetailsForm: {},
   appointmentList: [],
+  isShowPatientEditDetails: false,
   isGetFlag: false,
   isOpen: false,
   isGetPaymentFlag: false,
-  isAppintmentAdded: false,
+  isAppointmentAdded: false,
   isShowPaymentScreen: false,
   fieldsToShow: [{ label: 'Patient Name', name: 'patient_name' },
   { label: 'Address', name: 'address' },
@@ -18,6 +20,12 @@ export const patientInitialState = {
   fieldsToShowAppintments: [{ label: 'Date', name: 'appointment_date' },
   { label: 'Time', name: 'appointment_time' },
   { label: 'Appointment Type', name: 'appointment_type' },
+  ],
+  fieldsToShowEditPatient: [{ label: 'Patient Name', name: 'patient_name', required: true },
+  { label: 'Address', name: 'address', required: true },
+  { label: 'Contact Number', name: 'contact_number', required: true },
+  { label: 'Age', name: 'patient_age', required: true },
+  { label: 'Gender', name: 'patient_gender', type: 'select', options: GENDER_OPTIONS, required: true },
   ],
   RaiseRequestFields: [
     // { name: 'name', label: 'Name', type: 'text', required: true, },
@@ -37,3 +45,5 @@ export const patientInitialState = {
     },
   ]
 }
+
+export let resetScreen = { isAppointmentAdded: false, isShowPaymentScreen: false, isShowPatientEditDetails: false, }

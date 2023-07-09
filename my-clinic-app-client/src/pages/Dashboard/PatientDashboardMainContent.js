@@ -5,15 +5,16 @@ import doctorVideo from '../../videos/doctorVideo.mp4';
 import VideoComponent from '../commonComponents/CommonVideoComponent';
 import { resetProperty } from '../../redux/reducers/resetSlice.js'
 import { getData, setData } from '../../security/sessionStorage.js';
-import { patientInitialState } from './initialStateDashboardScreen';
+import { patientInitialState, resetScreen } from './initialStateDashboardScreen';
 import { useSelector } from 'react-redux';
 import Form from '../commonComponents/FormCommonComponent';
 import Portal from '../commonComponents/PortalComponent';
 import PaymentForm from '../commonComponents/PaymentFormComponent';
-import { APPOINTMENT_STATUS, PAYMENT_STATUS, RESET_PROPERTY, USER_DETAILS, useReduxHelpers } from '../../commonConfig/commonConfig';
-import { getRecordById } from '../../redux/reducers/patientsSlice';
+import { APPOINTMENT_STATUS, PAYMENT_STATUS, RESET_PROPERTY, USER_DETAILS, getUserId, useReduxHelpers } from '../../commonConfig/commonConfig';
+import { create_Update_PatientById, getRecordById } from '../../redux/reducers/patientsSlice';
 import { create_UpdateById, getAppointmentById, getAppointmentAllRecords } from '../../redux/reducers/appointmentsSlice';
 import { createPaymentById } from '../../redux/reducers/paymentSlice';
+import ConditionalRender from '../commonComponents/ConditionalRender';
 
 const PatientDashboard = () => {
   const [patientState, setPatientState] = useState(patientInitialState);
@@ -23,7 +24,7 @@ const PatientDashboard = () => {
 
   let { getAppPatientsById } = globalState.patients;
 
-  let { appointments, payments } = globalState;
+  let { appointments, payments, patients, authentication } = globalState;
 
   useEffect(() => {
     let reduxUserId = globalState.authentication?.userId;
@@ -35,16 +36,25 @@ const PatientDashboard = () => {
   }, [])
 
   const openModal = () => {
-    let state = { ...patientState, isOpen: true }
+    let state = { ...patientState, isOpen: true, ...resetScreen }
     setPatientState(state);
   };
 
   const closeModal = () => {
-    let state = { ...patientState, isOpen: false, isShowPaymentScreen: false, isAppintmentAdded: false }
+    let state = { ...patientState, isOpen: false, ...resetScreen }
     setPatientState(state);
   };
 
-  const handleSubmit = (formValues) => {
+  const handleShowEditPatientScreen = () => {
+    let state = {
+      ...patientState, isOpen: true, ...resetScreen, isShowPatientEditDetails: true
+
+    }
+    setPatientState(state);
+  }
+
+
+  const handleAppntFormSubmit = (formValues) => {
     // Handle form submission logic
     let state = { ...patientState, patientFormValues: formValues, isShowPaymentScreen: true }
     console.log(formValues);
@@ -52,7 +62,9 @@ const PatientDashboard = () => {
     setPatientState(state);
   };
 
-  let { isOpen, isShowPaymentScreen, isAppintmentAdded, appointmentList, fieldsToShowAppintments } = patientState;
+  let { isOpen, isShowPaymentScreen, isAppointmentAdded, appointmentList,
+    isShowPatientEditDetails, fieldsToShowEditPatient, patientEditDetailsForm,
+    fieldsToShowAppintments } = patientState;
 
   console.log(patientState)
 
@@ -87,8 +99,6 @@ const PatientDashboard = () => {
     createAppintment();
   }
 
-
-
   useEffect(() => {
     if (!!appointments && !!appointments.create_UpdateById?.id && patientState.isGetFlag) {
       dispatch(resetProperty('appointments', 'create_UpdateById'))
@@ -97,7 +107,7 @@ const PatientDashboard = () => {
     if (!!payments && !!payments.create_UpdateById?.id && patientState.isGetPaymentFlag) {
 
       dispatch(resetProperty('payments', 'create_UpdateById'))
-      setPatientState({ ...patientState, isAppintmentAdded: true, isShowPaymentScreen: false });
+      setPatientState({ ...patientState, isAppointmentAdded: true, isShowPaymentScreen: false });
       dispatch(getAppointmentAllRecords())
     }
     if (!!appointments && !!appointments.allappointments && appointments.allappointments.length > 0) {
@@ -105,9 +115,29 @@ const PatientDashboard = () => {
       let userId = reduxUserId || getData(USER_DETAILS)?.userId;
       dispatch(resetProperty('appointments', 'allappointments'))
       let filter = appointments.allappointments.filter(({ patient_id }) => patient_id === userId);
-      setPatientState({ ...patientState, isAppintmentAdded: true, isShowPaymentScreen: false, appointmentList: filter });
+      setPatientState({ ...patientState, isAppointmentAdded: true, isShowPaymentScreen: false, appointmentList: filter });
     }
-  }, [appointments, payments]);
+    if (!!appointments && !!appointments.allappointments && appointments.allappointments.length > 0) {
+      let reduxUserId = globalState.authentication?.userId;
+      let userId = reduxUserId || getData(USER_DETAILS)?.userId;
+      dispatch(resetProperty('appointments', 'allappointments'))
+      let filter = appointments.allappointments.filter(({ patient_id }) => patient_id === userId);
+      setPatientState({ ...patientState, isAppointmentAdded: true, isShowPaymentScreen: false, appointmentList: filter });
+    }
+
+    if (!!patients && !!patients.create_UpdateById) {
+      dispatch(resetProperty('patients', 'create_UpdateById'));
+
+      dispatch(getRecordById(getUserId(authentication)));
+      setPatientState({ ...patientState, ...resetScreen, isOpen: false });
+    }
+
+  }, [appointments, payments, patients]);
+
+  const handleEditPatientFormSubmission = (formValues) => {
+    console.log(formValues);
+    dispatch(create_Update_PatientById({ data: { ...formValues }, id: getAppPatientsById.patient_id }));
+  }
 
 
   console.log(fieldsToShowAppintments)
@@ -120,7 +150,7 @@ const PatientDashboard = () => {
           data={getAppPatientsById || {}}
           fieldsToShow={patientInitialState.fieldsToShow}
           isEdit={true}
-          navigate='/edit'
+          onClick={handleShowEditPatientScreen}
           buttonText='Edit Details'
           showLink={true}
         />
@@ -143,16 +173,22 @@ const PatientDashboard = () => {
         <Card
           title="Video Consultations"
           icon={FaVideo}
-          array={[]}
           navigate='/list'
+          array={[]}
         />
       </div>
       <VideoComponent onClick={openModal} src={doctorVideo} style={{ width: '100%', height: 'auto', maxHeight: '50vh' }} />
       <Portal isOpen={isOpen} onClose={closeModal}>
-        {/* Form content goes here */}
-        {isShowPaymentScreen ? <PaymentForm onPaymentSubmit={handlePaymentSubmit} /> : isAppintmentAdded ? <div><p>Successfully Raised Appointment Request</p> </div> : < Form fields={patientState.RaiseRequestFields}
-          onSubmit={handleSubmit} formName='Appointment' submitButtonName='Proceed to Payment' />}
+        <ConditionalRender
+          conditions={[
+            { condition: isShowPaymentScreen, content: <PaymentForm onPaymentSubmit={handlePaymentSubmit} /> },
+            { condition: isAppointmentAdded, content: <div><p>Successfully Raised Appointment Request</p></div> },
+            { condition: isShowPatientEditDetails, content: <Form initialValues={getAppPatientsById} fields={fieldsToShowEditPatient} onSubmit={handleEditPatientFormSubmission} formName="Edit Patient" submitButtonName="Edit Details" /> },
+            { condition: true, content: <Form fields={patientState.RaiseRequestFields} onSubmit={handleAppntFormSubmit} formName="Appointment" submitButtonName="Proceed to Payment" /> },
+          ]}
+        />
       </Portal>
+
     </main>
   );
 };

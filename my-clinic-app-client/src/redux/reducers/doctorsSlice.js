@@ -2,7 +2,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { deleteById, getAllData, create_Update_ById } from '../commonSlice/commonSlice';
 
-const fetchAllRecords = getAllData('doctors/fetchAllRecords', '/doctors');
+const fetchAllDocRecords = getAllData('doctors/fetchAllRecords', '/doctors');
 const getRecordById = getAllData('doctors/getRecordById', '/doctors');
 const deleteRecordById = deleteById('doctors/deleteRecordById', '/doctors');
 const create_UpdateById = create_Update_ById('doctors/create_UpdateById', '/doctors');
@@ -19,7 +19,7 @@ const doctorsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAllRecords.fulfilled, (state, action) => {
+      .addCase(fetchAllDocRecords.fulfilled, (state, action) => {
         console.log(action.payload);
         state.alldoctors = action.payload;
       })
@@ -35,5 +35,5 @@ const doctorsSlice = createSlice({
   },
 });
 
-export { fetchAllRecords, getRecordById, deleteRecordById, create_UpdateById };
+export { fetchAllDocRecords, getRecordById, deleteRecordById, create_UpdateById };
 export default doctorsSlice.reducer;

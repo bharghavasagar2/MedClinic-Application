@@ -2,10 +2,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { deleteById, getAllData, create_Update_ById } from '../commonSlice/commonSlice';
 
-const fetchAllRecords = getAllData('prescriptions/fetchAllRecords', '/notifications');
-const getRecordById = getAllData('prescriptions/getRecordById', '/notifications');
-const deleteRecordById = deleteById('prescriptions/deleteRecordById', '/notifications');
-const create_UpdateById = create_Update_ById('prescriptions/create_UpdateById', '/notifications');
+const fetchAllRecords = getAllData('notifications/fetchAllRecords', '/notifications');
+const getRecordById = getAllData('notifications/getRecordById', '/notifications');
+const deleteRecordById = deleteById('notifications/deleteRecordById', '/notifications');
+const create_UpdateById = create_Update_ById('notifications/create_UpdateById', '/notifications');
 
 
 const notificationsSlice = createSlice({

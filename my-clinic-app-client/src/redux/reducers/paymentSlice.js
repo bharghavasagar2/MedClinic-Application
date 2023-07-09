@@ -2,10 +2,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { deleteById, getAllData, create_Update_ById } from '../commonSlice/commonSlice';
 
-const fetchAllRecords = getAllData('prescriptions/fetchAllRecords', '/payments');
-const getRecordById = getAllData('prescriptions/getRecordById', '/payments');
-const deleteRecordById = deleteById('prescriptions/deleteRecordById', '/payments');
-const createPaymentById = create_Update_ById('prescriptions/create_UpdateById', '/payments');
+const fetchAllPaymentRecords = getAllData('payments/fetchAllRecords', '/payments');
+const getRecordById = getAllData('payments/getRecordById', '/payments');
+const deleteRecordById = deleteById('payments/deleteRecordById', '/payments');
+const createPaymentById = create_Update_ById('payments/create_UpdateById', '/payments');
 
 
 const paymentSlice = createSlice({
@@ -19,7 +19,7 @@ const paymentSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAllRecords.fulfilled, (state, action) => {
+      .addCase(fetchAllPaymentRecords.fulfilled, (state, action) => {
         console.log(action.payload);
         state.allpayments = action.payload;
       })
@@ -35,5 +35,5 @@ const paymentSlice = createSlice({
   },
 });
 
-export { fetchAllRecords, getRecordById, deleteRecordById, createPaymentById };
+export { fetchAllPaymentRecords, getRecordById, deleteRecordById, createPaymentById };
 export default paymentSlice.reducer;

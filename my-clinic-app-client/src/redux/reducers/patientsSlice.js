@@ -2,10 +2,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { deleteById, getAllData, create_Update_ById } from '../commonSlice/commonSlice';
 
-const fetchAllRecords = getAllData('patients/fetchAllRecords', '/patients');
+const fetchAllPatientRecords = getAllData('patients/fetchAllRecords', '/patients');
 const getRecordById = getAllData('patients/getRecordById', '/patients');
 const deleteRecordById = deleteById('patients/deleteRecordById', '/patients');
-const create_UpdateById = create_Update_ById('patients/create_UpdateById', '/patients');
+const create_Update_PatientById = create_Update_ById('patients/create_UpdateById', '/patients');
 
 
 const patientsSlice = createSlice({
@@ -19,7 +19,7 @@ const patientsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAllRecords.fulfilled, (state, action) => {
+      .addCase(fetchAllPatientRecords.fulfilled, (state, action) => {
         console.log(action.payload);
         state.allPatients = action.payload;
       })
@@ -29,11 +29,11 @@ const patientsSlice = createSlice({
       .addCase(deleteRecordById.fulfilled, (state, action) => {
         state.deleteRecordById = action.payload;
       })
-      .addCase(create_UpdateById.fulfilled, (state, action) => {
+      .addCase(create_Update_PatientById.fulfilled, (state, action) => {
         state.create_UpdateById = action.payload;
       });
   },
 });
 
-export { fetchAllRecords, getRecordById, deleteRecordById, create_UpdateById };
+export { fetchAllPatientRecords, getRecordById, deleteRecordById, create_Update_PatientById };
 export default patientsSlice.reducer;

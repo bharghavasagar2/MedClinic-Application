@@ -1,7 +1,12 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { getData } from '../security/sessionStorage';
+
 
 export const USER_DETAILS = 'userDetails';
+
+
+
 export const APPOINTMENT_STATUS = {
   PENDING: 'Pending with admin',
   APPROVED: 'Approved',
@@ -41,3 +46,30 @@ export const appointmentType = [
 ];
 
 
+export const GENDER_OPTIONS = [
+  { value: 'male', label: 'Male' },
+  { value: 'female', label: 'Female' },
+  { value: 'others', label: 'Others' },
+]
+
+export const getUserId = (authentication) => {
+  let reduxUserId = authentication?.userId;
+  let userId = reduxUserId || getData(USER_DETAILS)?.userId;
+  return userId;
+}
+
+export const filterArray = (data, filterArrayKey) => {
+  if (Array.isArray(data) && data.length > 0) {
+    let filterData = data;
+    if (filterArrayKey) {
+      filterData = data.filter(({ appointment_status }) => !!appointment_status && appointment_status === filterArrayKey);
+    }
+
+    if (Array.isArray(filterData) && filterData.length > 0) {
+      filterData = filterData.slice(0, 1);
+    }
+    return filterData;
+  } else {
+    return [];
+  }
+}
