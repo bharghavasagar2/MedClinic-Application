@@ -1,22 +1,35 @@
 const createTriggers = (db) => {
+  db.run(`
+  CREATE TRIGGER IF NOT EXISTS update_doctor_name
+  AFTER INSERT ON Appointments
+  WHEN NEW.doctor_id IS NOT NULL
+  BEGIN
+    UPDATE Appointments
+    SET doctor_name = (
+      SELECT doctor_name
+      FROM Doctors
+      WHERE doctor_id = NEW.doctor_id
+    )
+    WHERE appointment_id = NEW.appointment_id;
+  END;
+`);
 
-  // // Create trigger for inserting patient details into the Patients table
-  // db.run(`
-  //   CREATE TRIGGER insert_patient_details AFTER INSERT ON AuthenticationUsers
-  //   BEGIN
-  //     INSERT INTO Patients (patient_id, patient_name, patient_age, patient_gender, contact_number, address, user_id)
-  //     VALUES (NEW.user_id, '', 0, '', '', '', NEW.user_id);
-  //   END;
-  // `)
+  // Create trigger to update patient name in Appointments table
+  db.run(`
+  CREATE TRIGGER IF NOT EXISTS update_patient_name
+  AFTER INSERT ON Appointments
+  WHEN NEW.patient_id IS NOT NULL
+  BEGIN
+    UPDATE Appointments
+    SET patient_name = (
+      SELECT patient_name
+      FROM Patients
+      WHERE patient_id = NEW.patient_id
+    )
+    WHERE appointment_id = NEW.appointment_id;
+  END;
+`);
 
-  // // Create trigger for inserting doctor details into the Doctors table
-  // db.run(`
-  //   CREATE TRIGGER insert_doctor_details AFTER INSERT ON AuthenticationUsers
-  //   BEGIN
-  //     INSERT INTO Doctors (doctor_id, doctor_name, department_id, contact_number, email, user_id)
-  //     VALUES (NEW.user_id, '', '', '', '', NEW.user_id);
-  //   END;
-  // `)
 }
 
 module.exports = { createTriggers };

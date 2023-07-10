@@ -9,20 +9,32 @@ export const api = axios.create({
 
 export const Loading = () => {
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const requestInterceptor = api.interceptors.request.use((config) => {
       setLoading(true);
+      setSuccess(false); // Reset success state before each request
+      setError(null); // Reset error state before each request
       return config;
     });
 
     const responseInterceptor = api.interceptors.response.use(
       (response) => {
         setLoading(false);
+        setSuccess(true); // Set success state when the response is received
+        setTimeout(() => {
+          setSuccess(false); // Clear the success state after 2 seconds
+        }, 2000);
         return response;
       },
       (error) => {
         setLoading(false);
+        setError(error); // Set error state when an error occurs
+        setTimeout(() => {
+          setError(null); // Clear the error state after 2 seconds
+        }, 2000);
         return Promise.reject(error);
       }
     );
@@ -50,6 +62,14 @@ export const Loading = () => {
           </div>
         </div>
       )}
+      {success && (
+        <div className="success-message">Request fulfilled successfully</div>
+      )}
+      {error && (
+        <div className="error-message-fetch">{error.message}</div>
+      )}
     </div>
   );
 };
+
+

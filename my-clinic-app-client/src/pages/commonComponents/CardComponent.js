@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { filterArray } from '../../commonConfig/commonConfig';
 import { FaEye } from 'react-icons/fa';
 
-const Card = ({ title, onClick, icon: Icon, data, navigate = null, fieldsToShow, buttonText = 'Show All', showLink = false, filterArrayKey }) => {
+const Card = ({ title, onClick, icon: Icon, data, dataToBePassed = null, navigate = null, fieldsToShow, buttonText = 'Show All', showLink = false, filterArrayKey }) => {
   const renderData = () => {
     if (Array.isArray(data) && data.length > 0) {
       let filterData = filterArray(data, filterArrayKey);
@@ -37,7 +37,7 @@ const Card = ({ title, onClick, icon: Icon, data, navigate = null, fieldsToShow,
         <div className="relative">
           <p className="text-gray-600">{data}</p>
           {data !== '0' && (
-            <Link to={navigate} className="text-sky-500 hover:text-blue-700 absolute top-0 right-0 mt-2 mr-2">
+            <Link to={navigate} state={data} className="text-sky-500 hover:text-blue-700 absolute top-0 right-0 mt-2 mr-2">
               <FaEye size={22} />
             </Link>
           )}
@@ -58,7 +58,7 @@ const Card = ({ title, onClick, icon: Icon, data, navigate = null, fieldsToShow,
       {renderData()}
 
       {((Array.isArray(data) && Array.isArray(filterArray(data, filterArrayKey)) && filterArray(data, filterArrayKey).length > 0) && !showLink) ? (
-        <Link to={navigate ? navigate : null} state={data} className="text-blue-500 hover:text-blue-600 font-semibold">
+        <Link to={navigate ? navigate : null} state={dataToBePassed} className="text-blue-500 hover:text-blue-600 font-semibold">
           {buttonText}
         </Link>
       ) : (

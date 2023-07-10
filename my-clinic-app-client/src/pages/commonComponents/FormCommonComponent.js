@@ -5,10 +5,21 @@ import 'react-datetime/css/react-datetime.css';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const Form = ({ fields, onSubmit, submitButtonName = 'Submit', disabled = false, formName, initialValues }) => {
+  const timeValue = !!initialValues?.appointment_time ? moment(initialValues?.appointment_time, 'hh:mm A').toDate() : ''
+  const dateValue = !!initialValues?.appointment_date ? moment(initialValues?.appointment_date, 'DD-MM-YYYY').toDate() : ''
+
   const [formValues, setFormValues] = useState(initialValues || {});
   const [errors, setErrors] = useState({});
-  const [time, setTime] = useState('');
-  const [date, setDate] = useState('')
+  const [time, setTime] = useState(timeValue || '');
+  const [date, setDate] = useState(dateValue || '');
+
+
+  useEffect(() => {
+    return () => {
+      setTime('')
+      setDate('')
+    }
+  })
 
 
   // Update form values when initial values change

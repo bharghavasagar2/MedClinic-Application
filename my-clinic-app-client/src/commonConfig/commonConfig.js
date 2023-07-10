@@ -73,3 +73,8 @@ export const filterArray = (data, filterArrayKey) => {
     return [];
   }
 }
+
+export const EDIT = 'Edit';
+export const VIEW = 'View';
+export const Cancel = 'Cancel';
+

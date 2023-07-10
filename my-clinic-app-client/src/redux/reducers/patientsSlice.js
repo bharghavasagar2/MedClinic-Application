@@ -20,7 +20,7 @@ const patientsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllPatientRecords.fulfilled, (state, action) => {
-        console.log(action.payload);
+
         state.allPatients = action.payload;
       })
       .addCase(getRecordById.fulfilled, (state, action) => {
@@ -36,4 +36,5 @@ const patientsSlice = createSlice({
 });
 
 export { fetchAllPatientRecords, getRecordById, deleteRecordById, create_Update_PatientById };
+console.log(patientsSlice)
 export default patientsSlice.reducer;

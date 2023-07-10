@@ -33,6 +33,7 @@ exports.createAppointment = (req, res) => {
   const query = 'INSERT INTO Appointments (patient_id, doctor_id, appointment_date, appointment_time, appointment_status, department_id, appointment_type) VALUES (?, ?, ?, ?, ?, ?, ?)';
   db.run(query, [patient_id, doctor_id, appointment_date, appointment_time, appointment_status, department_id, appointment_type], function (err) {
     if (err) {
+      console.log(err)
       res.status(500).json({ error: 'Error creating appointment' });
     } else {
       res.json({ id: this.lastID });

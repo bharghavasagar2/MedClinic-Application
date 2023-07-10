@@ -117,3 +117,37 @@
 .transparent-table {
   background-color: transparent;
 }
+
+.table-container {
+  display: flex;
+  justify-content: center;
+}
+
+.link-list {
+  color: darkblue;
+}
+.loading-container {
+  position: relative;
+}
+
+.success-message {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  background-color: #4caf50;
+  color: #fff;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.error-message-fetch {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  background-color: #a7251c;
+  color: #fff;
+  font-size: 14px;
+  border-radius: 4px;
+}
