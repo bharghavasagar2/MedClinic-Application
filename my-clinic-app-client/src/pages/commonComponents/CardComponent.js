@@ -37,7 +37,7 @@ const Card = ({ title, onClick, icon: Icon, data, dataToBePassed = null, navigat
         <div className="relative">
           <p className="text-gray-600">{data}</p>
           {data !== '0' && (
-            <Link to={navigate} state={data} className="text-sky-500 hover:text-blue-700 absolute top-0 right-0 mt-2 mr-2">
+            <Link to={navigate} state={dataToBePassed} className="text-sky-500 hover:text-blue-700 absolute top-0 right-0 mt-2 mr-2">
               <FaEye size={22} />
             </Link>
           )}

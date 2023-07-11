@@ -35,7 +35,7 @@ export const patientInitialState = {
   fieldsToShowAppintmentsView: [{ label: 'Date', name: 'appointment_date' },
   { label: 'Time', name: 'appointment_time' },
   { label: 'Appointment Type', name: 'appointment_type' },
-  { label: 'Department', name: 'department_id' }
+  { label: 'Department', name: 'department_name' }
   ],
   fieldsToShowEditPatient: [{ label: 'Patient Name', name: 'patient_name', required: true },
   { label: 'Address', name: 'address', required: true },
@@ -61,5 +61,30 @@ export const patientInitialState = {
     },
   ]
 }
+
+
+export const apisToCall = {
+  view: {
+    endpoint: '/appointments',
+    // id: 'dataId',
+  },
+  create: {
+    endpoint: '/appointments',             // Replace with the actual endpoint for your API
+    // id: 'dataId',
+  },
+  delete: {
+    endpoint: '/appointments',                 // Replace with the actual endpoint for your API
+    // id: 'dataId',
+  },
+  update: {
+    endpoint: '/appointments',       // Replace with the actual endpoint for your API
+    id: 'dataId',
+  },
+  getAll: {
+    endpoint: 'appointments', // Replace with the actual endpoint for your API
+    // id: 'dataId',
+  }
+}
+
 
 export let resetScreen = { isAppointmentAdded: false, isShowPaymentScreen: false, isShowPatientEditDetails: false, }

@@ -10,16 +10,16 @@ const Form = ({ fields, onSubmit, submitButtonName = 'Submit', disabled = false,
 
   const [formValues, setFormValues] = useState(initialValues || {});
   const [errors, setErrors] = useState({});
-  const [time, setTime] = useState(timeValue || '');
-  const [date, setDate] = useState(dateValue || '');
+  const [time, setTime] = useState(timeValue);
+  const [date, setDate] = useState(dateValue);
 
 
-  useEffect(() => {
-    return () => {
-      setTime('')
-      setDate('')
-    }
-  })
+  // useEffect(() => {
+  //   return () => {
+  //     setTime('')
+  //     setDate('')
+  //   }
+  // })
 
 
   // Update form values when initial values change

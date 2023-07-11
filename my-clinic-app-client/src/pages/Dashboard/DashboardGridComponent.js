@@ -3,7 +3,7 @@ import { FaUser, FaCalendar, FaStethoscope, FaMoneyBillWave, FaClock } from 'rea
 import AnalyticalInfo from '../commonComponents/AnalyticalReportsComponent';
 import Card from '../commonComponents/CardComponent';
 import { getAppointmentAllRecords } from '../../redux/reducers/appointmentsSlice';
-import { APPOINTMENT_STATUS, getUserId, useReduxHelpers } from '../../commonConfig/commonConfig';
+import { APPOINTMENT_STATUS, Cancel, EDIT, getUserId, useReduxHelpers } from '../../commonConfig/commonConfig';
 import { filterRequestArray } from '../../commonConfig/commonFunction';
 import { fetchAllPatientRecords } from '../../redux/reducers/patientsSlice';
 import { fetchAllDocRecords } from '../../redux/reducers/doctorsSlice';
@@ -34,6 +34,15 @@ const DashboardGrid = () => {
         <Card title="Total Patients" navigate='/list' icon={FaUser} data={patients.allPatients.length.toString()}
         />
         <Card
+          //  dataToBePassed={{
+          //   rawData: filterRequestArray(appointments.allappointments, 'appointment_status', APPOINTMENT_STATUS.PENDING),
+          //   linkFields: [Cancel, Config],
+          //   linkLabels: [Cancel, EDIT],
+          //   apisToCall: { view: null, create: null, delete: null, update: 'create_Update_PatientById' },
+          //   addToResponseIfActionSuccess: { appointment_status: APPOINTMENT_STATUS.CANCELLED },
+          //   role: 'patient',
+          //   fieldsToShowOnEdit: fieldsToShowAppintmentsAdd
+          // }}
           title="Pending Appointment Requests"
           icon={FaClock} navigate='/list'
           data={filterRequestArray(appointments.allappointments, 'appointment_status', APPOINTMENT_STATUS.PENDING).length.toString()}

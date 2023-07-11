@@ -8,6 +8,8 @@ import videoReducer from '../reducers/videoSlice';
 import notificationReducer from '../reducers/notificationSlice';
 import { LOGOUT, RESET_PROPERTY } from '../../commonConfig/commonConfig.js';
 import paymentReducer from '../reducers/paymentSlice';
+import commonReducer from '../commonSlice/slice.js';
+
 
 const rootReducer = (state, action) => {
   if (action.type === LOGOUT) {
@@ -20,6 +22,7 @@ const rootReducer = (state, action) => {
       video: videoReducer(undefined, {}),
       notification: notificationReducer(undefined, {}),
       payments: paymentReducer(undefined, {}),
+      common: commonReducer(undefined, {}),
     };
   }
   if (action.type === RESET_PROPERTY) {
@@ -33,6 +36,7 @@ const rootReducer = (state, action) => {
       video: videoReducer,
       notification: notificationReducer,
       payments: paymentReducer,
+      common: commonReducer,
     })(undefined, {});
     const updatedState = {
       ...state,
@@ -52,6 +56,7 @@ const rootReducer = (state, action) => {
     video: videoReducer,
     notification: notificationReducer,
     payments: paymentReducer,
+    common: commonReducer,
   })(state, action);
 };
 

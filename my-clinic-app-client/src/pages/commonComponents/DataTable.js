@@ -2,8 +2,8 @@ import React from 'react';
 
 const Table = ({ columns, data }) => {
   return (
-    <div className="table-container">
-      <table className="min-w-full divide-y divide-gray-200">
+    <div className="table-container table-gray">
+      <table className="min-w-full divide-y divide-gray-200 table-gray">
         <thead>
           <tr>
             {columns.map((column) => (

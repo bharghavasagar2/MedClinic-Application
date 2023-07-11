@@ -1,7 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from '../commonComponents/DataTable';
 import HeaderComponent from './HeaderCommonComponent.js';
 import backgroundImage from '../../images/homepage.jpg';
+import * as patientsReducer from '../../redux/reducers/patientsSlice.js';
+import * as appointmentReducer from '../../redux/reducers/appointmentsSlice.js'
+import * as notificationReducer from '../../redux/reducers/notificationSlice.js'
+import * as doctorsReducer from '../../redux/reducers/doctorsSlice.js'
+import * as videosReducer from '../../redux/reducers/videoSlice.js';
+import * as prescriptionReducer from '../../redux/reducers/prescriptionsSlice.js'
+import * as paymentsReducer from '../../redux/reducers/paymentSlice.js';
 import { useLocation } from 'react-router-dom';
 import Portal from '../commonComponents/PortalComponent.js';
 import ConfirmationModal from './ConfirmationModal';
@@ -11,17 +18,57 @@ import { actionTypeInitialState, initialState } from '../../commonConfig/initial
 import ConditionalRender from './ConditionalRender';
 import FormView from './CommonFormView';
 import Form from './FormCommonComponent';
+import { resetProperty } from '../../redux/reducers/resetSlice';
+import {
+  getAllData,
+  getDataById,
+  deleteDataById,
+  createUpdateDataById
+} from '../../redux/commonSlice/slice.js'
 
 const List = () => {
   const location = useLocation();
-  let { rawData, linkFields, linkLabels, fieldsToShowOnEdit,
-    apisToCall, role, addToResponseIfActionSuccess } = location?.state;
+  let { rawData, linkFields, linkLabels, fieldsToShowOnEdit, reducer, specificState,
+    apisToCall, role, addToResponseIfActionSuccess, mainRecordId } = location?.state;
   console.log(location?.state)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const { dispatch } = useReduxHelpers();
+  const { dispatch, globalState } = useReduxHelpers();
   const [state, setState] = useState(initialState);
 
+
+
+
+  const handleApiCall = (reducer, apiAction) => {
+    let actionCreators;//ssds
+    switch (reducer) {
+      case 'patientsReducer':
+        actionCreators = patientsReducer[apiAction];
+        break;
+      case 'appointmentReducer':
+        actionCreators = appointmentReducer[apiAction];
+        break;
+      case 'notificationReducer':
+        actionCreators = notificationReducer[apiAction];
+        break;
+      case 'doctorsReducer':
+        actionCreators = doctorsReducer[apiAction];
+        break;
+      case 'videosReducer':
+        actionCreators = patientsReducer[apiAction];
+        break;
+      case 'prescriptionReducer':
+        actionCreators = prescriptionReducer[apiAction];
+        break;
+      case 'paymentsReducer':
+        actionCreators = paymentsReducer[apiAction];
+        break;
+      default:
+        break;
+    }
+    return actionCreators;
+  }
+  console.log(handleApiCall(reducer, apisToCall.update))
   const openModal = (item, i, actionType = null) => {
 
     switch (actionType) {
@@ -79,10 +126,18 @@ const List = () => {
 
   }
 
-  const handleOnEditFormSubmission = () => {
-
+  const handleOnEditFormSubmission = (formValues) => {
+    //  let actionCreator = handleApiCall(reducer, apisToCall[actionType]);
+    dispatch(createUpdateDataById({ endpoint: apisToCall.update.endpoint, id: formValues[mainRecordId], data: formValues }));
+    setState({ ...state, getAddUpdateFlag: true })
   }
 
+  useEffect(() => {
+    if (globalState.common && !!state.getAddUpdateFlag && !!globalState.common.createUpdateDataById) {
+      closeModal()
+      dispatch(resetProperty('common', 'createUpdateDataById'))
+    }
+  }, [globalState.common])
 
   let { isView, isEdit, isCancel } = state;
   console.log(isView, isEdit, isCancel, selectedItem, fieldsToShowOnEdit)

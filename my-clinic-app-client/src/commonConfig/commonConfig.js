@@ -77,4 +77,8 @@ export const filterArray = (data, filterArrayKey) => {
 export const EDIT = 'Edit';
 export const VIEW = 'View';
 export const Cancel = 'Cancel';
+export const Config = 'Config';
+export const Approve = 'Approve';
+
+
 
