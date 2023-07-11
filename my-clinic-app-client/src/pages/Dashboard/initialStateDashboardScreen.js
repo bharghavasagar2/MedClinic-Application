@@ -81,7 +81,7 @@ export const apisToCall = {
     id: 'dataId',
   },
   getAll: {
-    endpoint: 'appointments', // Replace with the actual endpoint for your API
+    endpoint: '/appointments', // Replace with the actual endpoint for your API
     // id: 'dataId',
   }
 }

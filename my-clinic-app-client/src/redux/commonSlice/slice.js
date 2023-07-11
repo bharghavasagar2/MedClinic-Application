@@ -1,15 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { globalState } from '../../commonConfig/commonConfig.js';
 import { getData } from '../../security/sessionStorage.js';
 import { api } from '../../api/api.js';
-//import { token } from '../../pages/Dashboard/DashboardComponent.js';
-
-
-
-
-
-console.log(globalState)
 
 const setAuthToken = (userToken) => {
 
@@ -25,7 +17,7 @@ export const getAllData = createAsyncThunk('common/getAllData', async (endpoint)
   try {
     const userData = getData('userDetails');
     setAuthToken(userData?.token);
-    const response = await axios.get(endpoint);
+    const response = await api.get(endpoint);
     return response.data;
   } catch (error) {
     console.error(`Error fetching data: ${error.message}`);
@@ -37,7 +29,7 @@ export const getDataById = createAsyncThunk('common/getDataById', async ({ endpo
   try {
     const userData = getData('userDetails');
     setAuthToken(userData?.token);
-    const response = await axios.get(`${endpoint}/${id}`);
+    const response = await api.get(`${endpoint}/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching data: ${error.message}`);
@@ -49,7 +41,7 @@ export const deleteDataById = createAsyncThunk('common/deleteDataById', async ({
   try {
     const userData = getData('userDetails');
     setAuthToken(userData?.token);
-    const response = await axios.delete(`${endpoint}/${id}`);
+    const response = await api.delete(`${endpoint}/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error deleting data: ${error.message}`);

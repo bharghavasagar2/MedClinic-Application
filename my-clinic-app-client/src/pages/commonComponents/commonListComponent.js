@@ -2,19 +2,12 @@ import React, { useEffect, useState } from 'react';
 import Table from '../commonComponents/DataTable';
 import HeaderComponent from './HeaderCommonComponent.js';
 import backgroundImage from '../../images/homepage.jpg';
-import * as patientsReducer from '../../redux/reducers/patientsSlice.js';
-import * as appointmentReducer from '../../redux/reducers/appointmentsSlice.js'
-import * as notificationReducer from '../../redux/reducers/notificationSlice.js'
-import * as doctorsReducer from '../../redux/reducers/doctorsSlice.js'
-import * as videosReducer from '../../redux/reducers/videoSlice.js';
-import * as prescriptionReducer from '../../redux/reducers/prescriptionsSlice.js'
-import * as paymentsReducer from '../../redux/reducers/paymentSlice.js';
 import { useLocation } from 'react-router-dom';
 import Portal from '../commonComponents/PortalComponent.js';
 import ConfirmationModal from './ConfirmationModal';
 import { generateColumnsAndData } from '../../commonConfig/commonFunction';
 import { Cancel, EDIT, VIEW, useReduxHelpers } from '../../commonConfig/commonConfig';
-import { actionTypeInitialState, initialState } from '../../commonConfig/initialListComponent';
+import { actionTypeInitialState, initialState, resetCommonSlice } from '../../commonConfig/initialListComponent';
 import ConditionalRender from './ConditionalRender';
 import FormView from './CommonFormView';
 import Form from './FormCommonComponent';
@@ -24,53 +17,25 @@ import {
   getDataById,
   deleteDataById,
   createUpdateDataById
-} from '../../redux/commonSlice/slice.js'
+} from '../../redux/commonSlice/slice.js';
 
 const List = () => {
   const location = useLocation();
   let { rawData, linkFields, linkLabels, fieldsToShowOnEdit, reducer, specificState,
     apisToCall, role, addToResponseIfActionSuccess, mainRecordId } = location?.state;
+
   console.log(location?.state)
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const { dispatch, globalState } = useReduxHelpers();
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState({ ...initialState, dataArrayList: rawData || [] });
 
+  const { common } = globalState;
 
+  let { isView, isEdit, isCancel, dataArrayList } = state;
 
-
-  const handleApiCall = (reducer, apiAction) => {
-    let actionCreators;//ssds
-    switch (reducer) {
-      case 'patientsReducer':
-        actionCreators = patientsReducer[apiAction];
-        break;
-      case 'appointmentReducer':
-        actionCreators = appointmentReducer[apiAction];
-        break;
-      case 'notificationReducer':
-        actionCreators = notificationReducer[apiAction];
-        break;
-      case 'doctorsReducer':
-        actionCreators = doctorsReducer[apiAction];
-        break;
-      case 'videosReducer':
-        actionCreators = patientsReducer[apiAction];
-        break;
-      case 'prescriptionReducer':
-        actionCreators = prescriptionReducer[apiAction];
-        break;
-      case 'paymentsReducer':
-        actionCreators = paymentsReducer[apiAction];
-        break;
-      default:
-        break;
-    }
-    return actionCreators;
-  }
-  console.log(handleApiCall(reducer, apisToCall.update))
   const openModal = (item, i, actionType = null) => {
-
     switch (actionType) {
       case Cancel:
         setState({ ...state, ...actionTypeInitialState, isCancel: true })
@@ -82,22 +47,34 @@ const List = () => {
         setState({ ...state, ...actionTypeInitialState, isEdit: true })
         break;
     }
-
-    setSelectedItem(rawData?.[i]);
+    setSelectedItem(dataArrayList?.[i]);
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
+  const { columns, data } = generateColumnsAndData(dataArrayList, linkFields, linkLabels, openModal);
+
+  useEffect(() => {
+    return () => {
+      resetCommonSlice(dispatch, resetProperty);
+    }
+  }, []);
+
+
+
+  const closeModal = (obj = false) => {
     setSelectedItem(null);
     setIsModalOpen(false);
-    setState({ ...state, ...actionTypeInitialState });
+    if (!!obj) {
+      setState({ ...state, ...actionTypeInitialState, ...obj });
+    } else {
+      setState({ ...state, ...actionTypeInitialState });
+    }
   };
 
   const handleItemClick = (item, i, k) => {
 
   };
 
-  const { columns, data } = generateColumnsAndData(rawData, linkFields, linkLabels, openModal);
 
 
   const formattedColumns = columns.map((column) => {
@@ -127,19 +104,25 @@ const List = () => {
   }
 
   const handleOnEditFormSubmission = (formValues) => {
-    //  let actionCreator = handleApiCall(reducer, apisToCall[actionType]);
     dispatch(createUpdateDataById({ endpoint: apisToCall.update.endpoint, id: formValues[mainRecordId], data: formValues }));
     setState({ ...state, getAddUpdateFlag: true })
   }
 
   useEffect(() => {
-    if (globalState.common && !!state.getAddUpdateFlag && !!globalState.common.createUpdateDataById) {
-      closeModal()
-      dispatch(resetProperty('common', 'createUpdateDataById'))
-    }
-  }, [globalState.common])
+    if (common && !!state.getAddUpdateFlag && !!common.createUpdateDataById) {
+      closeModal({ getAlldataFlag: true });
+      resetCommonSlice(dispatch, resetProperty, 'createUpdateDataById');
 
-  let { isView, isEdit, isCancel } = state;
+      if (!!apisToCall.getAll) {
+        dispatch(getAllData(apisToCall?.getAll?.endpoint))
+      }
+    }
+    if (Array.isArray(common.allData) && common.allData.length > 0 && !!state.getAlldataFlag) {
+      closeModal({ getAlldataFlag: false, dataArrayList: common.allData });
+      resetCommonSlice(dispatch, resetProperty, 'allData');
+    }
+  }, [common])
+
   console.log(isView, isEdit, isCancel, selectedItem, fieldsToShowOnEdit)
   return (
     <div className="bg-gray-100 min-h-screen" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }}>
