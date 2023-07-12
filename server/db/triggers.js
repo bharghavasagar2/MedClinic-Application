@@ -1,4 +1,35 @@
+const { deleteTableActivityLog } = require("./cancelledTables");
+
 const createTriggers = (db) => {
+  deleteTableActivityLog(db);
+  db.run(`
+  CREATE TRIGGER IF NOT EXISTS update_notifications_cancelled
+  AFTER UPDATE ON Appointments
+  FOR EACH ROW
+  WHEN NEW.appointment_status = 'Cancelled' AND NEW.patient_id IS NOT NULL
+  BEGIN
+    INSERT INTO Notifications (user_id, message)
+    VALUES (NEW.patient_id, 'Your appointment scheduled on ' || NEW.appointment_date || ' at ' || NEW.appointment_time || ' in the ' || NEW.department_name || ' department with ' || NEW.doctor_name || ' has been cancelled.');
+  END;
+  `);
+
+  db.run(`
+  CREATE TRIGGER IF NOT EXISTS update_notifications_approved
+  AFTER UPDATE ON Appointments
+  FOR EACH ROW
+  WHEN NEW.appointment_status = 'Approved' AND NEW.patient_id IS NOT NULL AND NEW.doctor_id IS NOT NULL
+  BEGIN
+    INSERT INTO Notifications (user_id, message)
+    VALUES (NEW.patient_id, 'Your appointment scheduled on ' || NEW.appointment_date || ' at ' || NEW.appointment_time || ' in the ' || NEW.department_name || ' department with ' || NEW.doctor_name || ' has been approved.');
+
+    INSERT INTO Notifications (user_id, message)
+    VALUES (NEW.doctor_id, 'The appointment with patient ' || NEW.patient_name || ' scheduled on ' || NEW.appointment_date || ' at ' || NEW.appointment_time || ' in the ' || NEW.department_name || ' department has been approved.');
+  END;
+  `);
+
+
+
+
   // Trigger to update doctor name in Appointments table
   db.run(`
     CREATE TRIGGER IF NOT EXISTS update_doctor_name_insert

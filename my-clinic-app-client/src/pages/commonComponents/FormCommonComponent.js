@@ -13,21 +13,6 @@ const Form = ({ fields, onSubmit, submitButtonName = 'Submit', disabled = false,
   const [time, setTime] = useState(timeValue);
   const [date, setDate] = useState(dateValue);
 
-
-  // useEffect(() => {
-  //   return () => {
-  //     setTime('')
-  //     setDate('')
-  //   }
-  // })
-
-
-  // Update form values when initial values change
-  useEffect(() => {
-    setFormValues(initialValues || {});
-  }, [initialValues]);
-
-
   const handleSubmit = (event) => {
     event.preventDefault();
     if (validateForm()) {
@@ -115,8 +100,8 @@ const Form = ({ fields, onSubmit, submitButtonName = 'Submit', disabled = false,
       <div className="form-header">
         <h2>{formName}</h2>
       </div>
-      {fields.map((field) => (
-        <div key={field.name}>
+      {fields.map((field, i) => (
+        <div key={i}>
           <label className="block font-medium text-gray-700" htmlFor={field.name}>
             {field.label}:
           </label>

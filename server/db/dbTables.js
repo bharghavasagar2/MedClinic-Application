@@ -14,7 +14,7 @@ const createDBTables = (db) => {
       appointment_date TEXT,
       appointment_time TEXT,
       appointment_type TEXT,
-      appointment_status TEXT,      
+      appointment_status TEXT,     
       FOREIGN KEY (department_id) REFERENCES Departments(department_id),
       FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
       FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id)

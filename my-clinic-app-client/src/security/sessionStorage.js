@@ -11,3 +11,10 @@ export const getData = (key) => {
 export const clearData = (key) => {
   store.remove(key);
 };
+
+
+export const getStorageValue = (key) => {
+  const userDetails = getData('userDetails');
+  const value = userDetails[key] || null;
+  return value;
+};

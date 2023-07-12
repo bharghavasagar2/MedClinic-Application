@@ -63,7 +63,31 @@ export const patientInitialState = {
 }
 
 
-export const apisToCall = {
+
+export const apisToCallAppointmentRequestPatient = {
+  view: {
+    endpoint: '/appointments',
+    // id: 'dataId',
+  },
+  create: {
+    endpoint: '/appointments',             // Replace with the actual endpoint for your API
+    // id: 'dataId',
+  },
+  delete: {
+    endpoint: '/appointments',                 // Replace with the actual endpoint for your API
+    // id: 'dataId',
+  },
+  update: {
+    endpoint: '/appointments',       // Replace with the actual endpoint for your API
+    id: 'dataId',
+  },
+  getAll: {
+    endpoint: '/appointments', // Replace with the actual endpoint for your API
+    // id: 'dataId',
+  }
+}
+
+export const apisToCallAppointmentRequestAdmin = {
   view: {
     endpoint: '/appointments',
     // id: 'dataId',
@@ -87,4 +111,34 @@ export const apisToCall = {
 }
 
 
-export let resetScreen = { isAppointmentAdded: false, isShowPaymentScreen: false, isShowPatientEditDetails: false, }
+
+export let resetScreen = {
+  isAppointmentAdded: false,
+  isShowPaymentScreen: false, isShowPatientEditDetails: false,
+}
+
+///Admin >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+export const initalStateDashboardGrid = {
+  isShowAddDoctorScreen: false,
+  isAddCredenForDoctor: false,
+  isOpen: false,
+  isAddFlag: false,
+  doctorFormValues: {},
+  doctorCredFormValues: {},
+  addCredentialFields: [
+    { name: 'username', label: 'Username', type: 'text', required: true, },
+    { name: 'password', label: 'Password', type: 'text', required: true, },
+  ],
+  addDoctorFields: [
+    { name: 'doctor_name', label: 'Doctor Name', type: 'text', required: true, },
+    { name: 'contact_number', label: 'Contact Number', type: 'text', required: true, },
+    { name: 'email', label: 'Email', type: 'text', required: true, },
+    {
+      name: 'department_id',
+      label: 'Select Department', required: true,
+      type: 'select',
+      options: departments,
+    },
+  ]
+}

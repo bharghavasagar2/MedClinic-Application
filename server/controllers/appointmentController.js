@@ -48,6 +48,7 @@ exports.updateAppointment = (req, res) => {
   const query = 'UPDATE Appointments SET patient_id = ?, doctor_id = ?, appointment_date = ?, appointment_time = ?, appointment_status = ?, department_id = ?, appointment_type = ? WHERE appointment_id = ?';
   db.run(query, [patient_id, doctor_id, appointment_date, appointment_time, appointment_status, department_id, appointment_type, appointmentId], (err) => {
     if (err) {
+      console.log(err)
       res.status(500).json({ error: 'Error updating appointment' });
     } else if (this.changes === 0) {
       res.status(404).json({ error: 'Appointment not found' });
@@ -63,11 +64,12 @@ exports.deleteAppointment = (req, res) => {
   const query = 'DELETE FROM Appointments WHERE appointment_id = ?';
   db.run(query, [appointmentId], (err) => {
     if (err) {
+      console.log(err)
       res.status(500).json({ error: 'Error deleting appointment' });
     } else if (this.changes === 0) {
       res.status(404).json({ error: 'Appointment not found' });
     } else {
-      res.sendStatus(204);
+      res.json({ message: 'Appointment deleted successfully' });
     }
   });
 };

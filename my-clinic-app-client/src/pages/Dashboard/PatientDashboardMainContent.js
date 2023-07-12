@@ -5,7 +5,7 @@ import doctorVideo from '../../videos/doctorVideo.mp4';
 import VideoComponent from '../commonComponents/CommonVideoComponent';
 import { resetProperty } from '../../redux/reducers/resetSlice.js'
 import { getData, setData } from '../../security/sessionStorage.js';
-import { apisToCall, patientInitialState, resetScreen } from './initialStateDashboardScreen';
+import { apisToCallAppointmentRequestPatient, patientInitialState, resetScreen } from './initialStateDashboardScreen';
 import { useSelector } from 'react-redux';
 import Form from '../commonComponents/FormCommonComponent';
 import Portal from '../commonComponents/PortalComponent';
@@ -168,19 +168,20 @@ const PatientDashboard = () => {
           title="Appointment Requests"
           icon={FaFilePrescription}
           fieldsToShow={patientInitialState.fieldsToShowAppintmentsView}
-          data={filterRequestArray(appointmentList, 'appointment_status', APPOINTMENT_STATUS.PENDING)}
+          data={filterRequestArray(appointmentList, 'appointment_status', [APPOINTMENT_STATUS.PENDING])}
           navigate='/list'
           dataToBePassed={{
-            rawData: filterRequestArray(appointmentList, 'appointment_status', APPOINTMENT_STATUS.PENDING),
+            rawData: filterRequestArray(appointmentList, 'appointment_status', [APPOINTMENT_STATUS.PENDING]),
             linkFields: [Cancel, EDIT],
             linkLabels: [Cancel, EDIT],
-            apisToCall: apisToCall,
+            apisToCall: apisToCallAppointmentRequestPatient,
             addToResponseIfActionSuccess: { Cancel: { appointment_status: APPOINTMENT_STATUS.CANCELLED } },
             role: 'patient',
             specificState: 'appointment',
             reducer: 'appointmentReducer',
             fieldsToShowOnEdit: fieldsToShowAppintmentsAdd,
-            mainRecordId: 'appointment_id'
+            mainRecordId: 'appointment_id',
+            confirmationMessage: 'Are you sure you want to Cancel the appointment'
           }}
         />
         <Card

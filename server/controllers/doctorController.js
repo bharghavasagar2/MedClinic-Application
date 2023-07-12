@@ -30,8 +30,8 @@ exports.getDoctorById = (req, res) => {
 // Create a new doctor
 exports.createDoctor = (req, res) => {
   const { doctor_name, department_id, contact_number, email, user_id } = req.body;
-  const query = 'INSERT INTO Doctors (doctor_name, department_id, contact_number, email, user_id) VALUES (?, ?, ?, ?, ?)';
-  db.run(query, [doctor_name, department_id, contact_number, email, user_id], function (err) {
+  const query = 'INSERT INTO Doctors (doctor_id, doctor_name, department_id, contact_number, email, user_id) VALUES (?, ?, ?, ?, ?, ?)';
+  db.run(query, [user_id, doctor_name, department_id, contact_number, email, user_id], function (err) {
     if (err) {
       res.status(500).json({ error: 'Error creating doctor' });
     } else {
@@ -66,7 +66,7 @@ exports.deleteDoctor = (req, res) => {
     } else if (this.changes === 0) {
       res.status(404).json({ error: 'Doctor not found' });
     } else {
-      res.sendStatus(204);
+      res.json({ message: 'Doctor deleted successfully' });
     }
   });
 };

@@ -67,7 +67,7 @@ exports.deletePatient = (req, res) => {
     } else if (this.changes === 0) {
       res.status(404).json({ error: 'Patient not found' });
     } else {
-      res.sendStatus(204);
+      res.json({ message: 'Patient deleted successfully' });
     }
   });
 };

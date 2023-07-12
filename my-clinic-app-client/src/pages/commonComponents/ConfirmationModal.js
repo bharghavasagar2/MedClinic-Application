@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ConfirmationModal = ({ message, onConfirm, onCancel }) => {
+const ConfirmationModal = ({ message = 'Please confirm your action', onConfirm, onCancel }) => {
   return (
     <div className="text-center">
       <p>{message}</p>

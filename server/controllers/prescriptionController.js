@@ -66,7 +66,7 @@ exports.deletePrescription = (req, res) => {
     } else if (this.changes === 0) {
       res.status(404).json({ error: 'Prescription not found' });
     } else {
-      res.sendStatus(204);
+      res.json({ message: 'Prescription deleted successfully' });
     }
   });
 };

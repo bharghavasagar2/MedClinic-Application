@@ -1,11 +1,13 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 const db = require('../db/db.js');
+const { createDoctor } = require('./doctorController');
 
 // Controller function to authenticate user and generate JWT token
 const axios = require('axios');
 
 const login = async (req, res) => {
+
   try {
     const { username, password, role, isSignUp } = req.body;
 
@@ -26,6 +28,16 @@ const login = async (req, res) => {
       if (!!isError) {
         return res.status(401).json({ error: 'Error Signing Up' });
       }
+    }
+
+    if (role === 'doctor' && !!isSignUp) {
+      await createUser({ username, password, role });
+      user = await getUserByUsername(username);
+      createDoctor({ body: { ...req.body, user_id: user?.user_id } }, res);
+      return;
+      // if (!!isError) {
+      //   return res.status(401).json({ error: 'Error Signing Up' });
+      // }
     }
 
     res.json({ token, role: user.role, userId: user?.user_id });

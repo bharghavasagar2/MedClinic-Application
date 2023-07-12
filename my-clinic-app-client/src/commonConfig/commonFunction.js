@@ -1,12 +1,16 @@
-export const filterRequestArray = (array, key, filterKey) => {
+export const filterRequestArray = (array, key, filterKeys) => {
   if (Array.isArray(array) && array.length > 0) {
-    return array.filter(
-      (data) => data[key] === filterKey
-    );
+    return array.filter((data) => filterKeys.indexOf(data[key]) !== -1);
   } else {
     return [];
   }
 };
+
+export const getCountAsString = (array) => {
+  const count = array.length;
+  return count.toString();
+};
+
 
 export const generateColumnsAndData = (array, linkFields, linkLabels, openModalFn) => {
   const columns = [];

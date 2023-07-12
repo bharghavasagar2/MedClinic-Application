@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom';
 import Portal from '../commonComponents/PortalComponent.js';
 import ConfirmationModal from './ConfirmationModal';
 import { generateColumnsAndData } from '../../commonConfig/commonFunction';
-import { Cancel, EDIT, VIEW, useReduxHelpers } from '../../commonConfig/commonConfig';
+import { Cancel, EDIT, USER_ROLES, VIEW, useReduxHelpers } from '../../commonConfig/commonConfig';
 import { actionTypeInitialState, initialState, resetCommonSlice } from '../../commonConfig/initialListComponent';
 import ConditionalRender from './ConditionalRender';
 import FormView from './CommonFormView';
@@ -18,10 +18,11 @@ import {
   deleteDataById,
   createUpdateDataById
 } from '../../redux/commonSlice/slice.js';
+import { getStorageValue } from '../../security/sessionStorage';
 
 const List = () => {
   const location = useLocation();
-  let { rawData, linkFields, linkLabels, fieldsToShowOnEdit, reducer, specificState,
+  let { rawData, linkFields, linkLabels, fieldsToShowOnEdit, specificState, confirmationMessage,
     apisToCall, role, addToResponseIfActionSuccess, mainRecordId } = location?.state;
 
   console.log(location?.state)
@@ -100,7 +101,7 @@ const List = () => {
   });
 
   const onCancelConfirm = () => {
-
+    dispatch(deleteDataById({ endpoint: apisToCall?.delete?.endpoint, id: selectedItem[mainRecordId] }));
   }
 
   const handleOnEditFormSubmission = (formValues) => {
@@ -108,9 +109,22 @@ const List = () => {
     setState({ ...state, getAddUpdateFlag: true })
   }
 
+
+  const getAllTableData = (common) => {
+
+  }
+
   useEffect(() => {
+    if (common && !!state.isCancel && !!common.deleteDataById && !!common.deleteDataById.message) {
+      closeModal({ getAlldataFlag: true, dataArrayList: [] });
+      resetCommonSlice(dispatch, resetProperty, 'deleteDataById');
+
+      if (!!apisToCall.getAll) {
+        dispatch(getAllData(apisToCall?.getAll?.endpoint))
+      }
+    }
     if (common && !!state.getAddUpdateFlag && !!common.createUpdateDataById) {
-      closeModal({ getAlldataFlag: true });
+      closeModal({ getAlldataFlag: true, dataArrayList: [] });
       resetCommonSlice(dispatch, resetProperty, 'createUpdateDataById');
 
       if (!!apisToCall.getAll) {
@@ -118,8 +132,14 @@ const List = () => {
       }
     }
     if (Array.isArray(common.allData) && common.allData.length > 0 && !!state.getAlldataFlag) {
-      closeModal({ getAlldataFlag: false, dataArrayList: common.allData });
       resetCommonSlice(dispatch, resetProperty, 'allData');
+
+      let dataArrayList = common.allData;
+      if (USER_ROLES.indexOf(role) !== -1) {
+        console.log(getStorageValue('userId'))
+        dataArrayList = common.allData.filter((data) => data[`${role}_id`] === getStorageValue('userId'));
+      }
+      closeModal({ getAlldataFlag: false, dataArrayList });
     }
   }, [common])
 
@@ -135,7 +155,7 @@ const List = () => {
         <ConditionalRender
           conditions={[
             { condition: isView, content: <FormView formData /> },
-            { condition: isCancel, content: <ConfirmationModal message='Please confirm your action' onConfirm={onCancelConfirm} onCancel={closeModal} /> },
+            { condition: isCancel, content: <ConfirmationModal message={confirmationMessage} onConfirm={onCancelConfirm} onCancel={closeModal} /> },
             { condition: isEdit, content: <Form initialValues={selectedItem || ''} fields={!!fieldsToShowOnEdit ? fieldsToShowOnEdit : null} onSubmit={handleOnEditFormSubmission} formName="Edit Patient" submitButtonName="Edit Details" /> },
             // { condition: true, content: <Form fields={patientState.RaiseRequestFields} onSubmit={handleAppntFormSubmit} formName="Appointment" submitButtonName="Proceed to Payment" /> },
           ]}

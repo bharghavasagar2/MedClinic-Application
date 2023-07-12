@@ -36,8 +36,8 @@ export const departments = [
   { value: 1, label: 'Cardiology' },
   { value: 2, label: 'Dermatology' },
   { value: 3, label: 'Gastroenterology' },
-  { value: 4, label: 'Neurology' },
-  { value: 5, label: 'Orthopedics' },
+  { value: 4, label: 'Orthopedics' },
+  { value: 5, label: 'Neurology' },
   { value: 6, label: 'General physician' }
 ];
 export const appointmentType = [
@@ -80,5 +80,7 @@ export const Cancel = 'Cancel';
 export const Config = 'Config';
 export const Approve = 'Approve';
 
+
+export const USER_ROLES = ['patient', 'doctor'];
 
 
