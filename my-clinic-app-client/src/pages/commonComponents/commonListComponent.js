@@ -5,8 +5,8 @@ import backgroundImage from '../../images/homepage.jpg';
 import { useLocation } from 'react-router-dom';
 import Portal from '../commonComponents/PortalComponent.js';
 import ConfirmationModal from './ConfirmationModal';
-import { generateColumnsAndData } from '../../commonConfig/commonFunction';
-import { Cancel, EDIT, USER_ROLES, VIEW, useReduxHelpers } from '../../commonConfig/commonConfig';
+import { filterRequestArray, generateColumnsAndData } from '../../commonConfig/commonFunction';
+import { ASSIGN_DOC, Cancel, EDIT, USER_ROLES, VIEW, useReduxHelpers } from '../../commonConfig/commonConfig';
 import { actionTypeInitialState, initialState, resetCommonSlice } from '../../commonConfig/initialListComponent';
 import ConditionalRender from './ConditionalRender';
 import FormView from './CommonFormView';
@@ -22,7 +22,7 @@ import { getStorageValue } from '../../security/sessionStorage';
 
 const List = () => {
   const location = useLocation();
-  let { rawData, linkFields, linkLabels, fieldsToShowOnEdit, specificState, confirmationMessage,
+  let { rawData, linkFields, linkLabels, fieldsToShowOnEdit, condtionToRenderAllData, confirmationMessage,
     apisToCall, role, addToResponseIfActionSuccess, mainRecordId } = location?.state;
 
   console.log(location?.state)
@@ -30,11 +30,12 @@ const List = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const { dispatch, globalState } = useReduxHelpers();
+  const [action, setAction] = useState(null);
   const [state, setState] = useState({ ...initialState, dataArrayList: rawData || [] });
 
   const { common } = globalState;
 
-  let { isView, isEdit, isCancel, dataArrayList } = state;
+  let { isView, isEdit, isCancel, dataArrayList, isAssignDoc } = state;
 
   const openModal = (item, i, actionType = null) => {
     switch (actionType) {
@@ -47,9 +48,13 @@ const List = () => {
       case EDIT:
         setState({ ...state, ...actionTypeInitialState, isEdit: true })
         break;
+      case ASSIGN_DOC:
+        setState({ ...state, ...actionTypeInitialState, isAssignDoc: true })
+        break;
     }
     setSelectedItem(dataArrayList?.[i]);
     setIsModalOpen(true);
+    setAction(actionType);
   };
 
   const { columns, data } = generateColumnsAndData(dataArrayList, linkFields, linkLabels, openModal);
@@ -65,6 +70,7 @@ const List = () => {
   const closeModal = (obj = false) => {
     setSelectedItem(null);
     setIsModalOpen(false);
+    setAction(null);
     if (!!obj) {
       setState({ ...state, ...actionTypeInitialState, ...obj });
     } else {
@@ -101,17 +107,20 @@ const List = () => {
   });
 
   const onCancelConfirm = () => {
-    dispatch(deleteDataById({ endpoint: apisToCall?.delete?.endpoint, id: selectedItem[mainRecordId] }));
+    if (!!addToResponseIfActionSuccess && !!addToResponseIfActionSuccess[action]) {
+      handleOnEditFormSubmission(selectedItem)
+    } else {
+      dispatch(deleteDataById({ endpoint: apisToCall?.delete?.endpoint, id: selectedItem[mainRecordId] }));
+    }
   }
 
   const handleOnEditFormSubmission = (formValues) => {
-    dispatch(createUpdateDataById({ endpoint: apisToCall.update.endpoint, id: formValues[mainRecordId], data: formValues }));
+    let formVal = formValues;
+    if (!!addToResponseIfActionSuccess && !!addToResponseIfActionSuccess[action]) {
+      formVal = { ...formVal, ...addToResponseIfActionSuccess[action] }
+    }
+    dispatch(createUpdateDataById({ endpoint: apisToCall.update.endpoint, id: formValues[mainRecordId], data: formVal }));
     setState({ ...state, getAddUpdateFlag: true })
-  }
-
-
-  const getAllTableData = (common) => {
-
   }
 
   useEffect(() => {
@@ -139,6 +148,9 @@ const List = () => {
         console.log(getStorageValue('userId'))
         dataArrayList = common.allData.filter((data) => data[`${role}_id`] === getStorageValue('userId'));
       }
+      if (!!condtionToRenderAllData) {
+        dataArrayList = filterRequestArray(dataArrayList, condtionToRenderAllData.key, condtionToRenderAllData.filterKeys)
+      }
       closeModal({ getAlldataFlag: false, dataArrayList });
     }
   }, [common])
@@ -156,6 +168,7 @@ const List = () => {
           conditions={[
             { condition: isView, content: <FormView formData /> },
             { condition: isCancel, content: <ConfirmationModal message={confirmationMessage} onConfirm={onCancelConfirm} onCancel={closeModal} /> },
+            { condition: isAssignDoc, content: <Form initialValues={selectedItem || ''} fields={!!fieldsToShowOnEdit ? fieldsToShowOnEdit : null} onSubmit={handleOnEditFormSubmission} formName="Assign Doc" submitButtonName="Assign & Approve" /> },
             { condition: isEdit, content: <Form initialValues={selectedItem || ''} fields={!!fieldsToShowOnEdit ? fieldsToShowOnEdit : null} onSubmit={handleOnEditFormSubmission} formName="Edit Patient" submitButtonName="Edit Details" /> },
             // { condition: true, content: <Form fields={patientState.RaiseRequestFields} onSubmit={handleAppntFormSubmit} formName="Appointment" submitButtonName="Proceed to Payment" /> },
           ]}

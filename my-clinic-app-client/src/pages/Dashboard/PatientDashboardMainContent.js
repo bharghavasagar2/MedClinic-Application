@@ -171,11 +171,11 @@ const PatientDashboard = () => {
           data={filterRequestArray(appointmentList, 'appointment_status', [APPOINTMENT_STATUS.PENDING])}
           navigate='/list'
           dataToBePassed={{
+            condtionToRenderAllData: { filterKeys: [APPOINTMENT_STATUS.PENDING], key: 'appointment_status' },
             rawData: filterRequestArray(appointmentList, 'appointment_status', [APPOINTMENT_STATUS.PENDING]),
             linkFields: [Cancel, EDIT],
             linkLabels: [Cancel, EDIT],
             apisToCall: apisToCallAppointmentRequestPatient,
-            addToResponseIfActionSuccess: { Cancel: { appointment_status: APPOINTMENT_STATUS.CANCELLED } },
             role: 'patient',
             specificState: 'appointment',
             reducer: 'appointmentReducer',

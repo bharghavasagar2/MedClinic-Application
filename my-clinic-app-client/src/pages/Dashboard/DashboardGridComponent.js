@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { FaUser, FaCalendar, FaStethoscope, FaMoneyBillWave, FaClock } from 'react-icons/fa';
+import { FaUser, FaCalendar, FaStethoscope, FaMoneyBillWave, FaClock, FaDemocrat, FaDotCircle, FaUserInjured, FaUserShield } from 'react-icons/fa';
 import AnalyticalInfo from '../commonComponents/AnalyticalReportsComponent';
 import Card from '../commonComponents/CardComponent';
 import { getAppointmentAllRecords } from '../../redux/reducers/appointmentsSlice';
-import { APPOINTMENT_STATUS, Cancel, EDIT, getUserId, useReduxHelpers } from '../../commonConfig/commonConfig';
+import { APPOINTMENT_STATUS, ASSIGN_DOC, Cancel, EDIT, getUserId, useReduxHelpers } from '../../commonConfig/commonConfig';
 import { filterRequestArray } from '../../commonConfig/commonFunction';
 import { fetchAllPatientRecords, getRecordById } from '../../redux/reducers/patientsSlice';
 import { create_Update_Doc_ById, fetchAllDocRecords } from '../../redux/reducers/doctorsSlice';
 import { fetchAllPaymentRecords } from '../../redux/reducers/paymentSlice';
-import { apisToCallAppointmentRequestAdmin, initalStateDashboardGrid } from './initialStateDashboardScreen';
+import { apisToCallAppointmentRequestAdmin, assignDoctorFields, initalStateDashboardGrid } from './initialStateDashboardScreen';
 import Portal from '../commonComponents/PortalComponent';
 import ConditionalRender from '../commonComponents/ConditionalRender';
 import Form from '../commonComponents/FormCommonComponent';
@@ -68,19 +68,26 @@ const DashboardGrid = () => {
   return (
     <main className="max-w-7xl mx-auto px-4 py-6 bg-opacity-70">
       <div className="flex justify-end mb-4">
-        <button className="px-4 py-2 rounded bg-blue-500 text-white" onClick={openModal} style={{ cursor: 'pointer !important' }}>Add Doctor</button>
+        {/* <button className="px-4 py-2 rounded bg-blue-500 text-white mr-2" onClick={openModal} style={{ cursor: 'pointer !important' }}>Add Walkin Patient</button> */}
+        <button className="px-4 py-2 rounded bg-blue-500 text-white flex items-center" onClick={openModal} style={{ cursor: 'pointer !important' }}>
+          <FaUserShield className="mr-2" />
+          Add Doctor
+        </button>
       </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <Card title="Total Patients" navigate="/list" icon={FaUser} data={patients.allPatients.length.toString()} />
+        <Card title="Total Patients" navigate="/list" icon={FaUserInjured} data={patients.allPatients.length.toString()} />
         <Card
           title="Pending Appointment Requests"
           dataToBePassed={{
-            rawData: filterRequestArray(appointments.appointmentList, 'appointment_status', [APPOINTMENT_STATUS.PENDING]),
-            linkFields: [Cancel, EDIT],
-            linkLabels: [Cancel, EDIT],
+            rawData: filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.PENDING]),
+            linkFields: [ASSIGN_DOC, Cancel],
+            linkLabels: [ASSIGN_DOC, Cancel],
+            fieldsToShowOnEdit: assignDoctorFields,
             apisToCall: apisToCallAppointmentRequestAdmin,
-            addToResponseIfActionSuccess: { Cancel: { appointment_status: APPOINTMENT_STATUS.CANCELLED } },
-            role: 'patient',
+            condtionToRenderAllData: { filterKeys: [APPOINTMENT_STATUS.PENDING], key: 'appointment_status' },
+            addToResponseIfActionSuccess: { Cancel: { appointment_status: APPOINTMENT_STATUS.CANCELLED }, ASSIGN_DOC: { appointment_status: APPOINTMENT_STATUS.APPROVED } },
+            role: 'admin',
             specificState: 'appointment',
             reducer: 'appointmentReducer',
             mainRecordId: 'appointment_id',

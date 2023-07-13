@@ -117,6 +117,9 @@
 .transparent-table {
   background-color: transparent;
 }
+.form-field.disabled {
+  color: rgb(171, 157, 157); /* Text color for disabled fields */
+}
 .table-gray {
   background-color: #8a98b3; /* Replace with your preferred gray color */
 }

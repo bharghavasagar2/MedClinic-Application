@@ -34,11 +34,11 @@ export { globalState }
 export const RESET_PROPERTY = 'resetProperty';
 export const departments = [
   { value: 1, label: 'Cardiology' },
-  { value: 2, label: 'Dermatology' },
-  { value: 3, label: 'Gastroenterology' },
+  { value: 2, label: 'General physician' },
+  { value: 3, label: 'Dermatology' },
   { value: 4, label: 'Orthopedics' },
-  { value: 5, label: 'Neurology' },
-  { value: 6, label: 'General physician' }
+  { value: 5, label: 'Gastroenterology' },
+  { value: 6, label: 'Neurology' }
 ];
 export const appointmentType = [
   { value: 'Walk-in', label: 'Walk-in' },
@@ -74,13 +74,15 @@ export const filterArray = (data, filterArrayKey) => {
   }
 }
 
-export const EDIT = 'Edit';
-export const VIEW = 'View';
+export const EDIT = 'EDIT';
+export const VIEW = 'VIEW';
 export const Cancel = 'Cancel';
 export const Config = 'Config';
 export const Approve = 'Approve';
+export const ASSIGN_DOC = 'ASSIGN_DOC';
 
 
 export const USER_ROLES = ['patient', 'doctor'];
+
 
 

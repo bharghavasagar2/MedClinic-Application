@@ -70,3 +70,15 @@ exports.deleteDoctor = (req, res) => {
     }
   });
 };
+
+exports.getDoctorsByDepartment = (req, res) => {
+  const departmentId = req.params.department_id;
+  const query = 'SELECT * FROM Doctors WHERE department_id = ?';
+  db.all(query, [departmentId], (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: 'Error retrieving doctors from the database' });
+    } else {
+      res.json(rows);
+    }
+  });
+};

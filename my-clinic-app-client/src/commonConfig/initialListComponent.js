@@ -12,7 +12,8 @@ export const actionTypeInitialState = {
   isEdit: false,
   isCancel: false,
   getAddUpdateFlag: false,
-  getAlldataFlag: false
+  getAlldataFlag: false,
+  isAssignDoc: false
 }
 
 export const resetCommonSlice = (dispatch, resetProperty, specificKeyreset = false) => {

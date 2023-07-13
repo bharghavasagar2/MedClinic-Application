@@ -61,10 +61,23 @@ export const createUpdateDataById = createAsyncThunk('common/createUpdateDataByI
   }
 });
 
+export const getLookUps = createAsyncThunk('common/getLookUps', async ({ endpoint, id }) => {
+  try {
+    const userData = getData('userDetails');
+    setAuthToken(userData?.token);
+    const response = await api.get(`${endpoint}/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching data: ${error.message}`);
+    throw error;
+  }
+});
+
 // Slice
 const commonSlice = createSlice({
   name: 'common',
   initialState: {
+    getLookUps: [],
     allData: [],
     dataById: null,
     deleteDataById: null,
@@ -84,6 +97,9 @@ const commonSlice = createSlice({
       })
       .addCase(createUpdateDataById.fulfilled, (state, action) => {
         state.createUpdateDataById = action.payload;
+      })
+      .addCase(getLookUps.fulfilled, (state, action) => {
+        state.getLookUps = action.payload;
       });
   },
 });

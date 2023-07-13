@@ -142,3 +142,32 @@ export const initalStateDashboardGrid = {
     },
   ]
 }
+
+export const assignDoctorFields = [
+
+  { name: 'appointment_date', label: 'Date', type: 'date', required: true, disabled: true },
+  { name: 'appointment_time', label: 'Time', type: 'time', required: true, disabled: true },
+  {
+    name: 'department_id',
+    label: 'Select Department', required: true,
+    type: 'select',
+    options: departments, disabled: true
+  },
+  {
+    name: 'appointment_type', disabled: true,
+    label: 'Select Appointment Type', required: true,
+    type: 'select',
+    options: appointmentType,
+  },
+  {
+    name: 'doctor_id',
+    label: 'Select Doctor', required: true,
+    type: 'select',
+    options: [],
+    isFetchLookUp: true,
+    endpoint: '/doctors/department',
+    filterValueAmongTheForm: 'department_id',
+    labelValueToShow: { value: 'doctor_id', label: 'doctor_name' }
+  },
+
+]

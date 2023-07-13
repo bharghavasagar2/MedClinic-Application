@@ -61,3 +61,13 @@ export const generateColumnsAndData = (array, linkFields, linkLabels, openModalF
 };
 
 
+
+export const createSelectArray = (isCheck, lookUpData, labelObjectToShow) => {
+  if (!!isCheck && Array.isArray(lookUpData) && lookUpData.length > 0 && !!labelObjectToShow) {
+    return lookUpData.map(el => {
+      return ({ label: el[labelObjectToShow.label], value: el[labelObjectToShow.value] });
+    })
+  } else {
+    return []
+  }
+}

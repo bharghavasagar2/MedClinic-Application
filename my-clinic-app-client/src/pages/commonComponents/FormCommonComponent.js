@@ -3,8 +3,12 @@ import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import 'react-datetime/css/react-datetime.css';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useReduxHelpers } from '../../commonConfig/commonConfig';
+import { getAllData, getLookUps } from '../../redux/commonSlice/slice';
+import { createSelectArray } from '../../commonConfig/commonFunction';
 
-const Form = ({ fields, onSubmit, submitButtonName = 'Submit', disabled = false, formName, initialValues }) => {
+const Form = ({ fields, onSubmit, submitButtonName = 'Submit', formName, initialValues }) => {
+  let { globalState, dispatch } = useReduxHelpers();
   const timeValue = !!initialValues?.appointment_time ? moment(initialValues?.appointment_time, 'hh:mm A').toDate() : ''
   const dateValue = !!initialValues?.appointment_date ? moment(initialValues?.appointment_date, 'DD-MM-YYYY').toDate() : ''
 
@@ -13,12 +17,15 @@ const Form = ({ fields, onSubmit, submitButtonName = 'Submit', disabled = false,
   const [time, setTime] = useState(timeValue);
   const [date, setDate] = useState(dateValue);
 
+  let { common } = globalState;
   const handleSubmit = (event) => {
     event.preventDefault();
     if (validateForm()) {
       onSubmit(formValues);
     }
   };
+
+
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -90,6 +97,19 @@ const Form = ({ fields, onSubmit, submitButtonName = 'Submit', disabled = false,
     [date]
   );
 
+  useEffect(() => {
+    fields.forEach((field) => {
+      if (field.isFetchLookUp && field.filterValueAmongTheForm && formValues[field.filterValueAmongTheForm]) {
+        console.log('I have triggered')
+        const fetchOptions = {
+          endpoint: field.endpoint,
+          id: formValues[field.filterValueAmongTheForm],
+        };
+        // Dispatch an action to fetch the options
+        dispatch(getLookUps(fetchOptions));
+      }
+    });
+  }, [formValues]);
 
   let buttonClassName = 'w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600';
   let inputClassName = 'w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500';
@@ -101,12 +121,13 @@ const Form = ({ fields, onSubmit, submitButtonName = 'Submit', disabled = false,
         <h2>{formName}</h2>
       </div>
       {fields.map((field, i) => (
-        <div key={i}>
+        <div key={i} className={`form-field ${field.disabled ? 'disabled' : ''}`}>
           <label className="block font-medium text-gray-700" htmlFor={field.name}>
             {field.label}:
           </label>
           {field.type === 'select' ? (
             <select
+              disabled={!!field.disabled}
               name={field.name}
               id={field.name}
               className={`${selectClassName} ${errors[field.name] && 'border-red-500'}`}
@@ -116,7 +137,7 @@ const Form = ({ fields, onSubmit, submitButtonName = 'Submit', disabled = false,
               <option value=''>
                 --Select--
               </option>
-              {field.options.map((option) => (
+              {[...field.options, ...createSelectArray(!!field.isFetchLookUp, common.getLookUps, field.labelValueToShow)].map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -124,6 +145,7 @@ const Form = ({ fields, onSubmit, submitButtonName = 'Submit', disabled = false,
             </select>
           ) : field.type === 'time' ? (
             <DatePicker
+              disabled={!!field.disabled}
               autoComplete="off"
               id={field.name}
               name={field.name}
@@ -140,6 +162,7 @@ const Form = ({ fields, onSubmit, submitButtonName = 'Submit', disabled = false,
 
           ) : (field.type === 'date') ? (
             <DatePicker
+              disabled={!!field.disabled}
               showIcon
               autoComplete="off"
               id={field.name}
@@ -151,7 +174,7 @@ const Form = ({ fields, onSubmit, submitButtonName = 'Submit', disabled = false,
             />
           ) : (
             <input
-              disabled={disabled}
+              disabled={!!field.disabled}
               className={`${inputClassName} ${errors[field.name] && 'border-red-500'} datepicker-input`}
               type={field.type}
               name={field.name}
