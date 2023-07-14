@@ -4,7 +4,8 @@ export const initialState = {
   isCancel: false,
   getAddUpdateFlag: false,
   getAlldataFlag: false,
-  dataArrayList: []
+  dataArrayList: [],
+  isPrescribe: false,
 }
 
 export const actionTypeInitialState = {
@@ -13,7 +14,8 @@ export const actionTypeInitialState = {
   isCancel: false,
   getAddUpdateFlag: false,
   getAlldataFlag: false,
-  isAssignDoc: false
+  isAssignDoc: false,
+  isPrescribe: false,
 }
 
 export const resetCommonSlice = (dispatch, resetProperty, specificKeyreset = false) => {

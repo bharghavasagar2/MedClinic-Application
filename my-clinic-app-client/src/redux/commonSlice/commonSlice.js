@@ -2,14 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../../api/api.js';
 import { getData } from '../../security/sessionStorage.js';
 import { useSelector } from 'react-redux';
-import { globalState } from '../../commonConfig/commonConfig.js';
 //import { token } from '../../pages/Dashboard/DashboardComponent.js';
-
-
-
-
-
-console.log(globalState)
 
 const setAuthToken = (userToken) => {
 

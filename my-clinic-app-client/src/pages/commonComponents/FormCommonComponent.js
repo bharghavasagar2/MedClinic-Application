@@ -7,10 +7,10 @@ import { useReduxHelpers } from '../../commonConfig/commonConfig';
 import { getAllData, getLookUps } from '../../redux/commonSlice/slice';
 import { createSelectArray } from '../../commonConfig/commonFunction';
 
-const Form = ({ fields, onSubmit, submitButtonName = 'Submit', formName, initialValues }) => {
+const Form = ({ fields, onSubmit, submitButtonName = 'Submit', formName, initialValues, isPrescribe = false }) => {
   let { globalState, dispatch } = useReduxHelpers();
-  const timeValue = !!initialValues?.appointment_time ? moment(initialValues?.appointment_time, 'hh:mm A').toDate() : ''
-  const dateValue = !!initialValues?.appointment_date ? moment(initialValues?.appointment_date, 'DD-MM-YYYY').toDate() : ''
+  const timeValue = !!initialValues?.appointment_time && !isPrescribe ? moment(initialValues?.appointment_time, 'hh:mm A').toDate() : '';
+  const dateValue = !!initialValues?.appointment_date && !isPrescribe ? moment(initialValues?.appointment_date, 'DD-MM-YYYY').toDate() : !!isPrescribe ? moment().toDate() : '';
 
   const [formValues, setFormValues] = useState(initialValues || {});
   const [errors, setErrors] = useState({});
@@ -24,8 +24,27 @@ const Form = ({ fields, onSubmit, submitButtonName = 'Submit', formName, initial
       onSubmit(formValues);
     }
   };
+  console.log(formValues)
+  console.log(initialValues)
+  useEffect(() => {
+    if (Array.isArray(fields) && fields.some((data) => !!data['initialValue'])) {
+      let findObj = fields.find((data) => !!data['initialValue']);
+      if (!!findObj && findObj.name && !!formValues && !(!!initialValues && !!initialValues[findObj.name])) {
+        let form = { ...formValues }   //initialValues
+        form[findObj.name] = findObj.initialValue;
+        form['prescription_date'] = dateValue;
+        setFormValues({ ...form })
+      }
+      if (!!findObj && findObj.name && !!formValues && (!!initialValues && !!initialValues[findObj.name])) {
+        let form = { ...formValues }   //initialValues
+        form[findObj.name] = initialValues[findObj.name];
+        form['prescription_date'] = dateValue;
+        setFormValues({ ...form })
+      }
+    }
+  }, [initialValues]);
 
-
+  console.log(formValues)
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -39,12 +58,9 @@ const Form = ({ fields, onSubmit, submitButtonName = 'Submit', formName, initial
     }));
   };
 
-
-
   const handleDateChange = (name, date, fieldType) => {
     const value = fieldType === 'time' ? moment(date).format('hh:mm A') : date;
-    //  setTime(date);
-    let obj
+    let obj;
     if (fieldType === 'date') {
       setTime('');
       setDate(date);
@@ -77,8 +93,6 @@ const Form = ({ fields, onSubmit, submitButtonName = 'Submit', formName, initial
     return isValid;
   };
 
-
-
   const filterPassedTime = useCallback(
     (time) => {
       const currentTime = new Date();
@@ -88,7 +102,7 @@ const Form = ({ fields, onSubmit, submitButtonName = 'Submit', formName, initial
       const currentDate = currentTime.toDateString();
       const datePickerDate = new Date(date).toDateString();
 
-      if (selectedDate === currentDate && datePickerDate === currentDate) { // Check if it's the current date
+      if (selectedDate === currentDate && datePickerDate === currentDate) {
         return selectedTime >= minTime;
       }
 
@@ -100,20 +114,23 @@ const Form = ({ fields, onSubmit, submitButtonName = 'Submit', formName, initial
   useEffect(() => {
     fields.forEach((field) => {
       if (field.isFetchLookUp && field.filterValueAmongTheForm && formValues[field.filterValueAmongTheForm]) {
-        console.log('I have triggered')
+        console.log('I have triggered');
         const fetchOptions = {
           endpoint: field.endpoint,
           id: formValues[field.filterValueAmongTheForm],
         };
-        // Dispatch an action to fetch the options
         dispatch(getLookUps(fetchOptions));
       }
     });
   }, [formValues]);
 
+  console.log(fields)
+
   let buttonClassName = 'w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600';
-  let inputClassName = 'w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500';
-  let selectClassName = 'w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500';
+  let inputClassName =
+    'w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500';
+  let selectClassName =
+    'w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500';
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -134,14 +151,14 @@ const Form = ({ fields, onSubmit, submitButtonName = 'Submit', formName, initial
               value={formValues[field.name] || ''}
               onChange={handleInputChange}
             >
-              <option value=''>
-                --Select--
-              </option>
-              {[...field.options, ...createSelectArray(!!field.isFetchLookUp, common.getLookUps, field.labelValueToShow)].map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
+              <option value="">--Select--</option>
+              {[...field.options, ...createSelectArray(!!field.isFetchLookUp, common.getLookUps, field.labelValueToShow)].map(
+                (option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                )
+              )}
             </select>
           ) : field.type === 'time' ? (
             <DatePicker
@@ -159,8 +176,7 @@ const Form = ({ fields, onSubmit, submitButtonName = 'Submit', formName, initial
               onChange={(date) => handleDateChange(field.name, date, field.type)}
               className={`${inputClassName} ${errors[field.name] && 'border-red-500'} datepicker-input`}
             />
-
-          ) : (field.type === 'date') ? (
+          ) : field.type === 'date' ? (
             <DatePicker
               disabled={!!field.disabled}
               showIcon
@@ -172,13 +188,22 @@ const Form = ({ fields, onSubmit, submitButtonName = 'Submit', formName, initial
               onChange={(date) => handleDateChange(field.name, date, field.type)}
               className={`${inputClassName} ${errors[field.name] && 'border-red-500'} datepicker-input`}
             />
+          ) : field.type === 'textarea' ? (
+            <textarea
+              disabled={!!field.disabled}
+              className={`${inputClassName} ${errors[field.name] && 'border-red-500'}`}
+              name={field.name}
+              id={'myTextarea'}
+              value={formValues[field.name]}
+              onChange={handleInputChange}
+            />
           ) : (
             <input
               disabled={!!field.disabled}
               className={`${inputClassName} ${errors[field.name] && 'border-red-500'} datepicker-input`}
               type={field.type}
               name={field.name}
-              id={field.name}
+              id={field.name}//initialValue
               value={formValues[field.name] || ''}
               onChange={handleInputChange}
             />

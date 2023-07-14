@@ -9,6 +9,8 @@ import { Loading } from '../api/api';
 import PrivateRoutes from '../token/withTokenAuth';
 import NotFound from '../pages/commonComponents/NotFoundComponent';
 import List from '../pages/commonComponents/commonListComponent';
+import PatientSignupWalkinForm from '../pages/Dashboard/WalkinPatientSignUpComponent.js'
+import { ToastContainer } from 'react-toastify';
 
 // Import other pages as needed
 
@@ -17,6 +19,7 @@ const AppRouter = () => {
   return (
     <Router>
       <Loading />
+      <ToastContainer />
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -25,10 +28,10 @@ const AppRouter = () => {
           <Route path="/signUp" element={<PatientSignup />} />
           <Route path="/adminLogin" element={<AdminLogin />} />
 
-          {/* Auth Protected Routes */}
           <Route element={<PrivateRoutes />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/list" element={<List />} />
+            <Route path="/adminPatientSignup" element={<PatientSignupWalkinForm />} />
           </Route>
           {/* Fallback route for handling undefined routes */}
           <Route path="*" element={<NotFound />} />

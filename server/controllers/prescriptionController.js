@@ -70,3 +70,18 @@ exports.deletePrescription = (req, res) => {
     }
   });
 };
+
+
+exports.getPrescriptionByAppointmentById = (req, res) => {
+  const appointment_id = req.params.appointment_id;
+  const query = 'SELECT * FROM Prescriptions WHERE appointment_id = ?';
+  db.get(query, [appointment_id], (err, row) => {
+    if (err) {
+      res.status(500).json({ error: 'Error retrieving prescription from the database' });
+    } else if (!row) {
+      res.json({});
+    } else {
+      res.json(row);
+    }
+  });
+};

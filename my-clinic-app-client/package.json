@@ -25,6 +25,7 @@
     "react-scripts": "5.0.1",
     "react-spinners": "^0.13.8",
     "react-time-picker": "^6.2.0",
+    "react-toastify": "^9.1.3",
     "recharts": "^2.7.2",
     "store2": "^2.14.2",
     "styled-components": "^6.0.2",

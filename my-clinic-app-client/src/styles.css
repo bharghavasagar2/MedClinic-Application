@@ -117,6 +117,11 @@
 .transparent-table {
   background-color: transparent;
 }
+#myTextarea {
+  height: 200px; /* Adjust the height as needed */
+  width: 400px; /* Adjust the width as needed */
+}
+
 .form-field.disabled {
   color: rgb(171, 157, 157); /* Text color for disabled fields */
 }

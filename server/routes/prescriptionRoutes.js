@@ -14,6 +14,9 @@ router.post('/prescriptions', authController.authenticateToken, prescriptionCont
 // Update a prescription
 router.put('/prescriptions/:id', authController.authenticateToken, prescriptionController.updatePrescription);
 
+//get by appoitnment id
+router.get('/prescriptions/appointments/:appointment_id', authController.authenticateToken, prescriptionController.getPrescriptionByAppointmentById);
+
 // Delete a prescription
 router.delete('/prescriptions/:id', authController.authenticateToken, prescriptionController.deletePrescription);
 

@@ -3,6 +3,7 @@ import { create_Update_ById, create_Record } from '../commonSlice/commonSlice';
 
 
 const login = create_Record('authentication/login', '/login');
+const walkinPatientSignUpAdmin = create_Record('authentication/patientWalkIn', '/login');
 const logOut = create_Update_ById('authentication/logOut', '/logout');
 const initialState = {
   loggedIn: false,
@@ -10,6 +11,7 @@ const initialState = {
   token: null,
   error: null,
   role: null,
+  patientSignUpSuccess: false
 };
 
 
@@ -46,10 +48,13 @@ const authenticationSlice = createSlice({
       })
       .addCase(logOut.rejected, (state, action) => {
         state.error = action.payload.message;
-      });
+      })
+      .addCase(walkinPatientSignUpAdmin.fulfilled, (state, action) => {
+        state.patientSignUpSuccess = true;
+      })
   }
 
 });
 
-export { login, logOut }
+export { login, logOut, walkinPatientSignUpAdmin }
 export default authenticationSlice.reducer;

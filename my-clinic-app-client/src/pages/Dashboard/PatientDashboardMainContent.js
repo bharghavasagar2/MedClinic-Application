@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaUser, FaCalendar, FaFilePrescription, FaVideo } from 'react-icons/fa';
+import { ToastContainer, toast } from 'react-toastify';
 import Card from '../commonComponents/CardComponent';
 import doctorVideo from '../../videos/doctorVideo.mp4';
 import VideoComponent from '../commonComponents/CommonVideoComponent';
@@ -46,7 +47,7 @@ const PatientDashboard = () => {
     setPatientState(state);
   };
 
-  const handleShowEditPatientScreen = () => {
+  const handleEditDashboardScreen = () => {
     let state = {
       ...patientState, isOpen: true, ...resetScreen, isShowPatientEditDetails: true
 
@@ -63,7 +64,7 @@ const PatientDashboard = () => {
     setPatientState(state);
   };
 
-  let { isOpen, isShowPaymentScreen, isAppointmentAdded, appointmentList,
+  let { isOpen, isShowPaymentScreen, appointmentList,
     isShowPatientEditDetails, fieldsToShowEditPatient, fieldsToShowAppintmentsAdd,
     fieldsToShowAppintments } = patientState;
 
@@ -106,27 +107,30 @@ const PatientDashboard = () => {
       createPayment(appointments.create_UpdateById.id);
     }
     if (!!payments && !!payments.create_UpdateById?.id && patientState.isGetPaymentFlag) {
-
       dispatch(resetProperty('payments', 'create_UpdateById'))
-      setPatientState({ ...patientState, isAppointmentAdded: true, isShowPaymentScreen: false });
+      setPatientState({ ...patientState, isShowPaymentScreen: false });
       dispatch(getAppointmentAllRecords())
+      closeModal();
+      toast('Sucessfully raised appointment request')
     }
     if (!!appointments && !!appointments.allappointments && appointments.allappointments.length > 0) {
       let reduxUserId = globalState.authentication?.userId;
       let userId = reduxUserId || getData(USER_DETAILS)?.userId;
       dispatch(resetProperty('appointments', 'allappointments'))
       let filter = appointments.allappointments.filter(({ patient_id }) => patient_id === userId);
-      setPatientState({ ...patientState, isAppointmentAdded: true, isShowPaymentScreen: false, appointmentList: filter });
+      setPatientState({ ...patientState, isShowPaymentScreen: false, appointmentList: filter });
     }
     if (!!appointments && !!appointments.allappointments && appointments.allappointments.length > 0) {
       let reduxUserId = globalState.authentication?.userId;
       let userId = reduxUserId || getData(USER_DETAILS)?.userId;
       dispatch(resetProperty('appointments', 'allappointments'))
       let filter = appointments.allappointments.filter(({ patient_id }) => patient_id === userId);
-      setPatientState({ ...patientState, isAppointmentAdded: true, isShowPaymentScreen: false, appointmentList: filter });
+
+      setPatientState({ ...patientState, isShowPaymentScreen: false, appointmentList: filter });
     }
 
     if (!!patients && !!patients.create_UpdateById) {
+      toast('Sucessfully Updated Patient details')
       dispatch(resetProperty('patients', 'create_UpdateById'));
 
       dispatch(getRecordById(getUserId(authentication)));
@@ -151,7 +155,7 @@ const PatientDashboard = () => {
           data={getAppPatientsById || {}}
           fieldsToShow={patientInitialState.fieldsToShowView}
           isEdit={true}
-          onClick={handleShowEditPatientScreen}
+          onClick={handleEditDashboardScreen}
           buttonText='Edit Details'
           showLink={true}
         />
@@ -196,7 +200,7 @@ const PatientDashboard = () => {
         <ConditionalRender
           conditions={[
             { condition: isShowPaymentScreen, content: <PaymentForm onPaymentSubmit={handlePaymentSubmit} /> },
-            { condition: isAppointmentAdded, content: <div><p>Successfully Raised Appointment Request</p></div> },
+            //    { condition: isAppointmentAdded, content: <div><p>Successfully Raised Appointment Request</p></div> },
             { condition: isShowPatientEditDetails, content: <Form initialValues={getAppPatientsById || ''} fields={fieldsToShowEditPatient} onSubmit={handleEditPatientFormSubmission} formName="Edit Patient" submitButtonName="Edit Details" /> },
             { condition: true, content: <Form fields={patientState.RaiseRequestFields} onSubmit={handleAppntFormSubmit} formName="Appointment" submitButtonName="Proceed to Payment" /> },
           ]}

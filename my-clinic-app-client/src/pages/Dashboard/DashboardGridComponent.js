@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaUser, FaCalendar, FaStethoscope, FaMoneyBillWave, FaClock, FaDemocrat, FaDotCircle, FaUserInjured, FaUserShield } from 'react-icons/fa';
+import { FaUser, FaCalendar, FaStethoscope, FaMoneyBillWave, FaClock, FaDemocrat, FaDotCircle, FaUserInjured, FaUserShield, FaWalking } from 'react-icons/fa';
 import AnalyticalInfo from '../commonComponents/AnalyticalReportsComponent';
 import Card from '../commonComponents/CardComponent';
 import { getAppointmentAllRecords } from '../../redux/reducers/appointmentsSlice';
@@ -14,6 +14,8 @@ import ConditionalRender from '../commonComponents/ConditionalRender';
 import Form from '../commonComponents/FormCommonComponent';
 import { resetProperty } from '../../redux/reducers/resetSlice';
 import { login } from '../../redux/reducers/authenticationSlice';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const DashboardGrid = () => {
   const { globalState, dispatch, navigate } = useReduxHelpers();
@@ -56,6 +58,7 @@ const DashboardGrid = () => {
   useEffect(() => {
     if (doctors.create_Update_Doc_ById && !!doctors.create_Update_Doc_ById && !!state.isAddFlag) {
       dispatch(resetProperty('doctors', 'create_Update_Doc_ById'));
+      toast("Successfully added Doctor");
       closeModal();
       dispatch(fetchAllDocRecords());
     }
@@ -68,7 +71,7 @@ const DashboardGrid = () => {
   return (
     <main className="max-w-7xl mx-auto px-4 py-6 bg-opacity-70">
       <div className="flex justify-end mb-4">
-        {/* <button className="px-4 py-2 rounded bg-blue-500 text-white mr-2" onClick={openModal} style={{ cursor: 'pointer !important' }}>Add Walkin Patient</button> */}
+        <Link to='/adminPatientSignup' className="px-4 py-2 rounded bg-blue-500 text-white flex items-center mr-2" style={{ cursor: 'pointer !important' }}><FaWalking className="mr-2" />Add Walkin Patient</Link>
         <button className="px-4 py-2 rounded bg-blue-500 text-white flex items-center" onClick={openModal} style={{ cursor: 'pointer !important' }}>
           <FaUserShield className="mr-2" />
           Add Doctor

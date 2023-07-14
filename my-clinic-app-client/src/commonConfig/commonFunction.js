@@ -1,10 +1,27 @@
-export const filterRequestArray = (array, key, filterKeys) => {
+import { getData } from "../security/sessionStorage";
+
+import { USER_DETAILS } from "./commonConfig";
+
+import { filter, omit } from 'lodash';
+
+export const filterRequestArray = (array, key, filterKeys, keyAssociatedWithUserId = null, keysToOmit = null) => {
+  const userId = getData(USER_DETAILS)?.userId;
   if (Array.isArray(array) && array.length > 0) {
-    return array.filter((data) => filterKeys.indexOf(data[key]) !== -1);
+    return filter(array, (data) => {
+      const filterKeyIndex = filterKeys.indexOf(data[key]);
+      return (
+        filterKeyIndex !== -1 &&
+        (!keyAssociatedWithUserId || data[keyAssociatedWithUserId] === userId)
+      );
+    }).map((filteredData) => (keysToOmit ? omit(filteredData, keysToOmit) : filteredData));
   } else {
     return [];
   }
 };
+
+
+
+
 
 export const getCountAsString = (array) => {
   const count = array.length;
@@ -43,6 +60,7 @@ export const generateColumnsAndData = (array, linkFields, linkLabels, openModalF
           itemData[key] = item[key] !== undefined && item[key] !== null ? item[key] : 'NA';
         }
       }
+
       if (linkFields) {
         linkFields.forEach((field, index) => {
           const linkText = linkLabels && linkLabels[index] ? linkLabels[index] : 'Link';

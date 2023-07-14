@@ -9,7 +9,7 @@ const axios = require('axios');
 const login = async (req, res) => {
 
   try {
-    const { username, password, role, isSignUp } = req.body;
+    const { username, password, role, isSignUp, isWalkinPatient } = req.body;
 
     // Perform user authentication logic
     let user = await getUserByUsername(username);
@@ -17,9 +17,11 @@ const login = async (req, res) => {
     if ((!user || user.password !== password) && !isSignUp) {
       // Invalid credentials
       return res.status(401).json({ error: 'Invalid credentials' });
+    } else if (!isSignUp && user?.role !== role) {
+      return res.status(401).json({ error: 'Error: Invalid User Access' });
     }
 
-    const token = jwt.sign({ username }, config.jwtSecret, { expiresIn: '1h' });
+    const token = !(!!isWalkinPatient) ? jwt.sign({ username }, config.jwtSecret, { expiresIn: '1h' }) : null;
 
     if (role === 'patient' && !!isSignUp) {
       await createUser({ username, password, role });
@@ -35,9 +37,7 @@ const login = async (req, res) => {
       user = await getUserByUsername(username);
       createDoctor({ body: { ...req.body, user_id: user?.user_id } }, res);
       return;
-      // if (!!isError) {
-      //   return res.status(401).json({ error: 'Error Signing Up' });
-      // }
+
     }
 
     res.json({ token, role: user.role, userId: user?.user_id });

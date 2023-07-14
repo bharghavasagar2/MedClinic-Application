@@ -9,9 +9,11 @@ export const USER_DETAILS = 'userDetails';
 
 export const APPOINTMENT_STATUS = {
   PENDING: 'Pending with admin',
-  APPROVED: 'Approved',
+  APPROVED: 'Scheduled',
   CANCELLED: 'Cancelled',
   COMPLETED: 'Completed',
+  AWAITING_RESULTS: 'Awaiting Results',
+  FOLLOW_UP: 'Follow-up',
 };
 export const LOGOUT = 'LOGOUT';
 export const PAYMENT_STATUS = {
@@ -19,7 +21,7 @@ export const PAYMENT_STATUS = {
   CANCELLED: 'Cancelled',
   COMPLETED: 'Completed',
 };
-let globalState;
+
 export const useReduxHelpers = () => {
 
   let globalState = useSelector((state) => state);
@@ -29,7 +31,7 @@ export const useReduxHelpers = () => {
   return { globalState, dispatch, navigate };
 }
 
-export { globalState }
+
 
 export const RESET_PROPERTY = 'resetProperty';
 export const departments = [
@@ -40,6 +42,7 @@ export const departments = [
   { value: 5, label: 'Gastroenterology' },
   { value: 6, label: 'Neurology' }
 ];
+
 export const appointmentType = [
   { value: 'Walk-in', label: 'Walk-in' },
   { value: 'Online', label: 'Online' },
@@ -80,9 +83,22 @@ export const Cancel = 'Cancel';
 export const Config = 'Config';
 export const Approve = 'Approve';
 export const ASSIGN_DOC = 'ASSIGN_DOC';
+export const PRESCRIBE = 'PRESCRIBE';
 
 
 export const USER_ROLES = ['patient', 'doctor'];
+
+export const AWAITING_RESULTS = 'Awaiting Results';
+
+export const CHANGE_APPOINTMENT_STATUS = 'Change Appointment Status';
+
+export const VIEW_PRESCRIPTION = 'View Prescription Details';
+
+export const appointmentPrescribeStatus = [
+  { value: APPOINTMENT_STATUS.FOLLOW_UP, label: APPOINTMENT_STATUS.FOLLOW_UP },
+  { value: APPOINTMENT_STATUS.COMPLETED, label: APPOINTMENT_STATUS.COMPLETED },
+];
+
 
 
 
