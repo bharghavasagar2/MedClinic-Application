@@ -173,6 +173,37 @@ const createTriggers = (db) => {
     END;
   `);
 
+  // Trigger to update doctor name in VideoConsultations table
+  db.run(`
+    CREATE TRIGGER IF NOT EXISTS update_doctor_name_insert_videoconsultation
+    AFTER INSERT ON VideoConsultations
+    WHEN NEW.doctor_id IS NOT NULL
+    BEGIN
+      UPDATE VideoConsultations
+      SET doctor_name = (
+        SELECT doctor_name
+        FROM Doctors
+        WHERE doctor_id = NEW.doctor_id
+      )
+      WHERE consultation_id = NEW.consultation_id;
+    END;
+  `);
+
+  db.run(`
+    CREATE TRIGGER IF NOT EXISTS update_doctor_name_update_videoconsultation
+    AFTER UPDATE ON VideoConsultations
+    WHEN NEW.doctor_id IS NOT NULL AND OLD.doctor_id <> NEW.doctor_id
+    BEGIN
+      UPDATE VideoConsultations
+      SET doctor_name = (
+        SELECT doctor_name
+        FROM Doctors
+        WHERE doctor_id = NEW.doctor_id
+      )
+      WHERE consultation_id = NEW.consultation_id;
+    END;
+  `);
+
 
   deleteTableActivityLog(db);
 };

@@ -28,8 +28,7 @@ export const getCountAsString = (array) => {
   return count.toString();
 };
 
-
-export const generateColumnsAndData = (array, linkFields, linkLabels, openModalFn) => {
+export const generateColumnsAndData = (array, linkConfiguration, openModalFn) => {
   const columns = [];
   const data = [];
 
@@ -42,11 +41,11 @@ export const generateColumnsAndData = (array, linkFields, linkLabels, openModalF
         columns.push(column);
       }
     }
-    if (linkFields) {
-      linkFields.forEach((field, index) => {
-        const label = columns.find((column) => column.field === field)?.label || 'Link';
-        const linkLabel = linkLabels && linkLabels[index] ? linkLabels[index] : label;
-        columns.push({ id: field, label: linkLabel, field: field });
+
+    if (linkConfiguration) {
+      linkConfiguration.forEach((config) => {
+        const columnLabel = config.label || 'Link';
+        columns.push({ id: config.field, label: columnLabel, field: config.field });
       });
     }
   }
@@ -61,14 +60,27 @@ export const generateColumnsAndData = (array, linkFields, linkLabels, openModalF
         }
       }
 
-      if (linkFields) {
-        linkFields.forEach((field, index) => {
-          const linkText = linkLabels && linkLabels[index] ? linkLabels[index] : 'Link';
-          itemData[field] = (
-            <a href="#" onClick={() => openModalFn(item)}>
-              {linkText}
-            </a>
-          );
+      if (linkConfiguration) {
+        linkConfiguration.forEach((config, index) => {
+          const linkText = config.label || 'Link';
+          const showLink = config.showLink === undefined || config.showLink;
+          const conditionField = item[config.conditionField];
+
+          if (showLink || (!showLink && conditionField !== config.condition)) {
+            itemData[config.field] = showLink || (!showLink && conditionField !== config.condition) ? (
+              <a
+                key={`${config.field}_${i}`}
+                disabled
+                className="link-list"
+                style={{ color: 'blue', transition: 'color 0.3s', cursor: 'pointer' }}
+                onClick={() => openModalFn(item)}
+              >
+                {linkText}
+              </a>
+            ) : (
+              config.customContent || 'Action not Applicable'
+            );
+          }
         });
       }
       data.push(itemData);

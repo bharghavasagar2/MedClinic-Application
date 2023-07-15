@@ -22,9 +22,6 @@ app.use('/medclinic', require('../server/routes/videoRoutes.js'));
 app.use('/medclinic', require('../server/routes/prescriptionRoutes.js'));
 app.use('/medclinic', require('../server/routes/paymentsRoutes.js'));
 
-// app.use('/medclinic', (req, res, next) => {
-//   console.log('Request Type:', req.method)
-// });
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {

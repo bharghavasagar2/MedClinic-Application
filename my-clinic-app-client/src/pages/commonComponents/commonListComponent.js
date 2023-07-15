@@ -24,7 +24,7 @@ import { getStorageValue } from '../../security/sessionStorage';
 
 const List = () => {
   const location = useLocation();
-  let { linkConfigurations,
+  let { linkConfiguration,
     conditionValue2, rawData, linkFields, linkLabels, fieldsToShowOnEdit, condtionToRenderAllData, confirmationMessage,
     apisToCall, role, addToResponseIfActionSuccess, mainRecordId, omitForViewFields } = location?.state;
 
@@ -71,7 +71,7 @@ const List = () => {
     setViewItem({})
   };
 
-  const { columns, data } = generateColumnsAndData(dataArrayList, linkFields, linkLabels, openModal);
+  const { columns, data } = generateColumnsAndData(dataArrayList, linkConfiguration, openModal);
 
   useEffect(() => {
     return () => {
@@ -105,17 +105,45 @@ const List = () => {
     return column;
   });
 
-  const formattedData = data.map((item, i) => {
 
+  // Existing code...
+
+  // Generate formatted data with links and custom content based on link configuration
+  const formattedData = data.map((item, i) => {
     const formattedItem = { ...item };
-    linkFields && Array.isArray(linkFields) && linkFields.forEach((field, index) => {
-      const linkText = linkLabels && linkLabels[index] ? linkLabels[index] : 'Link';
-      formattedItem[field] = (
-        <a disabled className="link-list" style={{ color: 'blue', transition: 'color 0.3s', cursor: 'pointer' }} onClick={() => openModal(item, i, linkText)}>{linkText}</a>
-      );
-    });
+    linkConfiguration &&
+      Array.isArray(linkConfiguration) &&
+      linkConfiguration.forEach((config, index) => {
+        const linkText = config.label || 'Link';
+        const conditionField = formattedItem[config.conditionField];
+        const showLink = config.showLink === undefined || config.showLink;
+        console.log(!showLink && conditionField !== config.condition, config.condition, conditionField)
+
+
+        formattedItem[config.field] = (showLink || (!showLink && conditionField !== config.condition)) ? (
+          <a
+            key={`${config.field}_${i}`}
+            disabled
+            className="link-list"
+            style={{ color: 'blue', transition: 'color 0.3s', cursor: 'pointer' }}
+            onClick={() => openModal(item, i, linkText)}
+          >
+            {linkText}
+          </a>
+        ) : (
+          config.customContent || 'Action not Applicable'
+        );
+
+      });
     return formattedItem;
   });
+
+  // Existing code...
+
+
+
+  // Existing Code...
+
 
   const onCancelConfirm = () => {
     if (!!addToResponseIfActionSuccess && !!addToResponseIfActionSuccess[action]) {

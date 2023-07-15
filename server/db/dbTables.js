@@ -74,12 +74,16 @@ const createDBTables = (db) => {
     `CREATE TABLE IF NOT EXISTS VideoConsultations (
       consultation_id INTEGER PRIMARY KEY,
       patient_id INTEGER,
+      appointment_id INTEGER,
+      patient_name TEXT,
+      doctor_name TEXT,
       doctor_id INTEGER,
-      consultation_date TEXT,
-      consultation_duration TEXT,
+      video_consultation_link TEXT,
+      appointment_date TEXT,
       consultation_status TEXT,       
       FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
-      FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id)
+      FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id),
+      FOREIGN KEY (appointment_id) REFERENCES Appointments(appointment_id)
     )`,
     `CREATE TABLE IF NOT EXISTS AuthenticationUsers (
       user_id INTEGER PRIMARY KEY,

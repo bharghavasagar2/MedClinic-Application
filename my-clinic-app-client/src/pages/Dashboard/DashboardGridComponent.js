@@ -84,8 +84,10 @@ const DashboardGrid = () => {
           title="Pending Appointment Requests"
           dataToBePassed={{
             rawData: filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.PENDING]),
-            linkFields: [ASSIGN_DOC, Cancel],
-            linkLabels: [ASSIGN_DOC, Cancel],
+            linkConfiguration: [
+              { field: ASSIGN_DOC, label: ASSIGN_DOC, showLink: true },
+              { field: Cancel, label: Cancel, showLink: true },
+            ],
             fieldsToShowOnEdit: assignDoctorFields,
             apisToCall: apisToCallAppointmentRequestAdmin,
             condtionToRenderAllData: { filterKeys: [APPOINTMENT_STATUS.PENDING], key: 'appointment_status' },

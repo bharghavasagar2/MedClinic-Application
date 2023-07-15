@@ -17,4 +17,7 @@ router.put('/video/:id', authController.authenticateToken, videoController.updat
 // DELETE a video consultation by ID
 router.delete('/video/:id', authController.authenticateToken, videoController.deleteVideoConsultation);
 
+router.get('/video/doctor/:doctor_id', authController.authenticateToken, videoController.getVideoConsultaionsByDoctorId);
+router.get('/video/patient/:patient_id', authController.authenticateToken, videoController.getVideoConsultaionsByPatientId);
+
 module.exports = router;

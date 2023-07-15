@@ -55,8 +55,9 @@ const DoctorDashboard = () => {
             dataToBePassed={{
               condtionToRenderAllData: { filterKeys: [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.COMPLETED, APPOINTMENT_STATUS.FOLLOW_UP], key: 'appointment_status', omit: ['department_name'] },
               rawData: filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.FOLLOW_UP, APPOINTMENT_STATUS.COMPLETED], 'doctor_id', "department_name"),
-              linkFields: [CHANGE_APPOINTMENT_STATUS],
-              linkLabels: [CHANGE_APPOINTMENT_STATUS],
+              linkConfiguration: [
+                { field: CHANGE_APPOINTMENT_STATUS, label: CHANGE_APPOINTMENT_STATUS, showLink: false, condition: APPOINTMENT_STATUS.COMPLETED, conditionField: 'appointment_status' },
+              ],
               apisToCall: apisToCallConsultation,
               role: 'doctor',
               specificState: 'appointment',
@@ -112,10 +113,12 @@ const DoctorDashboard = () => {
             dataToBePassed={{
               condtionToRenderAllData: { filterKeys: [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.COMPLETED, APPOINTMENT_STATUS.FOLLOW_UP], key: 'appointment_status', omit: ['department_name'] },
               rawData: filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.FOLLOW_UP, APPOINTMENT_STATUS.COMPLETED], 'doctor_id', "department_name"),
-              linkFields: [VIEW_PRESCRIPTION, PRESCRIBE],
-              linkLabels: [VIEW_PRESCRIPTION, PRESCRIBE],
-              conditionField2: 'appointment_status',
-              conditionValue2: APPOINTMENT_STATUS.COMPLETED,
+              linkConfiguration: [
+                { field: VIEW_PRESCRIPTION, label: VIEW_PRESCRIPTION, showLink: true },
+                { field: PRESCRIBE, label: PRESCRIBE, showLink: false, condition: APPOINTMENT_STATUS.COMPLETED, conditionField: 'appointment_status' },
+                // Other link configurations...
+              ],
+
               omitForViewFields: ['doctor_id', 'patient_id', 'doctor_name', 'prescription_id', 'department_id', 'appointment_date', 'dosage', 'appointment_id', 'appointment_status'],
               //  addToResponseIfActionSuccess: { PRESCRIBE: { appointment_status: APPOINTMENT_STATUS.COMPLETED } },
               apisToCall: apisToCallPrescribe,

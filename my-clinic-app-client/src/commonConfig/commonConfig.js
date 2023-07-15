@@ -48,6 +48,8 @@ export const appointmentType = [
   { value: 'Online', label: 'Online' },
 ];
 
+export const appointmentTypeWalkIn = 'Walk-in';
+export const appointmentTypeOnline = 'Online';
 
 export const GENDER_OPTIONS = [
   { value: 'male', label: 'Male' },

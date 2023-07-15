@@ -125,7 +125,6 @@ const PatientDashboard = () => {
       let userId = reduxUserId || getData(USER_DETAILS)?.userId;
       dispatch(resetProperty('appointments', 'allappointments'))
       let filter = appointments.allappointments.filter(({ patient_id }) => patient_id === userId);
-
       setPatientState({ ...patientState, isShowPaymentScreen: false, appointmentList: filter });
     }
 
@@ -140,12 +139,12 @@ const PatientDashboard = () => {
   }, [appointments, payments, patients]);
 
   const handleEditPatientFormSubmission = (formValues) => {
-    console.log(formValues);
+
     dispatch(create_Update_PatientById({ data: { ...formValues }, id: getAppPatientsById.patient_id }));
   }
 
 
-  console.log(fieldsToShowAppintments)
+
   return (
     <main className="max-w-7xl mx-auto px-4 py-6 bg-opacity-70">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -177,8 +176,10 @@ const PatientDashboard = () => {
           dataToBePassed={{
             condtionToRenderAllData: { filterKeys: [APPOINTMENT_STATUS.PENDING], key: 'appointment_status' },
             rawData: filterRequestArray(appointmentList, 'appointment_status', [APPOINTMENT_STATUS.PENDING]),
-            linkFields: [Cancel, EDIT],
-            linkLabels: [Cancel, EDIT],
+            linkConfiguration: [
+              { field: Cancel, label: Cancel, showLink: true },
+              { field: EDIT, label: EDIT, showLink: true },
+            ],
             apisToCall: apisToCallAppointmentRequestPatient,
             role: 'patient',
             specificState: 'appointment',
