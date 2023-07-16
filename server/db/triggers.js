@@ -204,7 +204,6 @@ const createTriggers = (db) => {
     END;
   `);
 
-
   deleteTableActivityLog(db);
 };
 

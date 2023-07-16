@@ -13,18 +13,27 @@ exports.getAllNotifications = (req, res) => {
   });
 };
 
-// Get a specific notification by ID
 exports.getNotificationById = (req, res) => {
-  const { id } = req.params;
-  const query = 'SELECT * FROM Notifications WHERE notification_id = ?';
-  db.get(query, [id], (err, row) => {
+  const { user_id } = req.params;
+  const query = 'SELECT * FROM Notifications WHERE user_id = ?';
+  db.all(query, [user_id], (err, rows) => {
     if (err) {
       console.error(err.message);
-      res.status(500).json({ error: 'Error retrieving notification from the database' });
-    } else if (!row) {
-      res.status(404).json({ error: 'Notification not found' });
+      res.status(500).json({ error: 'Error retrieving notifications from the database' });
+    } else if (rows.length === 0) {
+      res.status(404).json({ error: 'Notifications not found' });
     } else {
-      res.json(row);
+      // Set viewed to 1 for fetched notifications
+      const notificationIds = rows.map((row) => row.notification_id);
+      const updateQuery = `UPDATE Notifications SET viewed = 1 WHERE notification_id IN (${notificationIds.join(',')})`;
+      db.run(updateQuery, (err) => {
+        if (err) {
+          console.error(err.message);
+          res.status(500).json({ error: 'Error updating viewed status' });
+        } else {
+          res.json(rows);
+        }
+      });
     }
   });
 };

@@ -20,4 +20,6 @@ router.delete('/doctors/:id', authController.authenticateToken, doctorController
 // Get all doctors by department ID
 router.get('/doctors/department/:department_id', authController.authenticateToken, doctorController.getDoctorsByDepartment);
 
+router.get('/doctors/appointmentDetails/:id', authController.authenticateToken, doctorController.getDoctorDetails);
+
 module.exports = router;

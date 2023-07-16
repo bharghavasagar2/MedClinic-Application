@@ -128,16 +128,17 @@ exports.updateVideoConsultation = (req, res) => {
   } = req.body;//      appointment_time
 
   const sql = `UPDATE VideoConsultations SET
-    patient_id = ?,
-    doctor_id = ?,
-    patient_name = ?,
-    doctor_name = ?,
-    video_consultation_link = ?,
-    appointment_id = ?,
-    appointment_date = ?,
-    consultation_status = ?
-    appointment_time = ?,
-    WHERE consultation_id = ?`;
+  patient_id = ?,
+  doctor_id = ?,
+  patient_name = ?,
+  doctor_name = ?,
+  video_consultation_link = ?,
+  appointment_id = ?,
+  appointment_date = ?,
+  consultation_status = ?,
+  appointment_time = ?
+  WHERE consultation_id = ?`;
+
 
   const values = [
     patient_id,

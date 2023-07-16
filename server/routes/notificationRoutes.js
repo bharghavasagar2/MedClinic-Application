@@ -6,7 +6,7 @@ const authController = require('../controllers/authController.js');
 router.get('/notifications', authController.authenticateToken, notificationController.getAllNotifications);
 
 // Get an appointment by ID
-router.get('/notifications/:id', authController.authenticateToken, notificationController.getNotificationById);
+router.get('/notifications/:user_id', authController.authenticateToken, notificationController.getNotificationById);
 
 // Create a new appointment
 router.post('/notifications', authController.authenticateToken, notificationController.createNotification);

@@ -21,6 +21,7 @@ app.use('/medclinic', require('../server/routes/doctorRoutes.js'));
 app.use('/medclinic', require('../server/routes/videoRoutes.js'));
 app.use('/medclinic', require('../server/routes/prescriptionRoutes.js'));
 app.use('/medclinic', require('../server/routes/paymentsRoutes.js'));
+app.use('/medclinic', require('../server/routes/notificationRoutes'));
 
 
 // Serve static files in production
