@@ -1,9 +1,10 @@
 const db = require('../db/db.js');
 const _ = require('lodash');
+const { VIDEO_CONSULTATION_STATUS } = require('../config.js')
 
 exports.getVideoConsultaionsByDoctorId = (req, res) => {
   const doctor_id = req.params.doctor_id;
-  const query = 'SELECT * FROM Doctors WHERE doctor_id = ?';
+  const query = 'SELECT * FROM VideoConsultations WHERE doctor_id = ?';
   db.all(query, [doctor_id], (err, rows) => {
     if (err) {
       res.status(500).json({ error: 'Error retrieving doctors from the database' });
@@ -15,7 +16,7 @@ exports.getVideoConsultaionsByDoctorId = (req, res) => {
 
 exports.getVideoConsultaionsByPatientId = (req, res) => {
   const patient_id = req.params.patient_id;
-  const query = 'SELECT * FROM Doctors WHERE patient_id = ?';
+  const query = 'SELECT * FROM VideoConsultations WHERE patient_id = ?';
   db.all(query, [patient_id], (err, rows) => {
     if (err) {
       res.status(500).json({ error: 'Error retrieving doctors from the database' });
@@ -66,7 +67,8 @@ exports.createVideoConsultation = (req) => {
       doctor_name,
       appointment_id,
       appointment_date,
-      consultation_status,
+      // consultation_status,
+      appointment_time
     } = req;
 
     const sql = `INSERT INTO VideoConsultations (
@@ -77,8 +79,9 @@ exports.createVideoConsultation = (req) => {
       video_consultation_link,
       appointment_id,
       appointment_date,
-      consultation_status
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+      consultation_status,
+      appointment_time
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     const values = [
       patient_id,
@@ -88,7 +91,8 @@ exports.createVideoConsultation = (req) => {
       fetchMeetingLink,
       appointment_id,
       appointment_date,
-      consultation_status,
+      VIDEO_CONSULTATION_STATUS.PENDING_VIDEO_CONSULTATION,
+      appointment_time
     ];
 
     return new Promise((resolve, reject) => {
@@ -119,8 +123,9 @@ exports.updateVideoConsultation = (req, res) => {
     video_consultation_link,
     appointment_id,
     appointment_date,
+    appointment_time,
     consultation_status,
-  } = req.body;
+  } = req.body;//      appointment_time
 
   const sql = `UPDATE VideoConsultations SET
     patient_id = ?,
@@ -131,6 +136,7 @@ exports.updateVideoConsultation = (req, res) => {
     appointment_id = ?,
     appointment_date = ?,
     consultation_status = ?
+    appointment_time = ?,
     WHERE consultation_id = ?`;
 
   const values = [
@@ -142,6 +148,7 @@ exports.updateVideoConsultation = (req, res) => {
     appointment_id,
     appointment_date,
     consultation_status,
+    appointment_time,
     id,
   ];
 

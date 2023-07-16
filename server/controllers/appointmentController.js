@@ -53,7 +53,7 @@ exports.updateAppointment = async (req, res) => {
 
   try {
     const previousAppointment = await appointmentCheck(appointmentId);
-    const isCreateVideoLink = appointment_status === APPOINTMENT_STATUS.APPROVED && previousAppointment.appointment_status !== APPOINTMENT_STATUS.APPROVED;
+    const isCreateVideoLink = appointment_status === APPOINTMENT_STATUS.APPROVED && appointmentTypeOnline === appointment_type && previousAppointment.appointment_status !== APPOINTMENT_STATUS.APPROVED;
 
     const query = 'UPDATE Appointments SET patient_id = ?, doctor_id = ?, appointment_date = ?, appointment_time = ?, appointment_status = ?, department_id = ?, appointment_type = ? WHERE appointment_id = ?';
     const params = [patient_id, doctor_id, appointment_date, appointment_time, appointment_status, department_id, appointment_type, appointmentId];

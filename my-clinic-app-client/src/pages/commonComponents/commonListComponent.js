@@ -117,12 +117,19 @@ const List = () => {
         const linkText = config.label || 'Link';
         const conditionField = formattedItem[config.conditionField];
         const showLink = config.showLink === undefined || config.showLink;
-        console.log(!showLink && conditionField !== config.condition, config.condition, conditionField)
+
+        let isRedirectProps = {};
+        if (!!config.isRedirect) {
+          isRedirectProps = {
+            href: formattedItem[config.redirectUrl],
+            target: "_blank"
+          }
+        }
 
 
         formattedItem[config.field] = (showLink || (!showLink && conditionField !== config.condition)) ? (
           <a
-            key={`${config.field}_${i}`}
+            key={`${config.field}_${i}`} {...isRedirectProps}
             disabled
             className="link-list"
             style={{ color: 'blue', transition: 'color 0.3s', cursor: 'pointer' }}

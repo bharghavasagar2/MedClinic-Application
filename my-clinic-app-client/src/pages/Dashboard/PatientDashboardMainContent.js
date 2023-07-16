@@ -11,12 +11,13 @@ import { useSelector } from 'react-redux';
 import Form from '../commonComponents/FormCommonComponent';
 import Portal from '../commonComponents/PortalComponent';
 import PaymentForm from '../commonComponents/PaymentFormComponent';
-import { APPOINTMENT_STATUS, Cancel, EDIT, PAYMENT_STATUS, RESET_PROPERTY, USER_DETAILS, getUserId, useReduxHelpers } from '../../commonConfig/commonConfig';
+import { APPOINTMENT_STATUS, Cancel, EDIT, JOIN_MEETING, PAYMENT_STATUS, RESET_PROPERTY, USER_DETAILS, VIDEO_CONSULTATION_STATUS, getUserId, useReduxHelpers } from '../../commonConfig/commonConfig';
 import { create_Update_PatientById, getRecordById } from '../../redux/reducers/patientsSlice';
 import { create_UpdateById, getAppointmentById, getAppointmentAllRecords } from '../../redux/reducers/appointmentsSlice';
 import { createPaymentById } from '../../redux/reducers/paymentSlice';
 import ConditionalRender from '../commonComponents/ConditionalRender';
 import { filterRequestArray } from '../../commonConfig/commonFunction';
+import { getSpecificPatientVideoRecords, getVideoRecordById } from '../../redux/reducers/videoSlice';
 
 const PatientDashboard = () => {
   const [patientState, setPatientState] = useState(patientInitialState);
@@ -26,7 +27,7 @@ const PatientDashboard = () => {
 
   let { getAppPatientsById } = globalState.patients;
 
-  let { appointments, payments, patients, authentication } = globalState;
+  let { appointments, payments, patients, authentication, video } = globalState;
 
   useEffect(() => {
     let reduxUserId = globalState.authentication?.userId;
@@ -35,6 +36,7 @@ const PatientDashboard = () => {
     console.log(getData(USER_DETAILS)?.userId);
     dispatch(getAppointmentAllRecords())
     dispatch(getRecordById(userId));
+    dispatch(getSpecificPatientVideoRecords(userId));
   }, [])
 
   const openModal = () => {
@@ -144,7 +146,7 @@ const PatientDashboard = () => {
   }
 
 
-
+  console.log(video.getSpecificPatientVideoRecords)
   return (
     <main className="max-w-7xl mx-auto px-4 py-6 bg-opacity-70">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -193,7 +195,19 @@ const PatientDashboard = () => {
           title="Video Consultations"
           icon={FaVideo}
           navigate='/list'
-          array={[]}
+          data={Array.isArray(video.getSpecificPatientVideoRecords) && video.getSpecificPatientVideoRecords.length > 0 ? video.getSpecificPatientVideoRecords.length.toString() : []}
+          dataToBePassed={{
+            linkConfiguration: [
+              {
+                field: JOIN_MEETING, label: JOIN_MEETING, showLink: false, condition: VIDEO_CONSULTATION_STATUS.COMPLETED_VIDEO_CONSULTATION,
+                conditionField: 'consultation_status', isRedirect: true, redirectUrl: 'video_consultation_link'
+              },
+              //   { field: JOIN_MEETING, label: JOIN_MEETING, showLink: false, redirect: true, checkLink },
+            ],
+            rawData: video.getSpecificPatientVideoRecords,
+
+            role: 'patient',
+          }}
         />
       </div>
       <VideoComponent onClick={openModal} src={doctorVideo} style={{ width: '100%', height: 'auto', maxHeight: '50vh' }} />

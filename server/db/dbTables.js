@@ -76,6 +76,7 @@ const createDBTables = (db) => {
       patient_id INTEGER,
       appointment_id INTEGER,
       patient_name TEXT,
+      appointment_time	TEXT,
       doctor_name TEXT,
       doctor_id INTEGER,
       video_consultation_link TEXT,

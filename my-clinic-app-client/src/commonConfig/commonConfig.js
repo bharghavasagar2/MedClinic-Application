@@ -79,9 +79,17 @@ export const filterArray = (data, filterArrayKey) => {
   }
 }
 
+export const JOIN_MEETING = 'Join Meeting';
+
+export let VIDEO_CONSULTATION_STATUS = {
+  PENDING_VIDEO_CONSULTATION: 'Pending Video Consultation',
+  COMPLETED_VIDEO_CONSULTATION: 'Completed Video Consultation',
+}
+
 export const EDIT = 'EDIT';
 export const VIEW = 'VIEW';
 export const Cancel = 'Cancel';
+export const CHANGE_VIDEO_CONSULTATION_STATUS = 'Change Video Consultation Status';
 export const Config = 'Config';
 export const Approve = 'Approve';
 export const ASSIGN_DOC = 'ASSIGN_DOC';
