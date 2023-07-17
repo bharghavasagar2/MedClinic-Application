@@ -105,18 +105,25 @@ const createTriggers = (db) => {
   `);
 
   db.run(`
-    CREATE TRIGGER IF NOT EXISTS update_notifications_approved
-    AFTER UPDATE ON Appointments
-    FOR EACH ROW
-    WHEN NEW.appointment_status = 'Scheduled' AND NEW.patient_id IS NOT NULL AND NEW.doctor_id IS NOT NULL AND NEW.doctor_name IS NOT NULL AND NEW.patient_name IS NOT NULL
-    BEGIN
-      INSERT INTO Notifications (user_id, message)
-      VALUES (NEW.patient_id, 'Your appointment scheduled on ' || NEW.appointment_date || ' at ' || NEW.appointment_time || ' in the ' || NEW.department_name || ' department with ' || NEW.doctor_name || ' has been approved.');
+  CREATE TRIGGER IF NOT EXISTS update_notifications_approved
+  AFTER UPDATE ON Appointments
+  FOR EACH ROW
+  WHEN NEW.appointment_status = 'Scheduled' AND NEW.patient_id IS NOT NULL AND NEW.doctor_id IS NOT NULL AND NEW.doctor_name IS NOT NULL AND NEW.patient_name IS NOT NULL
+  BEGIN
+    INSERT INTO Notifications (user_id, message)
+    VALUES (NEW.patient_id, 'Your appointment scheduled on ' || NEW.appointment_date || ' at ' || NEW.appointment_time || ' in the ' || NEW.department_name || ' department with ' || NEW.doctor_name || ' has been approved.');
+  
+    INSERT INTO Notifications (user_id, message)
+    VALUES (NEW.doctor_id, 'The appointment with patient ' || NEW.patient_name || ' scheduled on ' || NEW.appointment_date || ' at ' || NEW.appointment_time || ' in the ' || NEW.department_name || ' department has been approved.');
+  END;
+`, function (error) {
+    if (error) {
+      console.error(error.message);
+    } else {
+      console.log("Trigger 'update_notifications_approved' created successfully.");
+    }
+  });
 
-      INSERT INTO Notifications (user_id, message)
-      VALUES (NEW.doctor_id, 'The appointment with patient ' || NEW.patient_name || ' scheduled on ' || NEW.appointment_date || ' at ' || NEW.appointment_time || ' in the ' || NEW.department_name || ' department has been approved.');
-    END;
-  `);
 
   db.run(`
     CREATE TRIGGER IF NOT EXISTS update_doctor_name_insert

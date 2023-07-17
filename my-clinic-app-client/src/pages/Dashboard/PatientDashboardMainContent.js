@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import _ from 'lodash';
 import { FaUser, FaCalendar, FaFilePrescription, FaVideo } from 'react-icons/fa';
 import { ToastContainer, toast } from 'react-toastify';
 import Card from '../commonComponents/CardComponent';
@@ -18,6 +19,7 @@ import { createPaymentById } from '../../redux/reducers/paymentSlice';
 import ConditionalRender from '../commonComponents/ConditionalRender';
 import { filterRequestArray } from '../../commonConfig/commonFunction';
 import { getSpecificPatientVideoRecords, getVideoRecordById } from '../../redux/reducers/videoSlice';
+import { getNotificationsByUserId } from '../../redux/reducers/notificationSlice';
 
 const PatientDashboard = () => {
   const [patientState, setPatientState] = useState(patientInitialState);
@@ -27,7 +29,7 @@ const PatientDashboard = () => {
 
   let { getAppPatientsById } = globalState.patients;
 
-  let { appointments, payments, patients, authentication, video } = globalState;
+  let { appointments, payments, patients, authentication, video, notification } = globalState;
 
   useEffect(() => {
     let reduxUserId = globalState.authentication?.userId;
@@ -37,6 +39,7 @@ const PatientDashboard = () => {
     dispatch(getAppointmentAllRecords())
     dispatch(getRecordById(userId));
     dispatch(getSpecificPatientVideoRecords(userId));
+    dispatch(getNotificationsByUserId(userId));
   }, [])
 
   const openModal = () => {
@@ -138,7 +141,19 @@ const PatientDashboard = () => {
       setPatientState({ ...patientState, ...resetScreen, isOpen: false });
     }
 
-  }, [appointments, payments, patients]);
+    if (notification && !_.isEmpty(notification.getNotificationsByUserId)) {
+      let notifications = _.uniqBy(notification.getNotificationsByUserId, 'created_at').filter(({ viewed }) => !viewed);
+      if (!_.isEmpty(notifications)) {
+        notifications.forEach(({ message }) => {
+          toast(message, {
+            autoClose: 60000,
+          });
+        })
+      }
+      dispatch(resetProperty('notification', 'getNotificationsByUserId'));
+    }
+
+  }, [appointments, payments, patients, notification]);
 
   const handleEditPatientFormSubmission = (formValues) => {
 

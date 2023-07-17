@@ -21,7 +21,7 @@ exports.getNotificationById = (req, res) => {
       console.error(err.message);
       res.status(500).json({ error: 'Error retrieving notifications from the database' });
     } else if (rows.length === 0) {
-      res.status(404).json({ error: 'Notifications not found' });
+      res.json({ message: 'No new notifications' });
     } else {
       // Set viewed to 1 for fetched notifications
       const notificationIds = rows.map((row) => row.notification_id);

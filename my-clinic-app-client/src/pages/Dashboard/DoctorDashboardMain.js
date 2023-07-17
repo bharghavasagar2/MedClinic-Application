@@ -9,6 +9,10 @@ import { getAppdoctorsById } from '../../redux/reducers/doctorsSlice';
 import { apisToCallVideoConsultation, initialStateDoctor, patientInitialState } from './initialStateDashboardScreen';
 import { filterRequestArray } from '../../commonConfig/commonFunction';
 import { getSpecificDoctorVideoRecords } from '../../redux/reducers/videoSlice';
+import { getNotificationsByUserId } from '../../redux/reducers/notificationSlice';
+import { toast } from 'react-toastify';
+import _ from 'lodash';
+import { resetProperty } from '../../redux/reducers/resetSlice';
 
 const DoctorDashboard = () => {
 
@@ -16,7 +20,7 @@ const DoctorDashboard = () => {
 
   let { getdoctorById } = globalState.doctors;
 
-  let { appointments, payments, patients, authentication, video } = globalState;
+  let { appointments, patients, authentication, video, notification } = globalState;
 
   let [state, setState] = useState({ ...initialStateDoctor })
 
@@ -29,7 +33,23 @@ const DoctorDashboard = () => {
     dispatch(getAppointmentAllRecords())
     dispatch(getAppdoctorsById(userId));
     dispatch(getSpecificDoctorVideoRecords(userId));
-  }, [])
+    dispatch(getNotificationsByUserId(userId));
+  }, []);
+
+  useEffect(() => {
+    if (notification && !_.isEmpty(notification.getNotificationsByUserId)) {
+      console.log(_.uniqBy(notification.getNotificationsByUserId, 'created_at'))
+      let notifications = _.uniqBy(notification.getNotificationsByUserId, 'created_at').filter(({ viewed }) => !viewed);
+      if (!_.isEmpty(notifications)) {
+        notifications.forEach(({ message }) => {
+          toast(message, {
+            autoClose: 60000,
+          });
+        })
+      }
+      dispatch(resetProperty('notification', 'getNotificationsByUserId'));
+    }
+  }, [notification]);
 
 
   let { apisToCallPrescribe, fieldsToShowPrescribeAdd, fieldsToShowAppintmentsAdd, apisToCallConsultation, fieldsToShowVideoConsultation } = state;

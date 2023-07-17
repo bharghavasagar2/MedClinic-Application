@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { deleteById, getAllData, create_Update_ById } from '../commonSlice/commonSlice';
 
 const fetchAllRecords = getAllData('notifications/fetchAllRecords', '/notifications');
-const getRecordById = getAllData('notifications/getRecordById', '/notifications');
+const getNotificationsByUserId = getAllData('notifications/getNotificationsByUserId', '/notifications');
 const deleteRecordById = deleteById('notifications/deleteRecordById', '/notifications');
 const create_UpdateById = create_Update_ById('notifications/create_UpdateById', '/notifications');
 
@@ -12,7 +12,7 @@ const notificationsSlice = createSlice({
   name: 'notifications',
   initialState: {
     allnotifications: [],
-    getnotificationById: null,
+    getNotificationsByUserId: null,
     deleteRecordById: null,
     create_UpdateById: null,
   },
@@ -23,8 +23,8 @@ const notificationsSlice = createSlice({
         console.log(action.payload);
         state.allnotifications = action.payload;
       })
-      .addCase(getRecordById.fulfilled, (state, action) => {
-        state.getnotificationById = action.payload;
+      .addCase(getNotificationsByUserId.fulfilled, (state, action) => {
+        state.getNotificationsByUserId = action.payload;
       })
       .addCase(deleteRecordById.fulfilled, (state, action) => {
         state.deleteRecordById = action.payload;
@@ -35,5 +35,5 @@ const notificationsSlice = createSlice({
   },
 });
 
-export { fetchAllRecords, getRecordById, deleteRecordById, create_UpdateById };
+export { fetchAllRecords, getNotificationsByUserId, deleteRecordById, create_UpdateById };
 export default notificationsSlice.reducer;
