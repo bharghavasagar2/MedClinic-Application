@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 import Form from '../commonComponents/FormCommonComponent';
 import Portal from '../commonComponents/PortalComponent';
 import PaymentForm from '../commonComponents/PaymentFormComponent';
-import { APPOINTMENT_STATUS, Cancel, EDIT, JOIN_MEETING, PAYMENT_STATUS, RESET_PROPERTY, USER_DETAILS, VIDEO_CONSULTATION_STATUS, getUserId, useReduxHelpers } from '../../commonConfig/commonConfig';
+import { APPOINTMENT_STATUS, Cancel, EDIT, JOIN_MEETING, PAYMENT_STATUS, RESET_PROPERTY, USER_DETAILS, VIDEO_CONSULTATION_STATUS, VIEW_PRESCRIPTION, getUserId, useReduxHelpers } from '../../commonConfig/commonConfig';
 import { create_Update_PatientById, getRecordById } from '../../redux/reducers/patientsSlice';
 import { create_UpdateById, getAppointmentById, getAppointmentAllRecords } from '../../redux/reducers/appointmentsSlice';
 import { createPaymentById } from '../../redux/reducers/paymentSlice';
@@ -146,7 +146,7 @@ const PatientDashboard = () => {
   }
 
 
-  console.log(video.getSpecificPatientVideoRecords)
+  console.log(appointments)
   return (
     <main className="max-w-7xl mx-auto px-4 py-6 bg-opacity-70">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -163,10 +163,23 @@ const PatientDashboard = () => {
         <Card
           title="Consultations"
           icon={FaCalendar}
-          fieldsToShow={patientInitialState.fieldsToShowAppintmentsView}
-          data={appointmentList}
           navigate='/list'
-          filterArrayKey={APPOINTMENT_STATUS.APPROVED}
+          fieldsToShow={patientInitialState.fieldsToShowAppintmentsView}
+          data={filterRequestArray(appointmentList, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.FOLLOW_UP, APPOINTMENT_STATUS.COMPLETED], 'patient_id')}
+          dataToBePassed={{
+            condtionToRenderAllData: { filterKeys: [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.COMPLETED, APPOINTMENT_STATUS.FOLLOW_UP], key: 'appointment_status' },
+            rawData: filterRequestArray(appointmentList, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.FOLLOW_UP, APPOINTMENT_STATUS.COMPLETED], 'patient_id'),
+            linkConfiguration: [
+              { field: VIEW_PRESCRIPTION, label: VIEW_PRESCRIPTION, showLink: true },
+            ],
+            omitForViewFields: ['department_id', 'dosage', 'appointment_id', 'patient_id', 'prescription_id', 'doctor_id', 'appointment_status'],
+            //  addToResponseIfActionSuccess: { PRESCRIBE: { appointment_status: APPOINTMENT_STATUS.COMPLETED } },
+            apisToCall: patientState.apisToCallPrescribe,
+            role: 'patient',
+            specificState: 'appointment',
+            reducer: 'appointmentReducer',
+            mainRecordId: 'appointment_id',
+          }}
         />
 
         <Card

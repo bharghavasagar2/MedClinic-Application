@@ -92,7 +92,7 @@ const PaymentForm = ({ onPaymentSubmit }) => {
   };
 
   return (
-    <div className="overflow-y-auto max-h-96">
+    <div className="overflow-y-auto max-h-100">
       <div className="flex flex-col space-y-4">
         <Cards
           number={cardNumber}

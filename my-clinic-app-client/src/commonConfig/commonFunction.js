@@ -4,24 +4,19 @@ import { USER_DETAILS } from "./commonConfig";
 
 import { filter, omit } from 'lodash';
 
-export const filterRequestArray = (array, key, filterKeys, keyAssociatedWithUserId = null, keysToOmit = null) => {
+export const filterRequestArray = (array, key = null, filterKeys = null, keyAssociatedWithUserId = null, keysToOmit = null) => {
   const userId = getData(USER_DETAILS)?.userId;
+
   if (Array.isArray(array) && array.length > 0) {
     return filter(array, (data) => {
-      const filterKeyIndex = filterKeys.indexOf(data[key]);
-      return (
-        filterKeyIndex !== -1 &&
-        (!keyAssociatedWithUserId || data[keyAssociatedWithUserId] === userId)
-      );
+      const keyCheck = !key || !filterKeys || filterKeys.indexOf(data[key]) !== -1;
+      const userIdCheck = !keyAssociatedWithUserId || data[keyAssociatedWithUserId] === userId;
+      return keyCheck && userIdCheck;
     }).map((filteredData) => (keysToOmit ? omit(filteredData, keysToOmit) : filteredData));
   } else {
     return [];
   }
 };
-
-
-
-
 
 export const getCountAsString = (array) => {
   const count = array.length;

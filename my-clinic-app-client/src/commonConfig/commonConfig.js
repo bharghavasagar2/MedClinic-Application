@@ -84,8 +84,10 @@ export const JOIN_MEETING = 'Join Meeting';
 export let VIDEO_CONSULTATION_STATUS = {
   PENDING_VIDEO_CONSULTATION: 'Pending Video Consultation',
   COMPLETED_VIDEO_CONSULTATION: 'Completed Video Consultation',
+  CANCELLED_VIDEO_CONSULTATION: 'Cancelled Video Consultation',
 }
-
+export const DELETE = 'DELETE';
+export const VIEW_DOCTOR_COMPLETE_PROFILE = 'View Doctor Complete Profile';
 export const EDIT = 'EDIT';
 export const VIEW = 'VIEW';
 export const Cancel = 'Cancel';
@@ -94,6 +96,12 @@ export const Config = 'Config';
 export const Approve = 'Approve';
 export const ASSIGN_DOC = 'ASSIGN_DOC';
 export const PRESCRIBE = 'PRESCRIBE';
+
+export const VIDEO_CONSULTATION_FIELDS = [
+  { value: VIDEO_CONSULTATION_STATUS.PENDING_VIDEO_CONSULTATION, label: VIDEO_CONSULTATION_STATUS.PENDING_VIDEO_CONSULTATION },
+  { value: VIDEO_CONSULTATION_STATUS.COMPLETED_VIDEO_CONSULTATION, label: VIDEO_CONSULTATION_STATUS.COMPLETED_VIDEO_CONSULTATION },
+  { value: VIDEO_CONSULTATION_STATUS.CANCELLED_VIDEO_CONSULTATION, label: VIDEO_CONSULTATION_STATUS.CANCELLED_VIDEO_CONSULTATION },
+]
 
 
 export const USER_ROLES = ['patient', 'doctor'];

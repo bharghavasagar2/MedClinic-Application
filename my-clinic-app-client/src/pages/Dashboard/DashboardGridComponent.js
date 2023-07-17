@@ -3,12 +3,12 @@ import { FaUser, FaCalendar, FaStethoscope, FaMoneyBillWave, FaClock, FaDemocrat
 import AnalyticalInfo from '../commonComponents/AnalyticalReportsComponent';
 import Card from '../commonComponents/CardComponent';
 import { getAppointmentAllRecords } from '../../redux/reducers/appointmentsSlice';
-import { APPOINTMENT_STATUS, ASSIGN_DOC, Cancel, EDIT, getUserId, useReduxHelpers } from '../../commonConfig/commonConfig';
+import { APPOINTMENT_STATUS, ASSIGN_DOC, Cancel, DELETE, EDIT, VIEW_DOCTOR_COMPLETE_PROFILE, VIEW_PRESCRIPTION, getUserId, useReduxHelpers } from '../../commonConfig/commonConfig';
 import { filterRequestArray } from '../../commonConfig/commonFunction';
 import { fetchAllPatientRecords, getRecordById } from '../../redux/reducers/patientsSlice';
 import { create_Update_Doc_ById, fetchAllDocRecords } from '../../redux/reducers/doctorsSlice';
 import { fetchAllPaymentRecords } from '../../redux/reducers/paymentSlice';
-import { apisToCallAppointmentRequestAdmin, assignDoctorFields, initalStateDashboardGrid } from './initialStateDashboardScreen';
+import { apisToCallAppointmentRequestAdmin, apisToCallDoctor, assignDoctorFields, initalStateDashboardGrid, initialStateDoctor } from './initialStateDashboardScreen';
 import Portal from '../commonComponents/PortalComponent';
 import ConditionalRender from '../commonComponents/ConditionalRender';
 import Form from '../commonComponents/FormCommonComponent';
@@ -103,13 +103,54 @@ const DashboardGrid = () => {
           data={filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.PENDING]).length.toString()}
         />
         <Card
-          title="Total Appointments Scheduled"
+          title="Confirmed Appointments"
           navigate="/list"
           icon={FaCalendar}
-          data={filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.APPROVED]).length.toString()}
+          data={filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.COMPLETED, APPOINTMENT_STATUS.FOLLOW_UP], null).length.toString()}
+          dataToBePassed={{
+            condtionToRenderAllData: { filterKeys: [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.COMPLETED, APPOINTMENT_STATUS.FOLLOW_UP], key: 'appointment_status', omit: ['department_name'] },
+            rawData: filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.COMPLETED, APPOINTMENT_STATUS.FOLLOW_UP], null),
+            linkConfiguration: [
+              { field: VIEW_PRESCRIPTION, label: VIEW_PRESCRIPTION, showLink: true },
+              // Other link configurations...
+            ],
+            omitForViewFields: ['doctor_id', 'patient_id', 'doctor_name', 'prescription_id', 'department_id', 'appointment_date', 'dosage', 'appointment_id'],
+            apisToCall: initialStateDoctor.apisToCallPrescribe,
+            role: 'admin',
+            specificState: 'appointment',
+            reducer: 'appointmentReducer',
+            mainRecordId: 'appointment_id',
+          }}
         />
-        <Card title="Total Doctors" icon={FaStethoscope} navigate="/doctors" data={doctors.alldoctors.length.toString()} />
-        <Card title="Total Payments" icon={FaMoneyBillWave} navigate="/list" data={payments.allpayments.length.toString()} />
+
+
+        <Card title="Total Doctors" icon={FaStethoscope} navigate="/list"
+
+          data={doctors.alldoctors.length.toString()}
+          dataToBePassed={{
+            isShowDoctorDetailsView: true,
+            rawData: doctors.alldoctors,
+            linkConfiguration: [
+              { field: DELETE, label: DELETE, showLink: true },
+              { field: VIEW_DOCTOR_COMPLETE_PROFILE, label: VIEW_DOCTOR_COMPLETE_PROFILE, showLink: true },
+            ],
+            omitForViewFields: ['doctor_id', 'patient_id', 'prescription_id', 'department_id', 'appointment_date', 'dosage', 'appointment_id'],
+            apisToCall: apisToCallDoctor,
+            role: 'admin',
+            mainRecordId: 'doctor_id',
+          }}
+        />
+
+
+
+
+        <Card title="Total Payments"
+          dataToBePassed={{
+            rawData: payments.allpayments,
+            role: 'admin',
+          }}
+
+          icon={FaMoneyBillWave} navigate="/list" data={payments.allpayments.length.toString()} />
       </div>
 
       <AnalyticalInfo width={800} height={500} barColor="#ff7f50" />

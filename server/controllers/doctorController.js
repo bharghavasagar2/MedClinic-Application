@@ -171,7 +171,6 @@ exports.getDoctorDetails = (req, res) => {
           doctorDetails.patients[patientIndex].appointments.push(appointmentDetails);
         });
       }
-
       res.json(doctorDetails);
     }
   });

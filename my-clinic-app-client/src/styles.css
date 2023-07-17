@@ -122,6 +122,11 @@
   width: 400px; /* Adjust the width as needed */
 }
 
+/* Custom CSS for responsive table */
+.table-responsive {
+  overflow-x: auto;
+}
+
 .form-field.disabled {
   color: rgb(171, 157, 157); /* Text color for disabled fields */
 }
@@ -161,4 +166,63 @@
   color: #fff;
   font-size: 14px;
   border-radius: 4px;
+}
+/* Add this CSS in your styles or a separate CSS file */
+
+/* Add this CSS in your styles or a separate CSS file */
+
+.modal-overlay {
+  /* Set overlay styles as per your design */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* Hide the scrollbar for the modal-overlay */
+}
+
+.modal-content {
+  /* Set modal styles as per your design */
+  position: relative; /* Add this to make the button position relative to the modal */
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-height: calc(
+    100vh - 40px
+  ); /* 100vh minus 40px for padding and button space */
+  overflow-y: auto; /* Enable vertical scrolling if the content overflows */
+}
+
+.modal-scrollable {
+  /* Set styles for the scrollable container */
+  overflow-y: auto; /* Enable vertical scrolling if the content overflows */
+}
+
+.modal-close {
+  /* Set close button styles as per your design */
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+/* Custom CSS for pagination buttons */
+.pagination-btn {
+  padding: 8px 12px;
+  background-color: #4a4a4a;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Disable style for disabled buttons */
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

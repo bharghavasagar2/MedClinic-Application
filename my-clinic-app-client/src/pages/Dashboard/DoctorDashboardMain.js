@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaUser, FaCalendar, FaUserMd, FaUserTimes, FaStethoscope, FaFilePrescription, FaVideo } from 'react-icons/fa';
 import Card from '../commonComponents/CardComponent';
-import { APPOINTMENT_STATUS, CHANGE_APPOINTMENT_STATUS, EDIT, PRESCRIBE, USER_DETAILS, VIEW_PRESCRIPTION, filterArray, useReduxHelpers } from '../../commonConfig/commonConfig';
+import { APPOINTMENT_STATUS, CHANGE_APPOINTMENT_STATUS, CHANGE_VIDEO_CONSULTATION_STATUS, EDIT, JOIN_MEETING, PRESCRIBE, USER_DETAILS, VIDEO_CONSULTATION_STATUS, VIEW_PRESCRIPTION, filterArray, useReduxHelpers } from '../../commonConfig/commonConfig';
 import { getAppointmentAllRecords } from '../../redux/reducers/appointmentsSlice';
 import { getData } from '../../security/sessionStorage';
 import { getAppdoctorsById } from '../../redux/reducers/doctorsSlice';
-import { initialStateDoctor } from './initialStateDashboardScreen';
+import { apisToCallVideoConsultation, initialStateDoctor, patientInitialState } from './initialStateDashboardScreen';
 import { filterRequestArray } from '../../commonConfig/commonFunction';
+import { getSpecificDoctorVideoRecords } from '../../redux/reducers/videoSlice';
 
 const DoctorDashboard = () => {
 
@@ -15,7 +16,7 @@ const DoctorDashboard = () => {
 
   let { getdoctorById } = globalState.doctors;
 
-  let { appointments, payments, patients, authentication } = globalState;
+  let { appointments, payments, patients, authentication, video } = globalState;
 
   let [state, setState] = useState({ ...initialStateDoctor })
 
@@ -27,10 +28,11 @@ const DoctorDashboard = () => {
     console.log(getData(USER_DETAILS)?.userId);
     dispatch(getAppointmentAllRecords())
     dispatch(getAppdoctorsById(userId));
+    dispatch(getSpecificDoctorVideoRecords(userId));
   }, [])
 
 
-  let { apisToCallPrescribe, fieldsToShowPrescribeAdd, fieldsToShowAppintmentsAdd, apisToCallConsultation } = state;
+  let { apisToCallPrescribe, fieldsToShowPrescribeAdd, fieldsToShowAppintmentsAdd, apisToCallConsultation, fieldsToShowVideoConsultation } = state;
   console.log(getdoctorById)
 
 
@@ -50,8 +52,9 @@ const DoctorDashboard = () => {
           <Card
             title="Consultations"
             icon={FaFilePrescription}
+            fieldsToShow={patientInitialState.fieldsToShowAppintmentsView}
             navigate='/list'
-            data={filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.COMPLETED, APPOINTMENT_STATUS.FOLLOW_UP], 'doctor_id', "department_name").length.toString()}
+            data={filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.COMPLETED, APPOINTMENT_STATUS.FOLLOW_UP], 'doctor_id', "department_name")}
             dataToBePassed={{
               condtionToRenderAllData: { filterKeys: [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.COMPLETED, APPOINTMENT_STATUS.FOLLOW_UP], key: 'appointment_status', omit: ['department_name'] },
               rawData: filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.FOLLOW_UP, APPOINTMENT_STATUS.COMPLETED], 'doctor_id', "department_name"),
@@ -70,7 +73,8 @@ const DoctorDashboard = () => {
           <Card
             title="Upcoming Appointments"
             icon={FaCalendar}
-            data={filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.FOLLOW_UP], 'doctor_id', "department_name").length.toString()}
+            fieldsToShow={patientInitialState.fieldsToShowAppintmentsView}
+            data={filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.FOLLOW_UP], 'doctor_id', "department_name")}
             navigate='/list'
             dataToBePassed={{
               condtionToRenderAllData: { filterKeys: [APPOINTMENT_STATUS.APPROVED], key: 'appointment_status' },
@@ -119,7 +123,7 @@ const DoctorDashboard = () => {
                 // Other link configurations...
               ],
 
-              omitForViewFields: ['doctor_id', 'patient_id', 'doctor_name', 'prescription_id', 'department_id', 'appointment_date', 'dosage', 'appointment_id', 'appointment_status'],
+              omitForViewFields: ['doctor_id', 'patient_id', 'doctor_name', 'prescription_id', 'department_id', 'appointment_date', 'dosage', 'appointment_id'],
               //  addToResponseIfActionSuccess: { PRESCRIBE: { appointment_status: APPOINTMENT_STATUS.COMPLETED } },
               apisToCall: apisToCallPrescribe,
               role: 'doctor',
@@ -134,6 +138,25 @@ const DoctorDashboard = () => {
             title="Video Consultation"
             icon={FaVideo}
             navigate='/list'
+            data={Array.isArray(video.getSpecificDoctorVideoRecords) && video.getSpecificDoctorVideoRecords.length > 0 ? video.getSpecificDoctorVideoRecords.length.toString() : []}
+            dataToBePassed={{
+              condtionToRenderAllData: { omit: ['doctor_name'] },
+              apisToCall: apisToCallVideoConsultation,
+              linkConfiguration: [
+                {
+                  field: JOIN_MEETING, label: JOIN_MEETING, showLink: false, condition: VIDEO_CONSULTATION_STATUS.COMPLETED_VIDEO_CONSULTATION,
+                  conditionField: 'consultation_status', isRedirect: true, redirectUrl: 'video_consultation_link'
+                },
+                {
+                  field: CHANGE_VIDEO_CONSULTATION_STATUS, label: CHANGE_VIDEO_CONSULTATION_STATUS, showLink: false,
+                  condition: VIDEO_CONSULTATION_STATUS.COMPLETED_VIDEO_CONSULTATION, conditionField: 'consultation_status'
+                },
+              ],
+              rawData: filterRequestArray(video.getSpecificDoctorVideoRecords, null, null, null, ['doctor_name']),
+              fieldsToShowOnEdit: fieldsToShowVideoConsultation,
+              role: 'doctor',
+              mainRecordId: 'consultation_id'
+            }}
           />
 
 

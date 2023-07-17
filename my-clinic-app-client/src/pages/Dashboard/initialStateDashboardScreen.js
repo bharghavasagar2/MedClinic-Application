@@ -1,5 +1,5 @@
 import moment from "moment";
-import { departments, appointmentType, GENDER_OPTIONS, appointmentPrescribeStatus } from "../../commonConfig/commonConfig";
+import { departments, appointmentType, GENDER_OPTIONS, appointmentPrescribeStatus, VIDEO_CONSULTATION_FIELDS } from "../../commonConfig/commonConfig";
 
 export const patientInitialState = {
   patientFormValues: {},
@@ -44,6 +44,28 @@ export const patientInitialState = {
   { label: 'Age', name: 'patient_age', required: true },
   { label: 'Gender', name: 'patient_gender', type: 'select', options: GENDER_OPTIONS, required: true },
   ],
+  apisToCallPrescribe: {
+    view: {
+      endpoint: '/prescriptions/appointments',
+      // id: 'dataId',
+    },
+    create: {
+      endpoint: '/prescriptions',             // Replace with the actual endpoint for your API
+      // id: 'dataId',
+    },
+    delete: {
+      endpoint: '/prescriptions',                 // Replace with the actual endpoint for your API
+      // id: 'dataId',
+    },
+    update: {
+      endpoint: '/prescriptions',       // Replace with the actual endpoint for your API
+      // id: 'dataId',
+    },
+    getAll: {
+      endpoint: '/appointments', // Replace with the actual endpoint for your API
+      // id: 'dataId',
+    }
+  },
   RaiseRequestFields: [
     // { name: 'name', label: 'Name', type: 'text', required: true, },
     { name: 'appointment_date', label: 'Date', type: 'date', required: true, },
@@ -188,13 +210,6 @@ export const initialStateDoctor = {
       required: true,
       initialValue: "Medication: \nDosage: \nFrequency: \nDuration: \nAdditional Instructions: ",
     },
-    {
-      name: 'appointment_status',
-      label: 'Select Appointment Status', required: true,
-      type: 'select',
-      options: appointmentPrescribeStatus,
-    },
-
   ],
   apisToCallPrescribe: {
     view: {
@@ -264,4 +279,62 @@ export const initialStateDoctor = {
       // id: 'dataId',
     }
   },
+  fieldsToShowVideoConsultation: [//video_consultation_link
+    { name: 'appointment_date', label: 'Appointment Date', type: 'date', disabled: true, },
+    { name: 'appointment_time', label: 'Appointment Time', type: 'time', disabled: true, },
+    { name: 'patient_name', label: 'Patient', type: 'text', disabled: true, },
+    { name: 'video_consultation_link', label: 'Video Consultation Link', type: 'text', disabled: true, },
+    {
+      name: 'consultation_status',
+      label: 'Select consultation_status', required: true,
+      type: 'select',
+      options: VIDEO_CONSULTATION_FIELDS,
+    },
+  ]
+}
+
+export const apisToCallVideoConsultation = {
+  view: {
+    endpoint: '/video',
+    // id: 'dataId',
+  },
+  create: {
+    endpoint: '/video',             // Replace with the actual endpoint for your API
+    // id: 'dataId',
+  },
+  delete: {
+    endpoint: '/video',                 // Replace with the actual endpoint for your API
+    // id: 'dataId',
+  },
+  update: {
+    endpoint: '/video',       // Replace with the actual endpoint for your API
+    //id: 'dataId',
+  },
+  getAll: {
+    endpoint: '/video', // Replace with the actual endpoint for your API
+    // id: 'dataId',
+  }
+}
+
+export const apisToCallDoctor = {
+  view: {
+    endpoint: '/doctors/appointmentDetails',
+    // id: 'dataId',
+  },
+  create: {
+    endpoint: '/doctors',             // Replace with the actual endpoint for your API
+    // id: 'dataId',
+  },
+  delete: {
+    endpoint: '/doctors',                 // Replace with the actual endpoint for your API
+    // id: 'dataId',
+  },
+  update: {
+    endpoint: '/doctors',       // Replace with the actual endpoint for your API
+    //id: 'dataId',
+  },
+  getAll: {
+    endpoint: '/doctors', // Replace with the actual endpoint for your API
+    // id: 'dataId',
+  }
 }

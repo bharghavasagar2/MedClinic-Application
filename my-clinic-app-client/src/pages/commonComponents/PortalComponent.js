@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { AiOutlineClose } from 'react-icons/ai';
+
 const Portal = ({ isOpen, onClose, children }) => {
   if (!isOpen) {
     return null;
@@ -9,10 +10,10 @@ const Portal = ({ isOpen, onClose, children }) => {
   return ReactDOM.createPortal(
     <div className="modal-overlay">
       <div className="modal-content">
-        <button style={{ color: 'red' }} onClick={onClose} className="modal-close">
+        <button style={{ color: 'red', position: 'absolute', top: '10px', right: '10px' }} onClick={onClose} className="modal-close">
           <AiOutlineClose size={24} />
         </button>
-        {children}
+        <div className="modal-scrollable">{children}</div>
       </div>
     </div>,
     document.body
