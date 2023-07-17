@@ -3,7 +3,7 @@ import { FaCalendar, FaStethoscope, FaMoneyBillWave, FaClock, FaUserInjured, FaU
 import AnalyticalInfo from '../commonComponents/AnalyticalReportsComponent';
 import Card from '../commonComponents/CardComponent';
 import { getAppointmentAllRecords } from '../../redux/reducers/appointmentsSlice';
-import { APPOINTMENT_STATUS, ASSIGN_DOC, Cancel, DELETE, EDIT, JOIN_MEETING, VIDEO_CONSULTATION_STATUS, VIEW_DOCTOR_COMPLETE_PROFILE, VIEW_PATIENT_COMPLETE_PROFILE, VIEW_PRESCRIPTION, useReduxHelpers } from '../../commonConfig/commonConfig';
+import { APPOINTMENT_STATUS, ASSIGN_DOC, Cancel, DELETE, EDIT, JOIN_MEETING, VIDEO_CONSULTATION_STATUS, VIEW_DOCTOR_COMPLETE_PROFILE, VIEW_PATIENT_COMPLETE_PROFILE, VIEW_PRESCRIPTION, getUserId, useReduxHelpers } from '../../commonConfig/commonConfig';
 import { filterRequestArray } from '../../commonConfig/commonFunction';
 import { fetchAllPatientRecords } from '../../redux/reducers/patientsSlice';
 import { create_Update_Doc_ById, fetchAllDocRecords } from '../../redux/reducers/doctorsSlice';
@@ -16,13 +16,14 @@ import { resetProperty } from '../../redux/reducers/resetSlice';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { fetchAllVideoRecords } from '../../redux/reducers/videoSlice';
+import { getAllData } from '../../redux/commonSlice/slice';
 
 const DashboardGrid = () => {
   const { globalState, dispatch, navigate } = useReduxHelpers();
 
   const [state, setState] = useState({ ...initalStateDashboardGrid });
 
-  let { appointments, payments, patients, doctors, video } = globalState;
+  let { appointments, payments, patients, doctors, video, common } = globalState;
 
   useEffect(() => {
     dispatch(getAppointmentAllRecords());
@@ -30,6 +31,7 @@ const DashboardGrid = () => {
     dispatch(fetchAllDocRecords());
     dispatch(fetchAllPaymentRecords());
     dispatch(fetchAllVideoRecords());
+    dispatch(getAllData('/api/getAllReports'));
   }, []);
 
   const openModal = () => {
@@ -192,7 +194,7 @@ const DashboardGrid = () => {
 
       </div>
 
-      <AnalyticalInfo width={800} height={500} barColor="#ff7f50" />
+      <AnalyticalInfo initialData={common.allData} width={800} height={500} barColor="#ff7f50" />
 
       <Portal isOpen={isOpen} onClose={closeModal}>
         <ConditionalRender

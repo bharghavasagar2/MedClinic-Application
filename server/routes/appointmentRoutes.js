@@ -17,4 +17,7 @@ router.put('/appointments/:id', authController.authenticateToken, appointmentCon
 // Delete an appointment
 router.delete('/appointments/:id', authController.authenticateToken, appointmentController.deleteAppointment);
 
+// Update an appointment
+router.get('/api/getAllReports', authController.authenticateToken, appointmentController.getAllReports);
+
 module.exports = router;

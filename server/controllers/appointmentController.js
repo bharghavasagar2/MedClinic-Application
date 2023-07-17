@@ -115,3 +115,113 @@ const appointmentCheck = (id, res) => {
 
 
 };
+
+
+
+
+// API endpoint to fetch all reports
+exports.getAllReports = (req, res) => {
+  const query1 = `
+  SELECT 
+  CASE 
+      WHEN substr(appointment_date, 4, 2) = '01' THEN 'Jan'
+      WHEN substr(appointment_date, 4, 2) = '02' THEN 'Feb'
+      WHEN substr(appointment_date, 4, 2) = '03' THEN 'Mar'
+      WHEN substr(appointment_date, 4, 2) = '04' THEN 'Apr'
+      WHEN substr(appointment_date, 4, 2) = '05' THEN 'May'
+      WHEN substr(appointment_date, 4, 2) = '06' THEN 'Jun'
+      WHEN substr(appointment_date, 4, 2) = '07' THEN 'Jul'
+      WHEN substr(appointment_date, 4, 2) = '08' THEN 'Aug'
+      WHEN substr(appointment_date, 4, 2) = '09' THEN 'Sep'
+      WHEN substr(appointment_date, 4, 2) = '10' THEN 'Oct'
+      WHEN substr(appointment_date, 4, 2) = '11' THEN 'Nov'
+      WHEN substr(appointment_date, 4, 2) = '12' THEN 'Dec'
+  END as month,
+  SUM(payment_amount) as revenue
+FROM 
+  Appointments
+JOIN Payments ON Appointments.appointment_id = Payments.appointment_id
+WHERE 
+  appointment_status = 'Scheduled'
+GROUP BY 
+  month
+ORDER BY 
+  appointment_date;
+  `;
+
+  const query2 = `
+    SELECT 
+        Departments.department_name as label,
+        COUNT(*) as appointments
+    FROM 
+        Appointments
+    JOIN Departments ON Appointments.department_id = Departments.department_id
+    WHERE 
+        Appointments.appointment_status = 'Scheduled'
+    GROUP BY 
+        Departments.department_name;
+  `;
+
+  const query3 = `
+    SELECT 
+        Doctors.doctor_name as doctor,
+        COUNT(*) as appointments
+    FROM 
+        Appointments
+    JOIN Doctors ON Appointments.doctor_id = Doctors.doctor_id
+    WHERE 
+        Appointments.appointment_status = 'Scheduled'
+    GROUP BY 
+        Doctors.doctor_name;
+  `;
+
+  const query4 = `
+    SELECT 
+        CASE
+            WHEN patient_age < 18 THEN 'Children'
+            WHEN patient_age >= 18 AND patient_age <= 65 THEN 'Adults'
+            WHEN patient_age > 65 THEN 'Seniors'
+            ELSE 'Unknown'
+        END AS age_group,
+        COUNT(*) AS appointments
+    FROM 
+        Appointments
+    JOIN Patients ON Appointments.patient_id = Patients.patient_id
+    WHERE 
+        Appointments.appointment_status = 'Scheduled'
+    GROUP BY 
+        age_group;
+  `;
+
+  const queries = [query1, query2, query3, query4];
+
+  // Execute all queries in parallel
+  Promise.all(queries.map(query => executeQuery(query)))
+    .then(results => {
+      const [revenueData, departmentsData, doctorsData, ageGroupData] = results;
+      const response = {
+        revenue: revenueData,
+        departments: departmentsData,
+        doctors: doctorsData,
+        ageGroup: ageGroupData
+      };
+      res.json(response);
+    })
+    .catch(error => {
+      console.error(error.message);
+      res.status(500).json({ error: 'Error fetching reports' });
+    });
+};
+
+// Helper function to execute a single SQL query and return the result
+const executeQuery = (query) => {
+  return new Promise((resolve, reject) => {
+    db.all(query, (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+};
