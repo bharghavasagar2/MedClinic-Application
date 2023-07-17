@@ -1,34 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import { FaUser, FaCalendar, FaStethoscope, FaMoneyBillWave, FaClock, FaDemocrat, FaDotCircle, FaUserInjured, FaUserShield, FaWalking } from 'react-icons/fa';
+import { FaCalendar, FaStethoscope, FaMoneyBillWave, FaClock, FaUserInjured, FaUserShield, FaWalking, FaVideo } from 'react-icons/fa';
 import AnalyticalInfo from '../commonComponents/AnalyticalReportsComponent';
 import Card from '../commonComponents/CardComponent';
 import { getAppointmentAllRecords } from '../../redux/reducers/appointmentsSlice';
-import { APPOINTMENT_STATUS, ASSIGN_DOC, Cancel, DELETE, EDIT, VIEW_DOCTOR_COMPLETE_PROFILE, VIEW_PRESCRIPTION, getUserId, useReduxHelpers } from '../../commonConfig/commonConfig';
+import { APPOINTMENT_STATUS, ASSIGN_DOC, Cancel, DELETE, EDIT, JOIN_MEETING, VIDEO_CONSULTATION_STATUS, VIEW_DOCTOR_COMPLETE_PROFILE, VIEW_PATIENT_COMPLETE_PROFILE, VIEW_PRESCRIPTION, useReduxHelpers } from '../../commonConfig/commonConfig';
 import { filterRequestArray } from '../../commonConfig/commonFunction';
-import { fetchAllPatientRecords, getRecordById } from '../../redux/reducers/patientsSlice';
+import { fetchAllPatientRecords } from '../../redux/reducers/patientsSlice';
 import { create_Update_Doc_ById, fetchAllDocRecords } from '../../redux/reducers/doctorsSlice';
 import { fetchAllPaymentRecords } from '../../redux/reducers/paymentSlice';
-import { apisToCallAppointmentRequestAdmin, apisToCallDoctor, assignDoctorFields, initalStateDashboardGrid, initialStateDoctor } from './initialStateDashboardScreen';
+import { apisToCallAppointmentRequestAdmin, apisToCallDoctor, apisToCallPatientAdmin, apisToCallVideoConsultation, assignDoctorFields, initalStateDashboardGrid, initialStateDoctor } from './initialStateDashboardScreen';
 import Portal from '../commonComponents/PortalComponent';
 import ConditionalRender from '../commonComponents/ConditionalRender';
 import Form from '../commonComponents/FormCommonComponent';
 import { resetProperty } from '../../redux/reducers/resetSlice';
-import { login } from '../../redux/reducers/authenticationSlice';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { fetchAllVideoRecords } from '../../redux/reducers/videoSlice';
 
 const DashboardGrid = () => {
   const { globalState, dispatch, navigate } = useReduxHelpers();
 
   const [state, setState] = useState({ ...initalStateDashboardGrid });
 
-  let { appointments, payments, patients, doctors } = globalState;
+  let { appointments, payments, patients, doctors, video } = globalState;
 
   useEffect(() => {
     dispatch(getAppointmentAllRecords());
     dispatch(fetchAllPatientRecords());
     dispatch(fetchAllDocRecords());
     dispatch(fetchAllPaymentRecords());
+    dispatch(fetchAllVideoRecords());
   }, []);
 
   const openModal = () => {
@@ -64,7 +65,7 @@ const DashboardGrid = () => {
     }
   }, [doctors]);
 
-  const { isShowAddDoctorScreen, isOpen, addDoctorFields, addCredentialFields, isAddCredenForDoctor, doctorFormValues, doctorCredFormValues } = state;
+  const { fieldsToShowVideoConsultation, isShowAddDoctorScreen, isOpen, addDoctorFields, addCredentialFields, isAddCredenForDoctor, doctorFormValues, doctorCredFormValues } = state;
 
   console.log(state)
 
@@ -79,10 +80,26 @@ const DashboardGrid = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <Card title="Total Patients" navigate="/list" icon={FaUserInjured} data={patients.allPatients.length.toString()} />
+
+        <Card title="Total Patients"
+          dataToBePassed={{
+            headerName: 'All Patient Records',
+            isShowPatientDetailsView: true,
+            rawData: patients.allPatients,
+            linkConfiguration: [
+              { field: DELETE, label: DELETE, showLink: true },
+              { field: VIEW_PATIENT_COMPLETE_PROFILE, label: VIEW_PATIENT_COMPLETE_PROFILE, showLink: true },
+            ],
+            apisToCall: apisToCallPatientAdmin,
+            role: 'admin',
+            mainRecordId: 'patient_id',
+          }}
+          navigate="/list" icon={FaUserInjured} data={patients.allPatients.length.toString()} />
+
         <Card
           title="Pending Appointment Requests"
           dataToBePassed={{
+            headerName: 'All Pending Appointment',
             rawData: filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.PENDING]),
             linkConfiguration: [
               { field: ASSIGN_DOC, label: ASSIGN_DOC, showLink: true },
@@ -108,11 +125,11 @@ const DashboardGrid = () => {
           icon={FaCalendar}
           data={filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.COMPLETED, APPOINTMENT_STATUS.FOLLOW_UP], null).length.toString()}
           dataToBePassed={{
+            headerName: 'All Confirmed Appointment',
             condtionToRenderAllData: { filterKeys: [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.COMPLETED, APPOINTMENT_STATUS.FOLLOW_UP], key: 'appointment_status', omit: ['department_name'] },
             rawData: filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.COMPLETED, APPOINTMENT_STATUS.FOLLOW_UP], null),
             linkConfiguration: [
               { field: VIEW_PRESCRIPTION, label: VIEW_PRESCRIPTION, showLink: true },
-              // Other link configurations...
             ],
             omitForViewFields: ['doctor_id', 'patient_id', 'doctor_name', 'prescription_id', 'department_id', 'appointment_date', 'dosage', 'appointment_id'],
             apisToCall: initialStateDoctor.apisToCallPrescribe,
@@ -122,17 +139,17 @@ const DashboardGrid = () => {
             mainRecordId: 'appointment_id',
           }}
         />
-
-
         <Card title="Total Doctors" icon={FaStethoscope} navigate="/list"
-
           data={doctors.alldoctors.length.toString()}
           dataToBePassed={{
+            headerName: 'Total Doctors List',
             isShowDoctorDetailsView: true,
             rawData: doctors.alldoctors,
+            fieldsToShowOnEdit: addDoctorFields,
             linkConfiguration: [
-              { field: DELETE, label: DELETE, showLink: true },
               { field: VIEW_DOCTOR_COMPLETE_PROFILE, label: VIEW_DOCTOR_COMPLETE_PROFILE, showLink: true },
+              { field: EDIT, label: EDIT, showLink: true },
+              { field: DELETE, label: DELETE, showLink: true },
             ],
             omitForViewFields: ['doctor_id', 'patient_id', 'prescription_id', 'department_id', 'appointment_date', 'dosage', 'appointment_id'],
             apisToCall: apisToCallDoctor,
@@ -141,16 +158,38 @@ const DashboardGrid = () => {
           }}
         />
 
-
-
-
         <Card title="Total Payments"
           dataToBePassed={{
+            headerName: 'Total Payments List',
             rawData: payments.allpayments,
             role: 'admin',
           }}
-
           icon={FaMoneyBillWave} navigate="/list" data={payments.allpayments.length.toString()} />
+
+        <Card
+          title="Video Consultation"
+          icon={FaVideo}
+          navigate='/list'
+          data={Array.isArray(video.allvideo) && video.allvideo.length > 0 ? video.allvideo.length.toString() : []}
+          dataToBePassed={{
+            headerName: 'Total Video Consultation List',
+            apisToCall: apisToCallVideoConsultation,
+            linkConfiguration: [
+              {
+                field: JOIN_MEETING, label: JOIN_MEETING, showLink: false, condition: VIDEO_CONSULTATION_STATUS.COMPLETED_VIDEO_CONSULTATION,
+                conditionField: 'consultation_status', isRedirect: true, redirectUrl: 'video_consultation_link'
+              },
+              {
+                field: DELETE, label: DELETE, showLink: true
+              },
+            ],
+            rawData: video.allvideo,
+            fieldsToShowOnEdit: fieldsToShowVideoConsultation,
+            role: 'admin',
+            mainRecordId: 'consultation_id'
+          }}
+        />
+
       </div>
 
       <AnalyticalInfo width={800} height={500} barColor="#ff7f50" />

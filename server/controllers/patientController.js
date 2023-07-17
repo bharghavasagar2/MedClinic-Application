@@ -71,3 +71,78 @@ exports.deletePatient = (req, res) => {
     }
   });
 };
+
+
+exports.getPatientDetails = (req, res) => {
+  const { id } = req.params;
+  const query = `
+    SELECT
+      p.patient_id,
+      p.patient_name,
+      p.patient_age,
+      p.patient_gender,
+      p.contact_number AS patient_contact_number,
+      p.address AS patient_address,
+      a.appointment_id,
+      a.appointment_date,
+      a.appointment_time,
+      a.appointment_type,
+      a.appointment_status,
+      d.doctor_id,
+      d.doctor_name,
+      d.department_id,
+      d.contact_number AS doctor_contact_number,
+      d.email AS doctor_email,
+      d.department_name
+    FROM Patients AS p
+    LEFT JOIN Appointments AS a ON p.patient_id = a.patient_id
+    LEFT JOIN Doctors AS d ON a.doctor_id = d.doctor_id
+    WHERE p.patient_id = ?;
+  `;
+
+  db.all(query, [id], (err, rows) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).json({ error: 'Error retrieving patient details from the database' });
+    } else {
+      const patientDetails = {
+        patient: {},
+        appointments: [],
+      };
+
+      if (rows.length > 0) {
+        patientDetails.patient = {
+          patient_id: rows[0].patient_id,
+          patient_name: rows[0].patient_name,
+          patient_age: rows[0].patient_age,
+          patient_gender: rows[0].patient_gender,
+          patient_contact_number: rows[0].patient_contact_number,
+          patient_address: rows[0].patient_address,
+        };
+
+        rows.forEach((row) => {
+          if (row.appointment_id) {
+            const appointment = {
+              appointment_id: row.appointment_id,
+              appointment_date: row.appointment_date,
+              appointment_time: row.appointment_time,
+              appointment_type: row.appointment_type,
+              appointment_status: row.appointment_status,
+              doctor: {
+                doctor_id: row.doctor_id,
+                doctor_name: row.doctor_name,
+                department_id: row.department_id,
+                doctor_contact_number: row.doctor_contact_number,
+                doctor_email: row.doctor_email,
+                department_name: row.department_name,
+              },
+            };
+            patientDetails.appointments.push(appointment);
+          }
+        });
+      }
+
+      res.json(patientDetails);
+    }
+  });
+};

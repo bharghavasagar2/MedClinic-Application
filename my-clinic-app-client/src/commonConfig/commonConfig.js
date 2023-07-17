@@ -87,6 +87,7 @@ export let VIDEO_CONSULTATION_STATUS = {
   CANCELLED_VIDEO_CONSULTATION: 'Cancelled Video Consultation',
 }
 export const DELETE = 'DELETE';
+export const VIEW_PATIENT_COMPLETE_PROFILE = 'View Patient Complete Profile';
 export const VIEW_DOCTOR_COMPLETE_PROFILE = 'View Doctor Complete Profile';
 export const EDIT = 'EDIT';
 export const VIEW = 'VIEW';

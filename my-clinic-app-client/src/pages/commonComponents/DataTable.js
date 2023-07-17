@@ -15,9 +15,9 @@ const Table = ({ columns, data }) => {
   };
 
   return (
-    <div>
-      <div className="table-container table-gray">
-        <table className="min-w-full divide-y divide-gray-200 table-gray">
+    <div className="table-responsive">
+      <div className="overflow-x-auto">
+        <table className="table min-w-full divide-y divide-gray-200 table-gray">
           <thead>
             <tr>
               {columns.map((column) => (

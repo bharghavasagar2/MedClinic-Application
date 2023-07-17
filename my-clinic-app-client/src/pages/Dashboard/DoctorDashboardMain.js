@@ -56,6 +56,7 @@ const DoctorDashboard = () => {
             navigate='/list'
             data={filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.COMPLETED, APPOINTMENT_STATUS.FOLLOW_UP], 'doctor_id', "department_name")}
             dataToBePassed={{
+              headerName: 'Total Consultations List',
               condtionToRenderAllData: { filterKeys: [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.COMPLETED, APPOINTMENT_STATUS.FOLLOW_UP], key: 'appointment_status', omit: ['department_name'] },
               rawData: filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.FOLLOW_UP, APPOINTMENT_STATUS.COMPLETED], 'doctor_id', "department_name"),
               linkConfiguration: [
@@ -77,6 +78,7 @@ const DoctorDashboard = () => {
             data={filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.FOLLOW_UP], 'doctor_id', "department_name")}
             navigate='/list'
             dataToBePassed={{
+              headerName: 'Upcoming Appointments List',
               condtionToRenderAllData: { filterKeys: [APPOINTMENT_STATUS.APPROVED], key: 'appointment_status' },
               rawData: filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.FOLLOW_UP], 'doctor_id', "department_name"),
               // linkFields: [PRESCRIBE],
@@ -98,6 +100,7 @@ const DoctorDashboard = () => {
 
             data={filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.COMPLETED, APPOINTMENT_STATUS.FOLLOW_UP], 'doctor_id', "department_name").length.toString()}
             dataToBePassed={{
+              headerName: 'Patient List',
               condtionToRenderAllData: { filterKeys: [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.COMPLETED, APPOINTMENT_STATUS.FOLLOW_UP], key: 'appointment_status' },
               rawData: filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.COMPLETED, APPOINTMENT_STATUS.FOLLOW_UP], 'doctor_id', "department_name"),
               role: 'doctor',
@@ -115,6 +118,7 @@ const DoctorDashboard = () => {
             navigate='/list'
             data={filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.COMPLETED, APPOINTMENT_STATUS.FOLLOW_UP], 'doctor_id', "department_name").length.toString()}
             dataToBePassed={{
+              headerName: 'Prescription Info List',
               condtionToRenderAllData: { filterKeys: [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.COMPLETED, APPOINTMENT_STATUS.FOLLOW_UP], key: 'appointment_status', omit: ['department_name'] },
               rawData: filterRequestArray(appointments.allappointments, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.FOLLOW_UP, APPOINTMENT_STATUS.COMPLETED], 'doctor_id', "department_name"),
               linkConfiguration: [
@@ -140,6 +144,7 @@ const DoctorDashboard = () => {
             navigate='/list'
             data={Array.isArray(video.getSpecificDoctorVideoRecords) && video.getSpecificDoctorVideoRecords.length > 0 ? video.getSpecificDoctorVideoRecords.length.toString() : []}
             dataToBePassed={{
+              headerName: 'Video Consultation List',
               condtionToRenderAllData: { omit: ['doctor_name'] },
               apisToCall: apisToCallVideoConsultation,
               linkConfiguration: [

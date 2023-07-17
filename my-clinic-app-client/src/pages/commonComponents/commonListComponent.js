@@ -8,7 +8,7 @@ import { useLocation } from 'react-router-dom';
 import Portal from '../commonComponents/PortalComponent.js';
 import ConfirmationModal from './ConfirmationModal';
 import { filterRequestArray, generateColumnsAndData } from '../../commonConfig/commonFunction';
-import { ASSIGN_DOC, CHANGE_APPOINTMENT_STATUS, CHANGE_VIDEO_CONSULTATION_STATUS, Cancel, DELETE, EDIT, PRESCRIBE, USER_ROLES, VIEW, VIEW_DOCTOR_COMPLETE_PROFILE, VIEW_PRESCRIPTION, useReduxHelpers } from '../../commonConfig/commonConfig';
+import { ASSIGN_DOC, CHANGE_APPOINTMENT_STATUS, CHANGE_VIDEO_CONSULTATION_STATUS, Cancel, DELETE, EDIT, PRESCRIBE, USER_ROLES, VIEW, VIEW_DOCTOR_COMPLETE_PROFILE, VIEW_PATIENT_COMPLETE_PROFILE, VIEW_PRESCRIPTION, useReduxHelpers } from '../../commonConfig/commonConfig';
 import { actionTypeInitialState, initialState, resetCommonSlice } from '../../commonConfig/initialListComponent';
 import ConditionalRender from './ConditionalRender';
 import FormView from './CommonFormView';
@@ -22,11 +22,12 @@ import {
   createUpdateDataById
 } from '../../redux/commonSlice/slice.js';
 import { getStorageValue } from '../../security/sessionStorage';
+import PatientFormView from './PatientDetailViewComponent';
 
 const List = () => {
   const location = useLocation();
-  let { linkConfiguration,
-    conditionValue2, rawData, isShowDoctorDetailsView, linkLabels, fieldsToShowOnEdit, condtionToRenderAllData, confirmationMessage,
+  let { linkConfiguration, headerName,
+    rawData, isShowDoctorDetailsView, isShowPatientDetailsView, fieldsToShowOnEdit, condtionToRenderAllData, confirmationMessage,
     apisToCall, role, addToResponseIfActionSuccess, mainRecordId, omitForViewFields } = location?.state;
 
   console.log(location?.state)
@@ -39,10 +40,7 @@ const List = () => {
   const [state, setState] = useState({ ...initialState, dataArrayList: rawData || [] });
 
   const { common } = globalState;
-
-
   const { dataById } = common;
-
   let { isView, isEdit, isCancel, dataArrayList, isAssignDoc, isPrescribe } = state;
 
   const openModal = (item, i, actionType = null) => {
@@ -51,9 +49,10 @@ const List = () => {
       case DELETE:
         setState({ ...state, ...actionTypeInitialState, isCancel: true })
         break;
-      case VIEW://VIEW_PRESCRIPTION//CHANGE_VIDEO_CONSULTATION_STATUS
+      case VIEW://VIEW_PRESCRIPTION//CHANGE_VIDEO_CONSULTATION_STATUS//VIEW_PATIENT_COMPLETE_PROFILE
       case VIEW_PRESCRIPTION:
       case VIEW_DOCTOR_COMPLETE_PROFILE:
+      case VIEW_PATIENT_COMPLETE_PROFILE:
         setState({ ...state, ...actionTypeInitialState, isView: true })
         dispatch(getDataById({ endpoint: apisToCall.view.endpoint, id: dataArrayList?.[i][mainRecordId] }))
         break;
@@ -84,8 +83,6 @@ const List = () => {
     }
   }, []);
 
-
-
   const closeModal = (obj = false) => {
     setSelectedItem(null);
     setIsModalOpen(false);
@@ -97,9 +94,6 @@ const List = () => {
     }
   };
 
-
-
-
   const formattedColumns = columns.map((column) => {
     if (column.field === 'details' || column.field === 'Details') {
       return {
@@ -109,9 +103,6 @@ const List = () => {
     }
     return column;
   });
-
-
-  // Existing code...
 
   // Generate formatted data with links and custom content based on link configuration
   const formattedData = data.map((item, i) => {
@@ -149,13 +140,6 @@ const List = () => {
       });
     return formattedItem;
   });
-
-  // Existing code...
-
-
-
-  // Existing Code...
-
 
   const onCancelConfirm = () => {
     if (!!addToResponseIfActionSuccess && !!addToResponseIfActionSuccess[action]) {
@@ -230,7 +214,7 @@ const List = () => {
   console.log(isShowDoctorDetailsView)
   return (
     <div className="bg-gray-100 min-h-screen" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }}>
-      <HeaderComponent />
+      <HeaderComponent headerName={!!headerName ? headerName : null} />
       <h2>Data Table</h2>
       <div className="table-container">
         <Table columns={formattedColumns} data={formattedData} />
@@ -238,12 +222,11 @@ const List = () => {
       <Portal isOpen={isModalOpen} onClose={closeModal}>
         <ConditionalRender
           conditions={[
-            { condition: isView, content: isShowDoctorDetailsView ? <DoctorViewForm formData={!_.isEmpty(viewItem) ? viewItem : null} /> : <FormView formData={!_.isEmpty(viewItem) ? _.omit({ ...viewItem, ...selectedItem }, !!omitForViewFields ? omitForViewFields : []) : {}} /> },
+            { condition: isView, content: isShowDoctorDetailsView ? <DoctorViewForm formData={!_.isEmpty(viewItem) ? viewItem : null} /> : !!isShowPatientDetailsView ? <PatientFormView patientData={!_.isEmpty(viewItem) ? viewItem : {}} /> : <FormView formData={!_.isEmpty(viewItem) ? _.omit({ ...viewItem, ...selectedItem }, !!omitForViewFields ? omitForViewFields : []) : {}} /> },
             { condition: isCancel, content: <ConfirmationModal message={confirmationMessage} onConfirm={onCancelConfirm} onCancel={closeModal} /> },
             { condition: isAssignDoc, content: <Form initialValues={selectedItem || ''} fields={!!fieldsToShowOnEdit ? fieldsToShowOnEdit : null} onSubmit={handleOnEditFormSubmission} formName="Assign Doc" submitButtonName="Assign & Approve" /> },
             { condition: isEdit, content: <Form initialValues={selectedItem || ''} fields={!!fieldsToShowOnEdit ? fieldsToShowOnEdit : null} onSubmit={handleOnEditFormSubmission} formName="Edit Patient" submitButtonName="Edit Details" /> },
             { condition: isPrescribe, content: <Form initialValues={selectedItem} fields={!!fieldsToShowOnEdit ? fieldsToShowOnEdit : null} onSubmit={handleOnPrescribeFormSubmission} formName="Prescription" submitButtonName="Prescribe" isPrescribe={true} /> },
-            // { condition: true, content: <Form fields={patientState.RaiseRequestFields} onSubmit={handleAppntFormSubmit} formName="Appointment" submitButtonName="Proceed to Payment" /> },
           ]}
         />
       </Portal>

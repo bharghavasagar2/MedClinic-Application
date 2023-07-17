@@ -163,6 +163,18 @@ export const initalStateDashboardGrid = {
       type: 'select',
       options: departments,
     },
+  ],
+  fieldsToShowVideoConsultation: [//video_consultation_link
+    { name: 'appointment_date', label: 'Appointment Date', type: 'date', disabled: true, },
+    { name: 'appointment_time', label: 'Appointment Time', type: 'time', disabled: true, },
+    { name: 'patient_name', label: 'Patient', type: 'text', disabled: true, },
+    { name: 'video_consultation_link', label: 'Video Consultation Link', type: 'text', disabled: true, },
+    {
+      name: 'consultation_status',
+      label: 'Select consultation_status', required: true,
+      type: 'select',
+      options: VIDEO_CONSULTATION_FIELDS,
+    },
   ]
 }
 
@@ -335,6 +347,29 @@ export const apisToCallDoctor = {
   },
   getAll: {
     endpoint: '/doctors', // Replace with the actual endpoint for your API
+    // id: 'dataId',
+  }
+}
+
+export const apisToCallPatientAdmin = {
+  view: {
+    endpoint: '/patients/appointmentDetails',
+    // id: 'dataId',
+  },
+  create: {
+    endpoint: '/patients',             // Replace with the actual endpoint for your API
+    // id: 'dataId',
+  },
+  delete: {
+    endpoint: '/patients',                 // Replace with the actual endpoint for your API
+    // id: 'dataId',
+  },
+  update: {
+    endpoint: '/patients',       // Replace with the actual endpoint for your API
+    //id: 'dataId',
+  },
+  getAll: {
+    endpoint: '/patients', // Replace with the actual endpoint for your API
     // id: 'dataId',
   }
 }

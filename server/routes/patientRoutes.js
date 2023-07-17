@@ -17,4 +17,6 @@ patientRouter.put('/patients/:id', authController.authenticateToken, patientCont
 // Delete a patient
 patientRouter.delete('/patients/:id', authController.authenticateToken, patientController.deletePatient);
 
+patientRouter.get('/patients/appointmentDetails/:id', authController.authenticateToken, patientController.getPatientDetails);
+
 module.exports = patientRouter;

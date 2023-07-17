@@ -13,8 +13,8 @@ export default function Modal({ icon, showModal, setShowModal, title, message, o
                 {!!icon && <FaExclamationCircle className="error-icon" />}
                 {title}
               </h3>
-              <button className="modal-close" onClick={onClose}>
-                ×
+              <button className="modal-close-qw" style={{ color: 'red' }} onClick={onClose}>
+                X
               </button>
             </div>
             <div className="modal-body">
@@ -26,7 +26,7 @@ export default function Modal({ icon, showModal, setShowModal, title, message, o
                   Confirm
                 </button>
               )}
-              <button className="modal-button modal-close" onClick={onClose}>
+              <button className="modal-button modal-close" style={{ color: 'red' }} onClick={onClose}>
                 Close
               </button>
             </div>

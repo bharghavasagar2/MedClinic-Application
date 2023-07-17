@@ -167,6 +167,7 @@ const PatientDashboard = () => {
           fieldsToShow={patientInitialState.fieldsToShowAppintmentsView}
           data={filterRequestArray(appointmentList, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.FOLLOW_UP, APPOINTMENT_STATUS.COMPLETED], 'patient_id')}
           dataToBePassed={{
+            headerName: 'Consultations List',
             condtionToRenderAllData: { filterKeys: [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.COMPLETED, APPOINTMENT_STATUS.FOLLOW_UP], key: 'appointment_status' },
             rawData: filterRequestArray(appointmentList, 'appointment_status', [APPOINTMENT_STATUS.APPROVED, APPOINTMENT_STATUS.FOLLOW_UP, APPOINTMENT_STATUS.COMPLETED], 'patient_id'),
             linkConfiguration: [
@@ -189,6 +190,7 @@ const PatientDashboard = () => {
           data={filterRequestArray(appointmentList, 'appointment_status', [APPOINTMENT_STATUS.PENDING])}
           navigate='/list'
           dataToBePassed={{
+            headerName: 'Appointment Requests List',
             condtionToRenderAllData: { filterKeys: [APPOINTMENT_STATUS.PENDING], key: 'appointment_status' },
             rawData: filterRequestArray(appointmentList, 'appointment_status', [APPOINTMENT_STATUS.PENDING]),
             linkConfiguration: [
@@ -210,6 +212,7 @@ const PatientDashboard = () => {
           navigate='/list'
           data={Array.isArray(video.getSpecificPatientVideoRecords) && video.getSpecificPatientVideoRecords.length > 0 ? video.getSpecificPatientVideoRecords.length.toString() : []}
           dataToBePassed={{
+            headerName: 'Video Consultations List',
             linkConfiguration: [
               {
                 field: JOIN_MEETING, label: JOIN_MEETING, showLink: false, condition: VIDEO_CONSULTATION_STATUS.COMPLETED_VIDEO_CONSULTATION,

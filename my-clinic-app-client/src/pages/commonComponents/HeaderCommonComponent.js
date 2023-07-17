@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { logOut } from '../../redux/reducers/authenticationSlice';
 import { LOGOUT } from '../../commonConfig/commonConfig';
 
-const HeaderComponent = () => {
+const HeaderComponent = ({ headerName }) => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
@@ -23,7 +23,7 @@ const HeaderComponent = () => {
           <img className="w-full h-full object-cover" src={logo} alt="icon" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold" style={{ marginRight: '10rem' }}>Dashboard</h1>
+          <h1 className="text-2xl font-bold" style={{ marginRight: '10rem' }}>{headerName || 'Dashboard'}</h1>
         </div>
 
 

@@ -10,7 +10,7 @@ const Portal = ({ isOpen, onClose, children }) => {
   return ReactDOM.createPortal(
     <div className="modal-overlay">
       <div className="modal-content">
-        <button style={{ color: 'red', position: 'absolute', top: '10px', right: '10px' }} onClick={onClose} className="modal-close">
+        <button style={{ color: 'red', position: 'sticky', top: '0px', right: '10px' }} onClick={onClose} className="modal-close pt-0">
           <AiOutlineClose size={24} />
         </button>
         <div className="modal-scrollable">{children}</div>
