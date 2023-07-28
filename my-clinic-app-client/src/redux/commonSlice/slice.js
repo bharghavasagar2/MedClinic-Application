@@ -14,7 +14,6 @@ const setAuthToken = (userToken) => {
 };
 // Async Thunks
 export const getAllData = createAsyncThunk('common/getAllData', async (endpoint) => {
-  debugger
   try {
     const userData = getData('userDetails');
     setAuthToken(userData?.token);

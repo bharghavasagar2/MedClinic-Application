@@ -194,7 +194,10 @@ const DashboardGrid = () => {
 
       </div>
 
-      <AnalyticalInfo initialData={common.allData} width={800} height={500} barColor="#ff7f50" />
+      <div className="flex justify-center">
+        <AnalyticalInfo initialData={common.allData} width={800} height={500} barColor="#ff7f50" />
+      </div>
+
 
       <Portal isOpen={isOpen} onClose={closeModal}>
         <ConditionalRender

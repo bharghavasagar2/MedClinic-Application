@@ -226,3 +226,30 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.cell-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Center the Cell components horizontally */
+}
+
+/* CSS for the buttons container */
+.analysis-button {
+  display: flex;
+  flex-direction: row; /* By default, buttons are arranged horizontally */
+  flex-wrap: wrap; /* Allow buttons to wrap to the next line on small screens */
+  justify-content: center; /* Center the buttons horizontally */
+  margin-top: 1em;
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 768px) {
+  /* Change flex-direction to column to make buttons appear vertically */
+  .analysis-button {
+    flex-direction: column;
+  }
+  /* Add some spacing between buttons in vertical layout */
+  /* .analysis-button button {
+    margin: 5px 0;
+  } */
+}

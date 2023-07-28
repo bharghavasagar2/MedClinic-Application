@@ -7,6 +7,8 @@ const productionBaseURL = 'https://medclinic.onrender.com/medclinic';
 
 const baseURL = window.location.hostname === 'localhost' ? developmentBaseURL : productionBaseURL;
 
+console.log(window.location.hostname)
+
 export const api = axios.create({
   baseURL: baseURL, // Replace with your API base URL
 });

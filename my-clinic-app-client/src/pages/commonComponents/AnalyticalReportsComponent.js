@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 const AnalyticalInfo = ({ initialData, width, height, barColor }) => {
   const [data, setData] = useState([]);
@@ -29,84 +29,99 @@ const AnalyticalInfo = ({ initialData, width, height, barColor }) => {
   switch (chartType) {
     case 'revenue':
       chart = (
-        <BarChart width={width} height={height} data={data.revenue}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="month" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="revenue" fill={barColor} />
-        </BarChart>
+        <ResponsiveContainer width="100%" height={400}>
+          <BarChart width={width} height={height} data={data.revenue}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="month" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="revenue" fill={barColor} />
+          </BarChart>
+        </ResponsiveContainer>
+
       );
       break;
     case 'departments':
       chart = (
-        <PieChart width={width} height={height}>
-          <Pie
-            data={data.departments}
-            dataKey="appointments"
-            nameKey="label"
-            cx="50%"
-            cy="50%"
-            outerRadius={120}
-            fill="#8884d8"
-            legendType="circle"
-            label
-          >
-            {data.departments.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-          <Legend />
-          <Tooltip />
-        </PieChart>
+        <ResponsiveContainer width="100%" height={400}>
+          <PieChart width={width} height={height}>
+            <Pie
+              data={data.departments}
+              dataKey="appointments"
+              nameKey="label"
+              cx="50%"
+              cy="50%"
+              outerRadius="80%"
+              fill="#8884d8"
+              legendType="circle"
+              label
+            >
+
+              {data.departments.map((entry, index) => (
+                // <div className='grid-view-details'>
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+
+              ))}
+
+            </Pie>
+            <Legend />
+            <Tooltip />
+          </PieChart>
+        </ResponsiveContainer>
+
       );
       break;
     case 'doctors':
       chart = (
-        <PieChart width={width} height={height}>
-          <Pie
-            data={data.doctors}
-            dataKey="appointments"
-            nameKey="doctor"
-            cx="50%"
-            cy="50%"
-            outerRadius={120}
-            fill="#8884d8"
-            legendType="circle"
-            label
-          >
-            {data.doctors.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
+        <ResponsiveContainer width="100%" height={400}>
+          <PieChart width={width} height={height}>
+            <Pie
+              data={data.doctors}
+              dataKey="appointments"
+              nameKey="doctor"
+              cx="50%"
+              cy="50%"
+              outerRadius="80%"
+              fill="#8884d8"
+              legendType="circle"
+              label
+            >
+              {data.doctors.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Pie>
+            <Legend />
             <Tooltip />
-          </Pie>
-          <Legend />
-          <Tooltip />
-        </PieChart>
+          </PieChart>
+        </ResponsiveContainer>
+
       );
       break;
     case 'ageGroup':
       chart = (
-        <PieChart width={width} height={height}>
-          <Pie
-            data={data.ageGroup}
-            dataKey="appointments"
-            nameKey="age_group"
-            cx="50%"
-            cy="50%"
-            outerRadius={120}
-            fill="#8884d8"
-            legendType="circle"
-            label
-          >
-            {data.ageGroup.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-          <Legend />
-          <Tooltip />
-        </PieChart>
+        <ResponsiveContainer width="100%" height={400}>
+          <PieChart width={width} height={height}>
+            <Pie
+              data={data.ageGroup}
+              dataKey="appointments"
+              nameKey="age_group"
+              cx="50%"
+              cy="50%"
+              outerRadius="80%"
+              fill="#8884d8"
+              legendType="circle"
+              label
+            >
+              {data.ageGroup.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Pie>
+            <Legend />
+            <Tooltip />
+          </PieChart>
+        </ResponsiveContainer>
+
       );
       break;
     default:
@@ -118,24 +133,26 @@ const AnalyticalInfo = ({ initialData, width, height, barColor }) => {
       <h2 className="text-2xl font-semibold mb-4">Analytical Report</h2>
       <div className="bg-white rounded-lg shadow p-6">
         {/* Render the appropriate chart */}
+
         {chart}
 
-        {data && Object.keys(data).length > 0 && (
-          <div className="mt-4">
 
-            <button onClick={() => handleChangeChartType('revenue')} className="px-4 py-2 bg-blue-500 text-white rounded mr-2">
+
+        {data && Object.keys(data).length > 0 && (
+          <div className="analysis-button">
+            <button onClick={() => handleChangeChartType('revenue')} className="px-4 py-2 bg-blue-500 text-white rounded mb-2 md:mr-2 md:mb-0">
               Monthly Revenue Analysis
             </button>
 
-            <button onClick={() => handleChangeChartType('departments')} className="px-4 py-2 bg-blue-500 text-white rounded mr-2">
+            <button onClick={() => handleChangeChartType('departments')} className="px-4 py-2 bg-blue-500 text-white rounded mb-2 md:mr-2 md:mb-0">
               Department-wise Appointment Analysis
             </button>
 
-            <button onClick={() => handleChangeChartType('doctors')} className="px-4 py-2 bg-blue-500 text-white rounded mr-2">
+            <button onClick={() => handleChangeChartType('doctors')} className="px-4 py-2 bg-blue-500 text-white rounded mb-2 md:mr-2 md:mb-0">
               Doctor-wise Appointment Analysis
             </button>
 
-            <button onClick={() => handleChangeChartType('ageGroup')} className="px-4 py-2 bg-blue-500 text-white rounded mr-2">
+            <button onClick={() => handleChangeChartType('ageGroup')} className="px-4 py-2 bg-blue-500 text-white rounded mb-2 md:mr-2 md:mb-0">
               Age Group-wise Appointment Analysis
             </button>
             {/* You can add more buttons or elements here for additional interactivity */}
