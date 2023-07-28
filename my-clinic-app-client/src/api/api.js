@@ -2,8 +2,13 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { ColorRing } from 'react-loader-spinner';
 
+const developmentBaseURL = 'http://localhost:5000/medclinic';
+const productionBaseURL = 'https://medclinic.onrender.com/medclinic';
+
+const baseURL = window.location.hostname === 'localhost' ? developmentBaseURL : productionBaseURL;
+
 export const api = axios.create({
-  baseURL: 'http://localhost:5000/medclinic', // Replace with your API base URL
+  baseURL: baseURL, // Replace with your API base URL
 });
 
 
