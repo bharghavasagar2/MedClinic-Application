@@ -4,6 +4,9 @@
   "description": "Find more details about MedClinic on my Medium article: [Introducing MedClinic: Revolutionizing Healthcare Management](https://medium.com/@bharghavasagarmandadi2022/introducing-medclinic-revolutionizing-healthcare-management-e8e32817a78d).",
   "main": "index.js",
   "scripts": {
+    "install:all": "npm install && npm run install:server && npm run install:client",
+    "install:server": "cd server && npm install",
+    "install:client": "cd my-clinic-app-client && npm install",
     "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
     "start:server": "cd server && npm run start",
     "start:client": "cd my-clinic-app-client && npm run start"
