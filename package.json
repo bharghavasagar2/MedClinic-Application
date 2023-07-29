@@ -1,0 +1,21 @@
+{
+  "name": "metclinicapplication",
+  "version": "1.0.0",
+  "description": "Find more details about MedClinic on my Medium article: [Introducing MedClinic: Revolutionizing Healthcare Management](https://medium.com/@bharghavasagarmandadi2022/introducing-medclinic-revolutionizing-healthcare-management-e8e32817a78d).",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
+    "start:server": "cd server && npm run start",
+    "start:client": "cd my-clinic-app-client && npm run start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bharghavasagar2/MetClinicApplication.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bharghavasagar2/MetClinicApplication/issues"
+  },
+  "homepage": "https://github.com/bharghavasagar2/MetClinicApplication#readme"
+}
