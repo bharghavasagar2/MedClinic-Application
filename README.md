@@ -7,9 +7,9 @@ Explore MedClinic at: [https://medclinic-kappa.vercel.app/](https://medclinic-ka
 MedClinic is a web application that streamlines the process of scheduling medical appointments, managing patient records, and conducting virtual video consultations between doctors and patients.
 
 ## Getting Started
-
-1. Clone the repository to your local machine.
-2. Install the required dependencies using `npm install` after checking into the respective server and client folder.
+### Running the Application in local environment
+1. Install all the required dependencies for both the server and client with a single command "npm run install:all" in the root folder. Afterward, start both the server and client simultaneously by running "npm start".
+2. The client application will be accessible at http://localhost:3000. The server will run on a different port, and the client will proxy requests to it.
 
 ## Testing Credentials 
 
@@ -24,11 +24,6 @@ MedClinic is a web application that streamlines the process of scheduling medica
 - **Doctor**:
   - Username: shankar
   - Password: 1234
-
-## Running the Application in local environment
-
--  Install all the required dependencies for both the server and client with a single command npm run install:all in the root folder. Afterward, start both the server and client simultaneously by running npm start.
-- The client application will be accessible at http://localhost:3000. The server will run on a different port, and the client will proxy requests to it.
 
 ## Features
 
