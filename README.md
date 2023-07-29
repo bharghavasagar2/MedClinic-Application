@@ -1,13 +1,17 @@
-# Healthcare Management System
+# MedClinic
 
-Healthcare Management System is a web application that streamlines the process of scheduling medical appointments, managing patient records, and conducting virtual video consultations between doctors and patients.
+Find more details about MedClinic on my Medium article: [Introducing MedClinic: Revolutionizing Healthcare Management](https://medium.com/@bharghavasagarmandadi2022/introducing-medclinic-revolutionizing-healthcare-management-e8e32817a78d).
+
+Explore MedClinic at: [https://medclinic-kappa.vercel.app/](https://medclinic-kappa.vercel.app/).
+
+MedClinic is a web application that streamlines the process of scheduling medical appointments, managing patient records, and conducting virtual video consultations between doctors and patients.
 
 ## Getting Started
 
 1. Clone the repository to your local machine.
 2. Install the required dependencies using `npm install` after checking into the respective server and client folder.
 
-## Credentials 
+## Testing Credentials 
 
 - **Admin**:
   - Username: admin
@@ -16,12 +20,12 @@ Healthcare Management System is a web application that streamlines the process o
 - **Patient**:
   - Username: priya
   - Password: 1234
- 
-   - **Doctor**:
+
+- **Doctor**:
   - Username: priya
   - Password: 1234
 
-## Running the Application
+## Running the Application in local environment
 
 - To start the application, run `npm start` in the client root folder and also run the same command for the server as well.
 - The application will be accessible at `http://localhost:3000`.
@@ -40,17 +44,13 @@ Healthcare Management System is a web application that streamlines the process o
 - SQLite
 - React JS
 - Redux
- -Tailwind css
+- Tailwind CSS
 - Third-party APIs for video consultations (Jitsi Meet)
 
 ## Notes
 
--Make sure you have install all the npm dependencies before running.
+- Make sure you have installed all the npm dependencies before running.
 
 ## Contributing
 
 Contributions to the project are welcome! Please submit any bug reports, feature requests, or pull requests through GitHub.
-
-
-
-
