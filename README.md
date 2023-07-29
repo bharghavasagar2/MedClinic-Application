@@ -27,8 +27,8 @@ MedClinic is a web application that streamlines the process of scheduling medica
 
 ## Running the Application in local environment
 
-- To start the application, run `npm start` in the client root folder and also run the same command for the server as well.
-- The application will be accessible at `http://localhost:3000`.
+-  Install all the required dependencies for both the server and client with a single command npm run install:all in the root folder. Afterward, start both the server and client simultaneously by running npm start.
+- The client application will be accessible at http://localhost:3000. The server will run on a different port, and the client will proxy requests to it.
 
 ## Features
 
