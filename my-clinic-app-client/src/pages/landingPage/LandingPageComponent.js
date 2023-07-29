@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
 import backgroundImage from '../../images/homepage.jpg';
 
 const LandingPage = () => {
+
   return (
     <div
       className="min-h-screen flex items-center justify-center"
