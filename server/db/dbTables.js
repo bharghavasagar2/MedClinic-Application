@@ -83,15 +83,11 @@ const createDBTables = (db) => {
       patient_id INTEGER,
       appointment_id INTEGER,
       doctor_id INTEGER,
-      patient_name TEXT,
-      appointment_time	TEXT,
-      doctor_name TEXT,
       video_consultation_link TEXT,
-      appointment_date TEXT,
       consultation_status TEXT,       
       FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
-      FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id),
-      FOREIGN KEY (appointment_id) REFERENCES Appointments(appointment_id)
+      FOREIGN KEY (appointment_id) REFERENCES Appointments(appointment_id),
+      FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id)
     )`,
     // Notifications
     `CREATE TABLE IF NOT EXISTS Notifications (

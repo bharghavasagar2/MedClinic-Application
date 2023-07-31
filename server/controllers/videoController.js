@@ -1,15 +1,17 @@
 const db = require('../db/db.js');
 const _ = require('lodash');
-const { VIDEO_CONSULTATION_STATUS } = require('../config.js')
+const { VIDEO_CONSULTATION_STATUS } = require('../config.js');
 
 exports.getVideoConsultaionsByDoctorId = (req, res) => {
   const doctor_id = req.params.doctor_id;
   const query = `
-    SELECT VideoConsultations.*, Doctors.doctor_name, Patients.patient_name
+    SELECT VideoConsultations.*, Patients.patient_name, Appointments.appointment_time, Doctors.doctor_name, Appointments.appointment_date
     FROM VideoConsultations
     LEFT JOIN Patients ON VideoConsultations.patient_id = Patients.patient_id
+    LEFT JOIN Appointments ON VideoConsultations.appointment_id = Appointments.appointment_id
     LEFT JOIN Doctors ON VideoConsultations.doctor_id = Doctors.doctor_id
-    WHERE VideoConsultations.doctor_id = ?`; // Specify the table for doctor_id
+    WHERE VideoConsultations.doctor_id = ?`;
+
   db.all(query, [doctor_id], (err, rows) => {
     if (err) {
       res.status(500).json({ error: 'Error retrieving doctors from the database' });
@@ -19,15 +21,16 @@ exports.getVideoConsultaionsByDoctorId = (req, res) => {
   });
 };
 
-
 exports.getVideoConsultaionsByPatientId = (req, res) => {
   const patient_id = req.params.patient_id;
   const query = `
-    SELECT VideoConsultations.*, Patients.patient_name, Doctors.doctor_name
+    SELECT VideoConsultations.*, Patients.patient_name, Appointments.appointment_time, Doctors.doctor_name, Appointments.appointment_date
     FROM VideoConsultations
     LEFT JOIN Patients ON VideoConsultations.patient_id = Patients.patient_id
+    LEFT JOIN Appointments ON VideoConsultations.appointment_id = Appointments.appointment_id
     LEFT JOIN Doctors ON VideoConsultations.doctor_id = Doctors.doctor_id
-    WHERE VideoConsultations.patient_id = ?`; // Specify the table for patient_id
+    WHERE VideoConsultations.patient_id = ?`;
+
   db.all(query, [patient_id], (err, rows) => {
     if (err) {
       res.status(500).json({ error: 'Error retrieving video consultations from the database' });
@@ -37,17 +40,17 @@ exports.getVideoConsultaionsByPatientId = (req, res) => {
   });
 };
 
-
-
-
 exports.getAllVideoConsultations = (req, res) => {
   const sql = `
     SELECT
       VideoConsultations.*,
       Patients.patient_name,
-      Doctors.doctor_name
+      Appointments.appointment_time,
+      Doctors.doctor_name,
+      Appointments.appointment_date
     FROM VideoConsultations
     LEFT JOIN Patients ON VideoConsultations.patient_id = Patients.patient_id
+    LEFT JOIN Appointments ON VideoConsultations.appointment_id = Appointments.appointment_id
     LEFT JOIN Doctors ON VideoConsultations.doctor_id = Doctors.doctor_id;
   `;
 
@@ -67,12 +70,14 @@ exports.getVideoConsultationById = (req, res) => {
     SELECT
       VideoConsultations.*,
       Patients.patient_name,
-      Doctors.doctor_name
+      Appointments.appointment_time,
+      Doctors.doctor_name,
+      Appointments.appointment_date
     FROM VideoConsultations
     LEFT JOIN Patients ON VideoConsultations.patient_id = Patients.patient_id
+    LEFT JOIN Appointments ON VideoConsultations.appointment_id = Appointments.appointment_id
     LEFT JOIN Doctors ON VideoConsultations.doctor_id = Doctors.doctor_id
-    WHERE VideoConsultations.consultation_id = ?;
-  `;
+    WHERE VideoConsultations.consultation_id = ?`;
 
   db.get(sql, [id], (err, row) => {
     if (err) {
@@ -93,36 +98,23 @@ exports.createVideoConsultation = (req) => {
     const {
       patient_id,
       doctor_id,
-      patient_name,
-      doctor_name,
-      appointment_id,
-      appointment_date,
-      // consultation_status,
-      appointment_time
+      appointment_id
     } = req;
 
     const sql = `INSERT INTO VideoConsultations (
       patient_id,
       doctor_id,
-      patient_name,
-      doctor_name,
       video_consultation_link,
       appointment_id,
-      appointment_date,
-      consultation_status,
-      appointment_time
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      consultation_status
+    ) VALUES (?, ?, ?, ?, ?)`;
 
     const values = [
       patient_id,
       doctor_id,
-      patient_name,
-      doctor_name,
       fetchMeetingLink,
       appointment_id,
-      appointment_date,
-      VIDEO_CONSULTATION_STATUS.PENDING_VIDEO_CONSULTATION,
-      appointment_time
+      VIDEO_CONSULTATION_STATUS.PENDING_VIDEO_CONSULTATION
     ];
 
     return new Promise((resolve, reject) => {
@@ -141,45 +133,31 @@ exports.createVideoConsultation = (req) => {
   }
 };
 
-
 // Update a video consultation by ID
 exports.updateVideoConsultation = (req, res) => {
   const { id } = req.params;
   const {
     patient_id,
     doctor_id,
-    patient_name,
-    doctor_name,
     video_consultation_link,
     appointment_id,
-    appointment_date,
-    appointment_time,
     consultation_status,
-  } = req.body;//      appointment_time
+  } = req.body;
 
   const sql = `UPDATE VideoConsultations SET
-  patient_id = ?,
-  doctor_id = ?,
-  patient_name = ?,
-  doctor_name = ?,
-  video_consultation_link = ?,
-  appointment_id = ?,
-  appointment_date = ?,
-  consultation_status = ?,
-  appointment_time = ?
-  WHERE consultation_id = ?`;
-
+    patient_id = ?,
+    doctor_id = ?,
+    video_consultation_link = ?,
+    appointment_id = ?,
+    consultation_status = ?
+    WHERE consultation_id = ?`;
 
   const values = [
     patient_id,
     doctor_id,
-    patient_name,
-    doctor_name,
     video_consultation_link,
     appointment_id,
-    appointment_date,
     consultation_status,
-    appointment_time,
     id,
   ];
 
@@ -210,8 +188,6 @@ exports.deleteVideoConsultation = (req, res) => {
     }
   });
 };
-
-
 
 const generateJitsiMeetLink = () => {
   const jitsiMeetUrl = 'https://meet.jit.si'; // Change this if you have your own Jitsi Meet server
