@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { ColorRing } from 'react-loader-spinner';
 
 const developmentBaseURL = 'http://localhost:5000/medclinic';
-const productionBaseURL = 'https://medclinic.onrender.com/medclinic';
+const productionBaseURL = 'https://medclinic-server.onrender.com/medclinic';
+//const productionBaseURL = 'https://medclinic.onrender.com/medclinic';
 
 const baseURL = window.location.hostname === 'localhost' ? developmentBaseURL : productionBaseURL;
 

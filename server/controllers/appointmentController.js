@@ -136,11 +136,6 @@ const appointmentCheck = (id) => {
 };
 
 
-
-
-
-
-
 // API endpoint to fetch all reports
 exports.getAllReports = (req, res) => {
   const query1 = `
