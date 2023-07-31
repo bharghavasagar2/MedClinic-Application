@@ -93,10 +93,11 @@ exports.getPatientDetails = (req, res) => {
       d.department_id,
       d.contact_number AS doctor_contact_number,
       d.email AS doctor_email,
-      d.department_name
+      dept.department_name AS department_name
     FROM Patients AS p
     LEFT JOIN Appointments AS a ON p.patient_id = a.patient_id
     LEFT JOIN Doctors AS d ON a.doctor_id = d.doctor_id
+    LEFT JOIN Departments AS dept ON d.department_id = dept.department_id
     WHERE p.patient_id = ?;
   `;
 

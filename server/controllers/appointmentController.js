@@ -1,13 +1,25 @@
-const { APPOINTMENT_STATUS, appointmentTypeWalkIn, appointmentTypeOnline } = require('../config.js');
+const { APPOINTMENT_STATUS, appointmentTypeOnline } = require('../config.js');
 const db = require('../db/db.js');
 const _ = require('lodash');
 
-
 const { createVideoConsultation } = require('./videoController.js');
+// Get all appointments with department_name and doctor_name
 
-// Get all appointments
+
+// Get all appointments with department_name, doctor_name, and patient_name
 exports.getAllAppointments = (req, res) => {
-  const query = 'SELECT * FROM Appointments';
+  const query = `
+    SELECT
+      Appointments.*,
+      Departments.department_name,
+      Doctors.doctor_name,
+      Patients.patient_name
+    FROM Appointments
+    LEFT JOIN Departments ON Appointments.department_id = Departments.department_id
+    LEFT JOIN Doctors ON Appointments.doctor_id = Doctors.doctor_id
+    LEFT JOIN Patients ON Appointments.patient_id = Patients.patient_id;
+  `;
+
   db.all(query, (err, rows) => {
     if (err) {
       res.status(500).json({ error: 'Error retrieving appointments from the database' });
@@ -17,10 +29,22 @@ exports.getAllAppointments = (req, res) => {
   });
 };
 
-// Get an appointment by ID
+// Get an appointment by ID with department_name, doctor_name, and patient_name
 exports.getAppointmentById = (req, res) => {
   const appointmentId = req.params.id;
-  const query = 'SELECT * FROM Appointments WHERE appointment_id = ?';
+  const query = `
+    SELECT
+      Appointments.*,
+      Departments.department_name,
+      Doctors.doctor_name,
+      Patients.patient_name
+    FROM Appointments
+    LEFT JOIN Departments ON Appointments.department_id = Departments.department_id
+    LEFT JOIN Doctors ON Appointments.doctor_id = Doctors.doctor_id
+    LEFT JOIN Patients ON Appointments.patient_id = Patients.patient_id
+    WHERE Appointments.appointment_id = ?;
+  `;
+
   db.get(query, [appointmentId], (err, row) => {
     if (err) {
       res.status(500).json({ error: 'Error retrieving appointment from the database' });
@@ -31,14 +55,13 @@ exports.getAppointmentById = (req, res) => {
     }
   });
 };
-
 // Create a new appointment
 exports.createAppointment = async (req, res) => {
   const { patient_id, doctor_id, appointment_date, appointment_time, appointment_status, department_id, appointment_type } = req.body;
   const query = 'INSERT INTO Appointments (patient_id, doctor_id, appointment_date, appointment_time, appointment_status, department_id, appointment_type) VALUES (?, ?, ?, ?, ?, ?, ?)';
   db.run(query, [patient_id, doctor_id, appointment_date, appointment_time, appointment_status, department_id, appointment_type], function (err) {
     if (err) {
-      console.log(err)
+      console.log(err);
       res.status(500).json({ error: 'Error creating appointment' });
     } else {
       res.json({ id: this.lastID });
@@ -85,7 +108,7 @@ exports.deleteAppointment = (req, res) => {
   const query = 'DELETE FROM Appointments WHERE appointment_id = ?';
   db.run(query, [appointmentId], (err) => {
     if (err) {
-      console.log(err)
+      console.log(err);
       res.status(500).json({ error: 'Error deleting appointment' });
     } else if (this.changes === 0) {
       res.status(404).json({ error: 'Appointment not found' });
@@ -95,9 +118,7 @@ exports.deleteAppointment = (req, res) => {
   });
 };
 
-
-
-const appointmentCheck = (id, res) => {
+const appointmentCheck = (id) => {
   const appointmentId = id;
   const query = 'SELECT * FROM Appointments WHERE appointment_id = ?';
 
@@ -112,9 +133,10 @@ const appointmentCheck = (id, res) => {
       }
     });
   });
-
-
 };
+
+
+
 
 
 
@@ -123,7 +145,7 @@ const appointmentCheck = (id, res) => {
 exports.getAllReports = (req, res) => {
   const query1 = `
   SELECT 
-  CASE 
+    CASE 
       WHEN substr(appointment_date, 4, 2) = '01' THEN 'Jan'
       WHEN substr(appointment_date, 4, 2) = '02' THEN 'Feb'
       WHEN substr(appointment_date, 4, 2) = '03' THEN 'Mar'
@@ -136,61 +158,61 @@ exports.getAllReports = (req, res) => {
       WHEN substr(appointment_date, 4, 2) = '10' THEN 'Oct'
       WHEN substr(appointment_date, 4, 2) = '11' THEN 'Nov'
       WHEN substr(appointment_date, 4, 2) = '12' THEN 'Dec'
-  END as month,
-  SUM(payment_amount) as revenue
-FROM 
-  Appointments
-JOIN Payments ON Appointments.appointment_id = Payments.appointment_id
-WHERE 
-  appointment_status = 'Scheduled'
-GROUP BY 
-  month
-ORDER BY 
-  appointment_date;
+    END as month,
+    SUM(payment_amount) as revenue
+  FROM 
+    Appointments
+  JOIN Payments ON Appointments.appointment_id = Payments.appointment_id
+  WHERE 
+    appointment_status IN ('Scheduled', 'Completed', 'Follow-up')
+  GROUP BY 
+    month
+  ORDER BY 
+    appointment_date;
   `;
 
   const query2 = `
     SELECT 
-        Departments.department_name as label,
-        COUNT(*) as appointments
+      Departments.department_name as label,
+      COUNT(*) as appointments
     FROM 
-        Appointments
+      Appointments
     JOIN Departments ON Appointments.department_id = Departments.department_id
     WHERE 
-        Appointments.appointment_status = 'Scheduled'
+      Appointments.appointment_status IN ('Scheduled', 'Completed', 'Follow-up')
     GROUP BY 
-        Departments.department_name;
+      Departments.department_name;
   `;
 
   const query3 = `
     SELECT 
-        Doctors.doctor_name as doctor,
-        COUNT(*) as appointments
+      Doctors.doctor_name as doctor,
+      COUNT(*) as appointments
     FROM 
-        Appointments
+      Appointments
     JOIN Doctors ON Appointments.doctor_id = Doctors.doctor_id
     WHERE 
-        Appointments.appointment_status = 'Scheduled'
+      Appointments.appointment_status IN ('Scheduled', 'Completed', 'Follow-up')
     GROUP BY 
-        Doctors.doctor_name;
+      Doctors.doctor_name;
   `;
 
   const query4 = `
     SELECT 
-        CASE
-            WHEN patient_age < 18 THEN 'Children'
-            WHEN patient_age >= 18 AND patient_age <= 65 THEN 'Adults'
-            WHEN patient_age > 65 THEN 'Seniors'
-            ELSE 'Unknown'
-        END AS age_group,
-        COUNT(*) AS appointments
+      CASE
+        WHEN patient_age < 18 THEN 'Children'
+        WHEN patient_age >= 18 AND patient_age <= 65 THEN 'Adults'
+        WHEN patient_age > 65 THEN 'Seniors'
+        ELSE 'Unknown'
+      END AS age_group,
+      COUNT(*) AS appointments
     FROM 
-        Appointments
+      Appointments
     JOIN Patients ON Appointments.patient_id = Patients.patient_id
     WHERE 
-        Appointments.appointment_status = 'Scheduled'
+      Appointments.appointment_status IN ('Scheduled', 'Completed', 'Follow-up')
     GROUP BY 
-        age_group;
+      age_group;
   `;
 
   const queries = [query1, query2, query3, query4];
@@ -212,6 +234,8 @@ ORDER BY
       res.status(500).json({ error: 'Error fetching reports' });
     });
 };
+
+
 
 // Helper function to execute a single SQL query and return the result
 const executeQuery = (query) => {

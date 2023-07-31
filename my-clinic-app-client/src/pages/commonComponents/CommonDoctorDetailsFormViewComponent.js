@@ -17,10 +17,11 @@ const DoctorFormView = ({ formData }) => {
 
   // Function to recursively render data (flattening nested objects and arrays)
   const renderData = (data) => {
-    return Object.keys(data).map((field) => {
+    return !!data && Object.keys(data).map((field) => {
       const value = data[field];
       if (typeof value === 'object') {
-        if (Array.isArray(value)) {
+        if (Array.isArray(value) && value.length > 0) {
+
           return (
             <div key={field}>
               <h4 className="text-lg font-bold mt-4">{capitalizeName(field)}</h4>
@@ -32,18 +33,20 @@ const DoctorFormView = ({ formData }) => {
             </div>
           );
         } else {
+          console.log(renderData(value))
           return (
             <div key={field}>
               <h3 className="text-xl font-bold mt-4">{capitalizeName(field)}</h3>
-              {renderData(value)}
+              {!_.isEmpty(renderData(value)) ? renderData(value) : 'No data found'}
             </div>
           );
         }
       } else {
+
         return (
           <div key={field} className="border-b border-gray-300">
             <div className="py-2 font-semibold">{capitalizeName(field)}</div>
-            <div className="py-2">{value}</div>
+            <div className="py-2">{!!value ? value : '-----'}</div>
           </div>
         );
       }

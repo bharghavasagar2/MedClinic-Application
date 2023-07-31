@@ -4,7 +4,12 @@ const { VIDEO_CONSULTATION_STATUS } = require('../config.js')
 
 exports.getVideoConsultaionsByDoctorId = (req, res) => {
   const doctor_id = req.params.doctor_id;
-  const query = 'SELECT * FROM VideoConsultations WHERE doctor_id = ?';
+  const query = `
+    SELECT VideoConsultations.*, Doctors.doctor_name, Patients.patient_name
+    FROM VideoConsultations
+    LEFT JOIN Patients ON VideoConsultations.patient_id = Patients.patient_id
+    LEFT JOIN Doctors ON VideoConsultations.doctor_id = Doctors.doctor_id
+    WHERE VideoConsultations.doctor_id = ?`; // Specify the table for doctor_id
   db.all(query, [doctor_id], (err, rows) => {
     if (err) {
       res.status(500).json({ error: 'Error retrieving doctors from the database' });
@@ -14,12 +19,18 @@ exports.getVideoConsultaionsByDoctorId = (req, res) => {
   });
 };
 
+
 exports.getVideoConsultaionsByPatientId = (req, res) => {
   const patient_id = req.params.patient_id;
-  const query = 'SELECT * FROM VideoConsultations WHERE patient_id = ?';
+  const query = `
+    SELECT VideoConsultations.*, Patients.patient_name, Doctors.doctor_name
+    FROM VideoConsultations
+    LEFT JOIN Patients ON VideoConsultations.patient_id = Patients.patient_id
+    LEFT JOIN Doctors ON VideoConsultations.doctor_id = Doctors.doctor_id
+    WHERE VideoConsultations.patient_id = ?`; // Specify the table for patient_id
   db.all(query, [patient_id], (err, rows) => {
     if (err) {
-      res.status(500).json({ error: 'Error retrieving doctors from the database' });
+      res.status(500).json({ error: 'Error retrieving video consultations from the database' });
     } else {
       res.json(rows);
     }
@@ -27,9 +38,19 @@ exports.getVideoConsultaionsByPatientId = (req, res) => {
 };
 
 
-// Get all video consultations
+
+
 exports.getAllVideoConsultations = (req, res) => {
-  const sql = 'SELECT * FROM VideoConsultations';
+  const sql = `
+    SELECT
+      VideoConsultations.*,
+      Patients.patient_name,
+      Doctors.doctor_name
+    FROM VideoConsultations
+    LEFT JOIN Patients ON VideoConsultations.patient_id = Patients.patient_id
+    LEFT JOIN Doctors ON VideoConsultations.doctor_id = Doctors.doctor_id;
+  `;
+
   db.all(sql, (err, rows) => {
     if (err) {
       console.error(err.message);
@@ -40,10 +61,19 @@ exports.getAllVideoConsultations = (req, res) => {
   });
 };
 
-// Get a video consultation by ID
 exports.getVideoConsultationById = (req, res) => {
   const { id } = req.params;
-  const sql = 'SELECT * FROM VideoConsultations WHERE consultation_id = ?';
+  const sql = `
+    SELECT
+      VideoConsultations.*,
+      Patients.patient_name,
+      Doctors.doctor_name
+    FROM VideoConsultations
+    LEFT JOIN Patients ON VideoConsultations.patient_id = Patients.patient_id
+    LEFT JOIN Doctors ON VideoConsultations.doctor_id = Doctors.doctor_id
+    WHERE VideoConsultations.consultation_id = ?;
+  `;
+
   db.get(sql, [id], (err, row) => {
     if (err) {
       console.error(err.message);

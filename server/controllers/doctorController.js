@@ -1,8 +1,13 @@
 const db = require('../db/db.js');
 
-// Get all doctors
+
+// Get all doctors with department_name
 exports.getAllDoctors = (req, res) => {
-  const query = 'SELECT * FROM Doctors';
+  const query = `
+    SELECT d.*, Departments.department_name
+    FROM Doctors AS d
+    LEFT JOIN Departments ON d.department_id = Departments.department_id
+  `;
   db.all(query, (err, rows) => {
     if (err) {
       res.status(500).json({ error: 'Error retrieving doctors from the database' });
@@ -71,9 +76,14 @@ exports.deleteDoctor = (req, res) => {
   });
 };
 
+// Get doctors by department
 exports.getDoctorsByDepartment = (req, res) => {
   const departmentId = req.params.department_id;
-  const query = 'SELECT * FROM Doctors WHERE department_id = ?';
+  const query = `
+    SELECT d.*, Departments.department_name
+    FROM Doctors AS d
+    LEFT JOIN Departments ON d.department_id = Departments.department_id
+    WHERE d.department_id = ?`;
   db.all(query, [departmentId], (err, rows) => {
     if (err) {
       res.status(500).json({ error: 'Error retrieving doctors from the database' });
@@ -82,6 +92,7 @@ exports.getDoctorsByDepartment = (req, res) => {
     }
   });
 };
+
 
 exports.getDoctorDetails = (req, res) => {
   const { id } = req.params;
@@ -92,7 +103,7 @@ exports.getDoctorDetails = (req, res) => {
       d.department_id,
       d.contact_number AS doctor_contact_number,
       d.email AS doctor_email,
-      d.department_name,
+      dept.department_name,
       json_group_array(
         json_object(
           'appointment_id', a.appointment_id,
@@ -111,13 +122,14 @@ exports.getDoctorDetails = (req, res) => {
               'address', p.address
             )
           ELSE
-            json('[]')
+            null
           END
         )
       ) AS appointments
     FROM Doctors AS d
     LEFT JOIN Appointments AS a ON d.doctor_id = a.doctor_id
     LEFT JOIN Patients AS p ON a.patient_id = p.patient_id
+    LEFT JOIN Departments AS dept ON d.department_id = dept.department_id
     WHERE d.doctor_id = ?
     GROUP BY d.doctor_id;
   `;
@@ -144,34 +156,37 @@ exports.getDoctorDetails = (req, res) => {
 
         rows[0].appointments = JSON.parse(rows[0].appointments);
         rows[0].appointments.forEach((appointment) => {
-          if (!doctorDetails.patients.some((p) => p.patient_id === appointment.patient_details.patient_id)) {
-            const patient = {
-              patient_id: appointment.patient_details.patient_id,
-              patient_name: appointment.patient_details.patient_name,
-              patient_age: appointment.patient_details.patient_age,
-              patient_gender: appointment.patient_details.patient_gender,
-              patient_contact_number: appointment.patient_details.contact_number,
-              patient_address: appointment.patient_details.address,
-              appointments: [],
+          if (appointment.appointment_id !== null) {
+            if (!doctorDetails.patients.some((p) => p.patient_id === appointment.patient_details.patient_id)) {
+              const patient = {
+                patient_id: appointment.patient_details.patient_id,
+                patient_name: appointment.patient_details.patient_name,
+                patient_age: appointment.patient_details.patient_age,
+                patient_gender: appointment.patient_details.patient_gender,
+                patient_contact_number: appointment.patient_details.contact_number,
+                patient_address: appointment.patient_details.address,
+                appointments: [],
+              };
+              doctorDetails.patients.push(patient);
+            }
+
+            const patientIndex = doctorDetails.patients.findIndex(
+              (p) => p.patient_id === appointment.patient_details.patient_id
+            );
+
+            const appointmentDetails = {
+              appointment_id: appointment.appointment_id,
+              appointment_date: appointment.appointment_date,
+              appointment_time: appointment.appointment_time,
+              appointment_type: appointment.appointment_type,
+              appointment_status: appointment.appointment_status,
             };
-            doctorDetails.patients.push(patient);
+            doctorDetails.patients[patientIndex].appointments.push(appointmentDetails);
           }
-
-          const patientIndex = doctorDetails.patients.findIndex(
-            (p) => p.patient_id === appointment.patient_details.patient_id
-          );
-
-          const appointmentDetails = {
-            appointment_id: appointment.appointment_id,
-            appointment_date: appointment.appointment_date,
-            appointment_time: appointment.appointment_time,
-            appointment_type: appointment.appointment_type,
-            appointment_status: appointment.appointment_status,
-          };
-          doctorDetails.patients[patientIndex].appointments.push(appointmentDetails);
         });
       }
       res.json(doctorDetails);
     }
   });
 };
+

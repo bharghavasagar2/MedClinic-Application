@@ -32,13 +32,12 @@ export const useReduxHelpers = () => {
 }
 
 
-
 export const RESET_PROPERTY = 'resetProperty';
 export const departments = [
   { value: 1, label: 'Cardiology' },
-  { value: 2, label: 'General physician' },
+  { value: 2, label: 'Orthopedics' },
   { value: 3, label: 'Dermatology' },
-  { value: 4, label: 'Orthopedics' },
+  { value: 4, label: 'General physician' },
   { value: 5, label: 'Gastroenterology' },
   { value: 6, label: 'Neurology' }
 ];

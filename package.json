@@ -8,7 +8,7 @@
     "install:server": "cd server && npm install",
     "install:client": "cd my-clinic-app-client && npm install",
     "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
-    "start:server": "cd server && npm run start",
+    "start:server": "cd server && nodemon --inspect index.js",
     "start:client": "cd my-clinic-app-client && npm run start"
   },
   "repository": {
