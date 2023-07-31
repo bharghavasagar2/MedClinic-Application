@@ -29,9 +29,9 @@ exports.getPrescriptionById = (req, res) => {
 
 // Create a new prescription
 exports.createPrescription = (req, res) => {
-  const { patient_id, doctor_id, prescription_date, prescription_details, dosage, appointment_id } = req.body;
-  const query = 'INSERT INTO Prescriptions (patient_id, doctor_id, prescription_date, prescription_details, dosage, appointment_id) VALUES (?, ?, ?, ?, ?, ?)';
-  db.run(query, [patient_id, doctor_id, prescription_date, prescription_details, dosage, appointment_id], function (err) {
+  const { patient_id, doctor_id, prescription_date, prescription_details, appointment_id } = req.body;
+  const query = 'INSERT INTO Prescriptions (patient_id, doctor_id, prescription_date, prescription_details, appointment_id) VALUES (?, ?, ?, ?, ?)';
+  db.run(query, [patient_id, doctor_id, prescription_date, prescription_details, appointment_id], function (err) {
     if (err) {
       res.status(500).json({ error: 'Error creating prescription' });
     } else {
@@ -43,9 +43,9 @@ exports.createPrescription = (req, res) => {
 // Update a prescription
 exports.updatePrescription = (req, res) => {
   const prescriptionId = req.params.id;
-  const { patient_id, doctor_id, prescription_date, prescription_details, dosage, appointment_id } = req.body;
-  const query = 'UPDATE Prescriptions SET patient_id = ?, doctor_id = ?, prescription_date = ?, prescription_details = ?, dosage = ?, appointment_id = ? WHERE prescription_id = ?';
-  db.run(query, [patient_id, doctor_id, prescription_date, prescription_details, dosage, appointment_id, prescriptionId], function (err) {
+  const { patient_id, doctor_id, prescription_date, prescription_details, appointment_id } = req.body;
+  const query = 'UPDATE Prescriptions SET patient_id = ?, doctor_id = ?, prescription_date = ?, prescription_details = ?, appointment_id = ? WHERE prescription_id = ?';
+  db.run(query, [patient_id, doctor_id, prescription_date, prescription_details, appointment_id, prescriptionId], function (err) {
     if (err) {
       res.status(500).json({ error: 'Error updating prescription' });
     } else if (this.changes === 0) {
@@ -70,7 +70,6 @@ exports.deletePrescription = (req, res) => {
     }
   });
 };
-
 
 exports.getPrescriptionByAppointmentById = (req, res) => {
   const appointment_id = req.params.appointment_id;
