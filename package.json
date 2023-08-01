@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/bharghavasagar2/MetClinicApplication/issues"
   },
-  "homepage": "https://github.com/bharghavasagar2/MetClinicApplication#readme"
+  "homepage": "https://github.com/bharghavasagar2/MetClinicApplication#readme",
+  "dependencies": {
+    "concurrently": "^8.2.0"
+  }
 }
