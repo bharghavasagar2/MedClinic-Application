@@ -20,7 +20,12 @@ exports.getAllDoctors = (req, res) => {
 // Get a doctor by ID
 exports.getDoctorById = (req, res) => {
   const doctorId = req.params.id;
-  const query = 'SELECT * FROM Doctors WHERE doctor_id = ?';
+  const query = `
+    SELECT Doctors.*, Departments.department_name
+    FROM Doctors
+    JOIN Departments ON Doctors.department_id = Departments.department_id
+    WHERE doctor_id = ?`;
+
   db.get(query, [doctorId], (err, row) => {
     if (err) {
       res.status(500).json({ error: 'Error retrieving doctor from the database' });
@@ -31,6 +36,7 @@ exports.getDoctorById = (req, res) => {
     }
   });
 };
+
 
 // Create a new doctor
 exports.createDoctor = (req, res) => {
