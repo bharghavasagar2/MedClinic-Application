@@ -18,11 +18,11 @@ MedClinic is a web application that streamlines the process of scheduling medica
   - Password: admin123
 
 - **Patient**:
-  - Username: priya
+  - Username: sai
   - Password: 1234
 
 - **Doctor**:
-  - Username: shankar
+  - Username: keshav
   - Password: 1234
 
 ## Features
