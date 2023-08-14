@@ -19,6 +19,7 @@ exports.getAllDoctors = (req, res) => {
 
 // Get a doctor by ID
 exports.getDoctorById = (req, res) => {
+
   const doctorId = req.params.id;
   const query = `
     SELECT Doctors.*, Departments.department_name
